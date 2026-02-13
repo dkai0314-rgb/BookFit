@@ -1,39 +1,40 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Sparkles, ShoppingBag } from "lucide-react";
-import { PrismaClient } from "@prisma/client";
-
-// Initialize Prisma
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/db";
 
 // Force dynamic rendering to ensure fresh data on monthly change
 export const dynamic = 'force-dynamic';
 
 async function getMonthlyBestsellers() {
-    const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+    try {
+        const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
 
-    // 1. Try to fetch current month's snapshot
-    let books = await prisma.monthlyBestseller.findMany({
-        where: { snapshotMonth: currentMonth },
-        orderBy: { rank: 'asc' }
-    });
-
-    // 2. Fallback: If empty, find the most recent snapshot
-    if (books.length === 0) {
-        const latestSnapshot = await prisma.monthlyBestseller.findFirst({
-            orderBy: { snapshotMonth: 'desc' },
-            select: { snapshotMonth: true }
+        // 1. Try to fetch current month's snapshot
+        let books = await prisma.monthlyBestseller.findMany({
+            where: { snapshotMonth: currentMonth },
+            orderBy: { rank: 'asc' }
         });
 
-        if (latestSnapshot) {
-            books = await prisma.monthlyBestseller.findMany({
-                where: { snapshotMonth: latestSnapshot.snapshotMonth },
-                orderBy: { rank: 'asc' }
+        // 2. Fallback: If empty, find the most recent snapshot
+        if (books.length === 0) {
+            const latestSnapshot = await prisma.monthlyBestseller.findFirst({
+                orderBy: { snapshotMonth: 'desc' },
+                select: { snapshotMonth: true }
             });
-        }
-    }
 
-    return books;
+            if (latestSnapshot) {
+                books = await prisma.monthlyBestseller.findMany({
+                    where: { snapshotMonth: latestSnapshot.snapshotMonth },
+                    orderBy: { rank: 'asc' }
+                });
+            }
+        }
+        return books;
+    } catch (error) {
+        console.error("Failed to fetch bestsellers (likely build time or DB missing):", error);
+        return []; // Return empty array to prevent build failure
+    }
 }
 
 export default async function BestsellersPage() {
@@ -79,7 +80,9 @@ export default async function BestsellersPage() {
                     {books.length === 0 ? (
                         <div className="col-span-full text-center py-20">
                             <p className="text-gray-500 text-lg">이번 달 컬렉션 준비 중입니다. 잠시만 기다려주세요! 📚</p>
-                            <p className="text-xs text-gray-600 mt-2">(관리자: 스크립트를 실행하여 데이터를 수집해주세요)</p>
+                            <p className="text-xs text-gray-600 mt-2 text-center">
+                                (시스템: 데이터 수집 대기 중)
+                            </p>
                         </div>
                     ) : (
                         books.map((book) => (
