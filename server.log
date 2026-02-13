@@ -1,0 +1,989 @@
+
+> book-fit-temp@0.1.0 dev
+> next dev
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\dkai0\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.30.1.62:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 881ms
+Persisting failed: Unable to commit operations
+
+Caused by:
+    0: Unable to write meta file 00000006.meta
+    1: 액세스가 거부되었습니다. (os error 5)
+ GET /survey 200 in 2.2s (compile: 2000ms, render: 166ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET /survey 200 in 47ms (compile: 4ms, render: 43ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "뇌과학에 대해서 알고 싶어요. 쉽고 잘 읽히는 뇌과학에 입문하기 좋은 책을 추천해주세요",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EB%87%8C%EA%B3%BC%ED%95%99%EC%97%90%20%EB%8C%80%ED%95%B4%EC%84%9C%20%EC%95%8C%EA%B3%A0%20%EC%8B%B6%EC%96%B4%EC%9A%94.%20%EC%89%BD%EA%B3%A0%20%EC%9E%98%20%EC%9D%BD%ED%9E%88%EB%8A%94%20%EB%87%8C%EA%B3%BC%ED%95%99%EC%97%90%20%EC%9E%85%EB%AC%B8%ED%95%98%EA%B8%B0%20%EC%A2%8B%EC%9D%80%20%EC%B1%85%EC%9D%84%20%EC%B6%94%EC%B2%9C%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+ POST /api/recommend 200 in 1427ms (compile: 334ms, render: 1092ms)
+ GET /result 200 in 763ms (compile: 744ms, render: 19ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET / 200 in 532ms (compile: 342ms, render: 190ms)
+ GET /survey 200 in 16ms (compile: 4ms, render: 12ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "사람들의 심리를 알고싶어요. 너무 어렵지 않고.. 가볍게 사람의 심리를 알 수 있는 책",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%82%AC%EB%9E%8C%EB%93%A4%EC%9D%98%20%EC%8B%AC%EB%A6%AC%EB%A5%BC%20%EC%95%8C%EA%B3%A0%EC%8B%B6%EC%96%B4%EC%9A%94.%20%EB%84%88%EB%AC%B4%20%EC%96%B4%EB%A0%B5%EC%A7%80%20%EC%95%8A%EA%B3%A0..%20%EA%B0%80%EB%B3%8D%EA%B2%8C%20%EC%82%AC%EB%9E%8C%EC%9D%98%20%EC%8B%AC%EB%A6%AC%EB%A5%BC%20%EC%95%8C%20%EC%88%98%20%EC%9E%88%EB%8A%94%20%EC%B1%85&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+ POST /api/recommend 200 in 1209ms (compile: 4ms, render: 1205ms)
+ GET /result 200 in 28ms (compile: 15ms, render: 13ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET /survey 200 in 15ms (compile: 3ms, render: 12ms)
+ GET /survey 200 in 20ms (compile: 4ms, render: 16ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET / 200 in 178ms (compile: 64ms, render: 114ms)
+ GET /result 200 in 40ms (compile: 5ms, render: 35ms)
+ GET /survey 200 in 22ms (compile: 4ms, render: 19ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+✓ Compiled in 303ms
+ GET /result 200 in 49ms (compile: 15ms, render: 34ms)
+ GET / 200 in 532ms (compile: 193ms, render: 339ms)
+ GET / 200 in 252ms (compile: 6ms, render: 246ms)
+ GET / 200 in 267ms (compile: 2ms, render: 265ms)
+ GET /survey 200 in 138ms (compile: 19ms, render: 119ms)
+ GET / 200 in 305ms (compile: 7ms, render: 298ms)
+ GET / 200 in 308ms (compile: 4ms, render: 304ms)
+ GET /result 200 in 226ms (compile: 11ms, render: 215ms)
+ GET /survey 200 in 203ms (compile: 12ms, render: 191ms)
+ GET /result 200 in 201ms (compile: 12ms, render: 189ms)
+ GET /survey 200 in 252ms (compile: 8ms, render: 244ms)
+ GET / 200 in 569ms (compile: 6ms, render: 563ms)
+ GET / 200 in 484ms (compile: 5ms, render: 480ms)
+ GET / 200 in 345ms (compile: 4ms, render: 341ms)
+ GET / 200 in 278ms (compile: 56ms, render: 222ms)
+ GET /survey 200 in 47ms (compile: 3ms, render: 44ms)
+ GET / 200 in 220ms (compile: 7ms, render: 213ms)
+ GET / 200 in 174ms (compile: 12ms, render: 162ms)
+ GET /survey 200 in 90ms (compile: 4ms, render: 86ms)
+ GET /survey 200 in 57ms (compile: 5ms, render: 52ms)
+ GET / 200 in 187ms (compile: 1975µs, render: 185ms)
+ GET /survey 200 in 38ms (compile: 3ms, render: 35ms)
+ GET /survey 200 in 20ms (compile: 4ms, render: 16ms)
+ GET / 200 in 141ms (compile: 5ms, render: 136ms)
+ GET / 200 in 100ms (compile: 3ms, render: 97ms)
+ GET /survey 200 in 27ms (compile: 2ms, render: 25ms)
+ GET /survey 200 in 15ms (compile: 2ms, render: 13ms)
+ GET /survey 200 in 38ms (compile: 2ms, render: 36ms)
+ GET /survey 200 in 38ms (compile: 1936µs, render: 37ms)
+ GET /survey 200 in 33ms (compile: 2ms, render: 31ms)
+ GET /survey 200 in 20ms (compile: 3ms, render: 17ms)
+ GET /result 200 in 38ms (compile: 3ms, render: 35ms)
+ GET /result 200 in 22ms (compile: 3ms, render: 19ms)
+ GET /result 200 in 18ms (compile: 3ms, render: 15ms)
+ GET /result 200 in 41ms (compile: 2ms, render: 39ms)
+ GET /result 200 in 25ms (compile: 3ms, render: 22ms)
+ GET /result 200 in 51ms (compile: 5ms, render: 46ms)
+ GET /result 200 in 74ms (compile: 2ms, render: 71ms)
+ GET /result 200 in 76ms (compile: 3ms, render: 73ms)
+ GET /result 200 in 62ms (compile: 5ms, render: 57ms)
+ GET /result 200 in 40ms (compile: 3ms, render: 37ms)
+ GET /result 200 in 23ms (compile: 4ms, render: 19ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+✓ Compiled in 228ms
+ GET / 200 in 338ms (compile: 112ms, render: 226ms)
+ GET / 200 in 183ms (compile: 3ms, render: 179ms)
+ GET / 200 in 167ms (compile: 3ms, render: 165ms)
+ GET / 200 in 148ms (compile: 2ms, render: 146ms)
+ GET / 200 in 150ms (compile: 2ms, render: 147ms)
+ GET / 200 in 157ms (compile: 2ms, render: 155ms)
+ GET / 200 in 207ms (compile: 2ms, render: 205ms)
+ GET / 200 in 213ms (compile: 1995µs, render: 211ms)
+ GET / 200 in 190ms (compile: 3ms, render: 186ms)
+ GET / 200 in 193ms (compile: 5ms, render: 187ms)
+ GET / 200 in 193ms (compile: 9ms, render: 184ms)
+ GET / 200 in 179ms (compile: 3ms, render: 176ms)
+ GET / 200 in 124ms (compile: 3ms, render: 120ms)
+ GET / 200 in 101ms (compile: 6ms, render: 95ms)
+ GET / 200 in 70ms (compile: 3ms, render: 67ms)
+ GET / 200 in 45ms (compile: 5ms, render: 41ms)
+ GET /result 200 in 84ms (compile: 10ms, render: 75ms)
+ GET /survey 200 in 58ms (compile: 11ms, render: 48ms)
+ GET /survey 200 in 32ms (compile: 6ms, render: 26ms)
+ GET /survey 200 in 14ms (compile: 2ms, render: 12ms)
+ GET /result 200 in 17ms (compile: 3ms, render: 14ms)
+ GET /result 200 in 15ms (compile: 3ms, render: 12ms)
+ GET /result 200 in 13ms (compile: 1960µs, render: 11ms)
+ GET /result 200 in 12ms (compile: 2ms, render: 9ms)
+ GET /survey 200 in 16ms (compile: 1922µs, render: 14ms)
+ GET /result 200 in 47ms (compile: 2ms, render: 45ms)
+ GET /result 200 in 48ms (compile: 2ms, render: 46ms)
+ GET /result 200 in 65ms (compile: 2ms, render: 62ms)
+ GET /result 200 in 52ms (compile: 3ms, render: 49ms)
+ GET /result 200 in 50ms (compile: 3ms, render: 47ms)
+ GET /result 200 in 56ms (compile: 3ms, render: 53ms)
+ GET /result 200 in 38ms (compile: 3ms, render: 35ms)
+ GET /result 200 in 39ms (compile: 3ms, render: 36ms)
+ GET /result 200 in 40ms (compile: 2ms, render: 38ms)
+ GET /result 200 in 29ms (compile: 2ms, render: 26ms)
+ GET /result 200 in 16ms (compile: 2ms, render: 13ms)
+ GET /survey 200 in 43ms (compile: 2ms, render: 40ms)
+ GET /survey 200 in 30ms (compile: 2ms, render: 28ms)
+ GET /survey 200 in 18ms (compile: 2ms, render: 15ms)
+ GET /survey 200 in 20ms (compile: 3ms, render: 18ms)
+ GET /survey 200 in 38ms (compile: 2ms, render: 36ms)
+ GET /survey 200 in 28ms (compile: 1945µs, render: 26ms)
+ GET /survey 200 in 16ms (compile: 2ms, render: 14ms)
+ GET /survey 200 in 49ms (compile: 3ms, render: 46ms)
+ GET /survey 200 in 52ms (compile: 2ms, render: 50ms)
+ GET /survey 200 in 49ms (compile: 6ms, render: 44ms)
+ GET /survey 200 in 30ms (compile: 3ms, render: 27ms)
+ GET /survey 200 in 13ms (compile: 3ms, render: 11ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET / 200 in 218ms (compile: 3ms, render: 215ms)
+ GET /advice 200 in 748ms (compile: 715ms, render: 34ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+✓ Compiled in 143ms
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET / 200 in 62ms (compile: 2ms, render: 60ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET /advice 200 in 15ms (compile: 3ms, render: 12ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET /search 200 in 277ms (compile: 262ms, render: 15ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:118:32)
+  116 |
+  117 |             try {
+> 118 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  119 |                 const response = await result.response;
+  120 |                 const text = response.text();
+  121 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1244ms (compile: 46ms, render: 1198ms)
+ GET /result 200 in 153ms (compile: 77ms, render: 76ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET / 200 in 54ms (compile: 3ms, render: 51ms)
+ GET / 200 in 59ms (compile: 1971µs, render: 57ms)
+ GET / 200 in 46ms (compile: 2ms, render: 43ms)
+ GET /search 200 in 16ms (compile: 2ms, render: 14ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:118:32)
+  116 |
+  117 |             try {
+> 118 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  119 |                 const response = await result.response;
+  120 |                 const text = response.text();
+  121 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1011ms (compile: 1746µs, render: 1010ms)
+ GET /result 200 in 19ms (compile: 6ms, render: 14ms)
+ GET / 200 in 231ms (compile: 2ms, render: 228ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET / 200 in 71ms (compile: 4ms, render: 67ms)
+ GET /search 200 in 13ms (compile: 3ms, render: 10ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:118:32)
+  116 |
+  117 |             try {
+> 118 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  119 |                 const response = await result.response;
+  120 |                 const text = response.text();
+  121 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1013ms (compile: 2ms, render: 1011ms)
+ GET /result 200 in 13ms (compile: 2ms, render: 11ms)
+ GET / 200 in 59ms (compile: 3ms, render: 57ms)
+ GET / 200 in 95ms (compile: 2ms, render: 93ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET /search 200 in 14ms (compile: 3ms, render: 11ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:118:32)
+  116 |
+  117 |             try {
+> 118 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  119 |                 const response = await result.response;
+  120 |                 const text = response.text();
+  121 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1117ms (compile: 1749µs, render: 1116ms)
+ GET /result 200 in 20ms (compile: 3ms, render: 17ms)
+ GET / 200 in 124ms (compile: 2ms, render: 122ms)
+ GET / 200 in 49ms (compile: 2ms, render: 47ms)
+ GET /search 200 in 15ms (compile: 2ms, render: 13ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:118:32)
+  116 |
+  117 |             try {
+> 118 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  119 |                 const response = await result.response;
+  120 |                 const text = response.text();
+  121 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1117ms (compile: 2ms, render: 1115ms)
+ GET /result 200 in 15ms (compile: 3ms, render: 12ms)
+ GET / 200 in 63ms (compile: 2ms, render: 60ms)
+ GET / 200 in 57ms (compile: 2ms, render: 55ms)
+ GET /search 200 in 23ms (compile: 5ms, render: 17ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:118:32)
+  116 |
+  117 |             try {
+> 118 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  119 |                 const response = await result.response;
+  120 |                 const text = response.text();
+  121 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1078ms (compile: 1676µs, render: 1076ms)
+ GET /result 200 in 16ms (compile: 5ms, render: 11ms)
+ GET / 200 in 42ms (compile: 1988µs, render: 40ms)
+ GET /search 200 in 13ms (compile: 3ms, render: 10ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:118:32)
+  116 |
+  117 |             try {
+> 118 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  119 |                 const response = await result.response;
+  120 |                 const text = response.text();
+  121 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 995ms (compile: 1452µs, render: 993ms)
+ GET /result 200 in 15ms (compile: 3ms, render: 13ms)
+ GET /search 200 in 40ms (compile: 3ms, render: 37ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:118:32)
+  116 |
+  117 |             try {
+> 118 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  119 |                 const response = await result.response;
+  120 |                 const text = response.text();
+  121 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1629ms (compile: 2ms, render: 1626ms)
+ GET /result 200 in 19ms (compile: 3ms, render: 16ms)
+ GET / 200 in 73ms (compile: 6ms, render: 68ms)
+ GET /search 200 in 20ms (compile: 2ms, render: 18ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:118:32)
+  116 |
+  117 |             try {
+> 118 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  119 |                 const response = await result.response;
+  120 |                 const text = response.text();
+  121 |                 const jsonStr = text.replace(/```json/g, "").replace(/```/g, ""); {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1085ms (compile: 2ms, render: 1083ms)
+ GET /result 200 in 15ms (compile: 3ms, render: 12ms)
+ GET / 200 in 136ms (compile: 4ms, render: 132ms)
+ GET /search 200 in 27ms (compile: 4ms, render: 23ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET / 200 in 135ms (compile: 2ms, render: 133ms)
+ GET /search 200 in 14ms (compile: 2ms, render: 12ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 // Robust JSON parsing for intent analysis {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:124:32)
+  122 |
+  123 |             try {
+> 124 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  125 |                 const response = await result.response;
+  126 |                 const text = response.text();
+  127 | {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1132ms (compile: 71ms, render: 1061ms)
+ GET /result 200 in 62ms (compile: 2ms, render: 60ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 // Robust JSON parsing for intent analysis {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:124:32)
+  122 |
+  123 |             try {
+> 124 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  125 |                 const response = await result.response;
+  126 |                 const text = response.text();
+  127 | {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1083ms (compile: 49ms, render: 1034ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 // Robust JSON parsing for intent analysis {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:124:32)
+  122 |
+  123 |             try {
+> 124 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  125 |                 const response = await result.response;
+  126 |                 const text = response.text();
+  127 | {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1068ms (compile: 40ms, render: 1028ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 // Robust JSON parsing for intent analysis {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "지친 마음을 달래줄 힐링 에세이",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%A7%80%EC%B9%9C%20%EB%A7%88%EC%9D%8C%EC%9D%84%20%EB%8B%AC%EB%9E%98%EC%A4%84%20%ED%9E%90%EB%A7%81%20%EC%97%90%EC%84%B8%EC%9D%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:124:32)
+  122 |
+  123 |             try {
+> 124 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  125 |                 const response = await result.response;
+  126 |                 const text = response.text();
+  127 | {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1573ms (compile: 27ms, render: 1545ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET / 200 in 131ms (compile: 5ms, render: 127ms)
+ GET /search 200 in 29ms (compile: 13ms, render: 16ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 // Robust JSON parsing for intent analysis {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "ai에 대한 기초적인 지식과 앞으로 미래 발전은 어떻게 될지 알고싶어",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=ai%EC%97%90%20%EB%8C%80%ED%95%9C%20%EA%B8%B0%EC%B4%88%EC%A0%81%EC%9D%B8%20%EC%A7%80%EC%8B%9D%EA%B3%BC%20%EC%95%9E%EC%9C%BC%EB%A1%9C%20%EB%AF%B8%EB%9E%98%20%EB%B0%9C%EC%A0%84%EC%9D%80%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EB%90%A0%EC%A7%80%20%EC%95%8C%EA%B3%A0%EC%8B%B6%EC%96%B4&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:124:32)
+  122 |
+  123 |             try {
+> 124 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  125 |                 const response = await result.response;
+  126 |                 const text = response.text();
+  127 | {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1836ms (compile: 5ms, render: 1830ms)
+ GET /result 200 in 51ms (compile: 35ms, render: 16ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET / 200 in 22ms (compile: 3ms, render: 19ms)
+ GET /advice 200 in 27ms (compile: 14ms, render: 13ms)
+ GET /search 200 in 12ms (compile: 1879µs, render: 10ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET /search 200 in 13ms (compile: 2ms, render: 11ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+ GET /result 200 in 94ms (compile: 15ms, render: 80ms)
+ GET / 200 in 112ms (compile: 3ms, render: 109ms)
+ GET /search 200 in 15ms (compile: 3ms, render: 12ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 // Robust JSON parsing for intent analysis {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "ai 기초정보와 미래에 대한 방향을 예측하는 책",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=ai%20%EA%B8%B0%EC%B4%88%EC%A0%95%EB%B3%B4%EC%99%80%20%EB%AF%B8%EB%9E%98%EC%97%90%20%EB%8C%80%ED%95%9C%20%EB%B0%A9%ED%96%A5%EC%9D%84%20%EC%98%88%EC%B8%A1%ED%95%98%EB%8A%94%20%EC%B1%85&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:124:32)
+  122 |
+  123 |             try {
+> 124 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  125 |                 const response = await result.response;
+  126 |                 const text = response.text();
+  127 | {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1079ms (compile: 2ms, render: 1077ms)
+ GET /result 200 in 16ms (compile: 5ms, render: 11ms)
+ GET /result 200 in 41ms (compile: 2ms, render: 39ms)
+ GET / 200 in 32ms (compile: 1850µs, render: 30ms)
+ GET /search 200 in 14ms (compile: 1796µs, render: 12ms)
+Gemini Analysis Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:41:32)
+  39 |
+  40 |             try {
+> 41 |                 const result = await model.generateContent(prompt);
+     |                                ^
+  42 |                 const response = await result.response;
+  43 |                 const text = response.text();
+  44 |                 // Robust JSON parsing for intent analysis {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+Gemini Search Params: {
+  "q": "심리학 책",
+  "intitle": "",
+  "inauthor": "",
+  "subject": "",
+  "filter": ""
+}
+Fetching Google Books: https://www.googleapis.com/books/v1/volumes?q=%EC%8B%AC%EB%A6%AC%ED%95%99%20%EC%B1%85&key=AIzaSyAsQBBNzvwKWddSWi5UfiHwC8CSntdo5S4&maxResults=8&langRestrict=ko
+Gemini Reasoning Failed: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9962:11)
+    at async makeRequest (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:9934:9)
+    at async generateContent (C:\Users\dkai0\Desktop\Anti\BookFit\book-fit-temp\.next\dev\server\chunks\a4e17_141eed33._.js:10376:22)
+    at async POST (src\app\api\recommend\route.ts:124:32)
+  122 |
+  123 |             try {
+> 124 |                 const result = await model.generateContent(reasonPrompt);
+      |                                ^
+  125 |                 const response = await result.response;
+  126 |                 const text = response.text();
+  127 | {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ POST /api/recommend 200 in 1150ms (compile: 1754µs, render: 1148ms)
+ GET /result 200 in 17ms (compile: 4ms, render: 13ms)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+[?25h

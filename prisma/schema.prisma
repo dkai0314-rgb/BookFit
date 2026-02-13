@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model MonthlyBestseller {
+  id            Int      @id @default(autoincrement())
+  snapshotMonth String   // YYYY-MM format
+  rank          Int
+  isbn13        String
+  title         String
+  author        String
+  publisher     String
+  coverUrl      String
+  categoryName  String?
+  description   String?
+  link          String?
+  source        String   @default("aladin")
+  createdAt     DateTime @default(now())
+
+  @@unique([snapshotMonth, isbn13])
+  @@index([snapshotMonth, rank])
+}
