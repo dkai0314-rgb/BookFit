@@ -13,8 +13,16 @@ export async function GET(request: Request) {
             orderBy: { createdAt: 'desc' }
         });
         return NextResponse.json(books);
-    } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch books' }, { status: 500 });
+    } catch (error: any) {
+        console.error("Database Error:", error);
+        return NextResponse.json({
+            error: 'Failed to fetch books',
+            details: error.message,
+            stack: error.stack,
+            cwd: process.cwd(),
+            // @ts-ignore
+            envUrl: process.env.DATABASE_URL
+        }, { status: 500 });
     }
 }
 
