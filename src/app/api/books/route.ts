@@ -20,7 +20,12 @@ export async function GET(request: Request) {
             details: error.message,
             stack: error.stack,
             cwd: process.cwd(),
-            envUrl: process.env.DATABASE_URL
+            envUrl: process.env.DATABASE_URL,
+            files: {
+                rootDbExists: require('fs').existsSync(require('path').join(process.cwd(), 'dev.db')),
+                prismaDbExists: require('fs').existsSync(require('path').join(process.cwd(), 'prisma/dev.db')),
+                rootDirFiles: require('fs').readdirSync(process.cwd()),
+            }
         }, { status: 500 });
     }
 }
