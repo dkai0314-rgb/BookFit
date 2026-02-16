@@ -45,7 +45,21 @@ export default function CurationSection() {
         );
     }
 
-    if (!curation) return null;
+    if (!curation) {
+        return (
+            <section className="w-full py-24 px-6 max-w-6xl mx-auto text-center border-y border-white/5 bg-white/2">
+                <div className="space-y-6">
+                    <h2 className="text-3xl font-serif text-white opacity-50">BookFit Choice</h2>
+                    <p className="text-gray-500 font-light">곧 새로운 큐레이션이 공개됩니다. 잠시만 기다려 주세요!</p>
+                    <div className="flex justify-center gap-8 opacity-20 grayscale pointer-events-none">
+                        {[1, 2, 3].map(i => (
+                            <div key={i} className="aspect-[1/1.5] w-32 bg-slate-800 rounded shadow-2xl" />
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+    }
 
     return (
         <section className="w-full py-24 px-6 max-w-6xl mx-auto">
