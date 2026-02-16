@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Sparkles, Heart, Brain, ArrowRight, Loader2 } from "lucide-react";
 import Image from 'next/image';
+import Link from 'next/link';
 
 type Mode = 'SELECT' | 'TASTE' | 'MIND';
 
@@ -90,9 +91,9 @@ export default function RecommendPage() {
     return (
         <div className="min-h-screen bg-[#061A14] text-white flex flex-col items-center py-20 px-4">
             <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
-                <div onClick={reset} className="cursor-pointer text-2xl font-bold font-serif tracking-tight text-white hover:text-accent transition-colors">
+                <Link href="/" className="cursor-pointer text-2xl font-bold font-serif tracking-tight text-white hover:text-accent transition-colors">
                     BookFit AI
-                </div>
+                </Link>
             </header>
 
             <main className="w-full max-w-2xl mt-12">
