@@ -12,6 +12,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^5.22.0",
+    "@resvg/resvg-js": "^2.6.2",
     "axios": "^1.13.5",
     "clsx": "^2.1.1",
     "dotenv": "^17.3.1",
@@ -19,10 +20,12 @@
     "iconv-lite": "^0.7.2",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
+    "next-share": "^0.27.0",
     "node-fetch": "^3.3.2",
     "prisma": "^5.22.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "satori": "^0.19.2",
     "tailwind-merge": "^3.4.0",
     "zustand": "^5.0.11"
   },
