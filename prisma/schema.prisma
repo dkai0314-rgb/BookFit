@@ -28,3 +28,18 @@ model MonthlyBestseller {
   @@unique([snapshotMonth, isbn13])
   @@index([snapshotMonth, rank])
 }
+
+model Book {
+  id          String   @id @default(uuid())
+  title       String
+  author      String
+  category    String
+  description String
+  summary     String?  // LLM summary
+  recommendation String? // AI Recommendation Reason
+  imageUrl    String?  // Cover image URL
+  purchaseLink String?
+  isChoice    Boolean  @default(false) // curated for "BookFit Choice"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

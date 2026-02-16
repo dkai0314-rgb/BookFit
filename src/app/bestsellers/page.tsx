@@ -1,151 +1,121 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Sparkles, ShoppingBag } from "lucide-react";
-import { prisma } from "@/lib/db";
+"use client";
 
-// Force dynamic rendering to ensure fresh data on monthly change
-export const dynamic = 'force-dynamic';
+import { useState, useEffect } from 'react';
+import { Loader2, ArrowLeft } from "lucide-react";
+import Link from 'next/link';
 
-async function getMonthlyBestsellers() {
-    try {
-        const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
-
-        // 1. Try to fetch current month's snapshot
-        let books = await prisma.monthlyBestseller.findMany({
-            where: { snapshotMonth: currentMonth },
-            orderBy: { rank: 'asc' }
-        });
-
-        // 2. Fallback: If empty, find the most recent snapshot
-        if (books.length === 0) {
-            const latestSnapshot = await prisma.monthlyBestseller.findFirst({
-                orderBy: { snapshotMonth: 'desc' },
-                select: { snapshotMonth: true }
-            });
-
-            if (latestSnapshot) {
-                books = await prisma.monthlyBestseller.findMany({
-                    where: { snapshotMonth: latestSnapshot.snapshotMonth },
-                    orderBy: { rank: 'asc' }
-                });
-            }
-        }
-        return books;
-    } catch (error) {
-        console.error("Failed to fetch bestsellers (likely build time or DB missing):", error);
-        return []; // Return empty array to prevent build failure
-    }
+interface AladinBook {
+    title: string;
+    author: string;
+    description: string;
+    cover: string;
+    link: string;
+    categoryName: string;
 }
 
-export default async function BestsellersPage() {
-    const books = await getMonthlyBestsellers();
-    const displayMonth = books.length > 0 ? books[0].snapshotMonth : new Date().toISOString().slice(0, 7);
+export default function BestsellersPage() {
+    const [books, setBooks] = useState<AladinBook[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchBestsellers = async () => {
+            try {
+                const res = await fetch('/api/bestsellers');
+                const data = await res.json();
+                setBooks(data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBestsellers();
+    }, []);
 
     return (
-        <div className="min-h-screen bg-background flex flex-col items-center overflow-x-hidden">
-            {/* Header (Reuse) */}
-            <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/95 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
-                <div className="max-w-6xl mx-auto w-full flex justify-between items-center">
-                    <Link href="/">
-                        <div className="text-2xl font-bold flex items-center gap-2 font-serif tracking-tight cursor-pointer">
-                            <span className="bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent drop-shadow-sm">BookFit</span>
-                        </div>
-                    </Link>
-                    <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-                        <Link href="/" className="hover:text-accent transition-colors">이달의북핏</Link>
-                        <Link href="/bestsellers" className="text-accent font-semibold transition-colors">베스트셀러</Link>
-                    </nav>
-                    <div className="flex items-center gap-4">
-                        <Button variant="ghost" className="text-gray-400 hover:text-white hover:bg-white/5">Login</Button>
-                    </div>
+        <div className="min-h-screen bg-[#061A14] text-white flex flex-col items-center py-10 px-4">
+            <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
+                <Link href="/" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+                    <ArrowLeft size={20} /> 홈으로
+                </Link>
+                <div className="text-xl font-bold font-serif tracking-tight text-white hover:text-accent transition-colors">
+                    BookFit Bestsellers
                 </div>
+                <div className="w-20"></div> {/* Spacer for center alignment */}
             </header>
 
-            <main className="flex-1 w-full max-w-6xl px-6 pt-32 pb-20 flex flex-col space-y-12">
-                {/* Page Title */}
-                <section className="text-center space-y-4">
-                    <div className="inline-flex items-center rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent mb-2">
-                        <Sparkles className="w-3 h-3 mr-2" />
-                        {displayMonth} Collection
-                    </div>
-                    <h1 className="text-4xl md:text-5xl font-bold text-white font-serif">Monthly Bestsellers</h1>
-                    <p className="text-gray-400 max-w-2xl mx-auto font-light leading-relaxed">
-                        대한민국 독자들이 가장 사랑한 이달의 책 Top 30.<br />
-                        데이터가 검증한 시대의 흐름을 확인하세요.
+            <main className="w-full max-w-[1400px] mt-16 pb-20">
+                <div className="text-center mb-12 space-y-3">
+                    <h1 className="text-3xl md:text-5xl font-bold font-serif">
+                        지금 가장 <span className="text-accent">사랑받는 책</span>
+                    </h1>
+                    <p className="text-gray-400 text-lg">
+                        알라딘 종합 베스트셀러 Top 30
                     </p>
-                </section>
+                </div>
 
-                {/* Book Grid */}
-                <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {books.length === 0 ? (
-                        <div className="col-span-full text-center py-20">
-                            <p className="text-gray-500 text-lg">이번 달 컬렉션 준비 중입니다. 잠시만 기다려주세요! 📚</p>
-                            <p className="text-xs text-gray-600 mt-2 text-center">
-                                (시스템: 데이터 수집 대기 중)
-                            </p>
-                        </div>
-                    ) : (
-                        books.map((book) => (
-                            <div key={book.id} className="group relative bg-[#0B2A1F]/40 border border-[rgba(255,255,255,0.08)] rounded-xl overflow-hidden hover:bg-[#0B2A1F]/60 transition-all hover:border-accent/30 hover:shadow-2xl hover:shadow-accent/5 flex flex-col">
-                                {/* Book Cover Area */}
-                                <div className="aspect-[1.5/1] w-full bg-[#061A14] relative overflow-hidden p-6 flex items-center justify-center">
-                                    {/* Gradient Background */}
-                                    <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-[#0B2A1F] to-black"></div>
-
-                                    {/* Real Image */}
-                                    {book.coverUrl ? (
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-40">
+                        <Loader2 size={48} className="text-accent animate-spin mb-4" />
+                        <p className="text-gray-500 text-lg">실시간 베스트셀러를 불러오고 있습니다...</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-10">
+                        {books.map((book, i) => (
+                            <a
+                                key={i}
+                                href={book.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group flex flex-col h-full bg-[#0B2A1F]/20 rounded-xl overflow-hidden hover:bg-[#0B2A1F]/40 transition-all duration-300 hover:-translate-y-2 border border-white/5 hover:border-accent/30"
+                            >
+                                {/* Cover Image Container */}
+                                <div className="aspect-[1/1.5] w-full relative overflow-hidden bg-black/50">
+                                    {book.cover ? (
                                         <img
-                                            src={book.coverUrl}
+                                            src={book.cover.replace("coversum", "cover500")}
                                             alt={book.title}
-                                            className="relative h-48 w-auto h-full object-contain shadow-2xl transform group-hover:scale-105 transition-all duration-500 rounded-sm"
+                                            className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                                         />
                                     ) : (
-                                        <div className="relative w-32 h-48 bg-gray-700 rounded-sm flex items-center justify-center">
-                                            <span className="text-xs text-gray-400">No Cover</span>
-                                        </div>
+                                        <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs">No Image</div>
                                     )}
-                                </div>
 
-                                {/* Content Area */}
-                                <div className="p-6 flex-1 flex flex-col space-y-4">
-                                    <div className="space-y-1">
-                                        <div className="flex justify-between items-start">
-                                            <div className="text-xs text-accent font-semibold tracking-wide uppercase truncate max-w-[70%]">{book.categoryName?.split('>')[1] || 'General'}</div>
-                                            <div className="text-xs font-mono text-gray-500">Rank {book.rank}</div>
-                                        </div>
-                                        <h3 className="text-xl font-bold text-white font-serif line-clamp-2 leading-tight h-[3rem]">{book.title}</h3>
-                                        <p className="text-sm text-gray-400 truncate">{book.author}</p>
+                                    {/* Rank Badge */}
+                                    <div className="absolute top-0 left-0 bg-accent text-[#061A14] px-3 py-1.5 text-lg font-bold shadow-lg z-10 rounded-br-lg">
+                                        {i + 1}
                                     </div>
 
-                                    <div className="space-y-2 flex-1">
-                                        {book.description && (
-                                            <div className="bg-white/5 rounded-lg p-3 border border-white/5">
-                                                <p className="text-xs text-gray-400 leading-relaxed font-light line-clamp-3">
-                                                    {book.description}
-                                                </p>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="pt-2">
-                                        <Link href={book.link || '#'} target="_blank">
-                                            <Button className="w-full bg-white text-[#061A14] hover:bg-gray-100 font-bold transition-transform hover:-translate-y-0.5 shadow-lg">
-                                                <ShoppingBag className="w-4 h-4 mr-2" />
-                                                구매하기
-                                            </Button>
-                                        </Link>
+                                    {/* Hover Overlay */}
+                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                        <span className="text-white border border-white/30 px-4 py-2 rounded-full backdrop-blur-md text-sm hover:bg-accent hover:text-[#061A14] hover:border-accent transition-all font-bold">
+                                            상세보기
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
-                        ))
-                    )}
-                </section>
+
+                                {/* Info */}
+                                <div className="p-5 flex flex-col flex-1">
+                                    <h3 className="font-bold text-white text-lg mb-2 line-clamp-2 leading-tight group-hover:text-accent transition-colors">
+                                        {book.title}
+                                    </h3>
+                                    <p className="text-sm text-gray-400 mb-3 font-medium">
+                                        {book.author}
+                                    </p>
+                                    <div className="flex-1">
+                                        <p className="text-xs text-gray-500 line-clamp-3 leading-relaxed">
+                                            {book.description || "책 소개가 없습니다."}
+                                        </p>
+                                    </div>
+                                    <div className="pt-4 mt-auto border-t border-white/5">
+                                        <p className="text-[10px] text-gray-600 uppercase tracking-widest text-right">Best Seller</p>
+                                    </div>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                )}
             </main>
-
-            {/* Footer Reuse */}
-            <footer className="w-full py-8 text-center text-sm text-gray-600 border-t border-[rgba(255,255,255,0.05)] bg-[#04120e]">
-                <p>© 2026 BookFit. All rights reserved.</p>
-            </footer>
         </div>
     );
 }

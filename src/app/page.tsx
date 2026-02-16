@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, Heart, Sparkles, MessageSquare, BookCheck, Lightbulb } from "lucide-react";
+import BookList from "@/components/BookList";
 
 export default function Home() {
   return (
@@ -52,19 +53,21 @@ export default function Home() {
               읽어야 할 이유를 먼저 확인하고, 확신 있게 선택하세요.
             </p>
             <div className="flex gap-4 pt-6">
-              <Link href="/search">
-                <Button size="lg" className="rounded-md bg-primary text-white hover:bg-primary-hover px-8 py-6 text-lg shadow-lg shadow-black/20 transition-all hover:scale-105 border border-transparent">
-                  맞춤 추천
+              <Link href="/recommend">
+                <Button size="lg" className="rounded-md bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold px-8 py-6 text-lg shadow-lg shadow-black/20 transition-all hover:scale-105 border border-transparent">
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  AI 맞춤 추천
                 </Button>
               </Link>
-              <Link href="/advice">
+              <Link href="/bestsellers">
                 <Button variant="outline" size="lg" className="rounded-md border-white/20 bg-white/5 text-white hover:bg-white/10 px-8 py-6 text-lg backdrop-blur-sm transition-all hover:border-white/40">
-                  독서 템플릿
+                  베스트셀러
                 </Button>
               </Link>
             </div>
           </div>
         </section>
+
 
         {/* BookFit Choice (Previously Bestsellers) - Moved UP */}
         <section className="w-full py-20 px-6 max-w-6xl">
@@ -77,38 +80,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Placeholder Items for BookFit Choice - 3 items for cleaner look */}
-            {[
-              { title: "침묵의 기술", author: "PHILOSOPHY", color: "#a3b18a" },
-              { title: "건축의 고고학", author: "ART & ARCHITECTURE", color: "#457b9d" },
-              { title: "언어의 온도", author: "ESSAYS", color: "#e9c46a" }
-            ].map((book, i) => (
-              <div key={i} className="group relative space-y-4 cursor-pointer">
-                <div className="aspect-[3/4] w-full overflow-hidden rounded-sm bg-[#0B2A1F] shadow-2xl border border-[rgba(255,255,255,0.05)] group-hover:shadow-[0_20px_50px_-12px_rgba(30,142,90,0.25)] transition-all duration-500 group-hover:-translate-y-2 relative">
-                  {/* Book Cover Simulation */}
-                  <div className="absolute inset-4 bg-[#f0f0f0] shadow-inner flex flex-col p-6 items-center justify-center text-center space-y-4" style={{ backgroundColor: '#e8e8e5' }}>
-                    <div className="w-full h-full border border-black/5 flex flex-col justify-between p-4 bg-gradient-to-br from-white/50 to-transparent">
-                      <div className="text-[10px] tracking-widest text-gray-500 uppercase">{book.author}</div>
-                      <div className="space-y-1">
-                        <div className="text-lg font-serif font-bold text-gray-800 leading-tight">{book.title}</div>
-                        <div className="w-8 h-[1px] bg-gray-400 mx-auto my-2 opacity-50"></div>
-                        <div className="text-[9px] text-gray-500 leading-relaxed opacity-70">
-                          Minimal Cover {i + 1}<br />
-                          Edition Natural
-                        </div>
-                      </div>
-                      <div className="text-[8px] text-gray-400 font-mono">Double-note version</div>
-                    </div>
-                    {/* Spine shadow effect */}
-                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-r from-black/20 to-transparent"></div>
-                  </div>
-                </div>
-                <div className="space-y-1 text-left pt-2">
-                  <h3 className="font-bold text-lg text-white leading-none group-hover:text-accent transition-colors">{book.title}</h3>
-                  <p className="text-xs font-semibold tracking-wider text-[#63756b] uppercase">{book.author}</p>
-                </div>
-              </div>
-            ))}
+            <BookList />
           </div>
         </section>
 
