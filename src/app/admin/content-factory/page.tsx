@@ -1,14 +1,33 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
+import { Trash2, ExternalLink, Download, LayoutGrid, Clock } from 'lucide-react';
 
 export default function ContentFactoryPage() {
     const [theme, setTheme] = useState('');
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
+    const [history, setHistory] = useState<any[]>([]);
+    const [loadingHistory, setLoadingHistory] = useState(true);
+
+    useEffect(() => {
+        fetchHistory();
+    }, []);
+
+    const fetchHistory = async () => {
+        setLoadingHistory(true);
+        try {
+            const response = await fetch('/api/curation');
+            const data = await response.json();
+            setHistory(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error('Failed to fetch history:', error);
+        } finally {
+            setLoadingHistory(false);
+        }
+    };
 
     const handleGenerate = async () => {
         if (!theme) return;
@@ -23,6 +42,7 @@ export default function ContentFactoryPage() {
             });
             const data = await response.json();
             setResult(data);
+            fetchHistory(); // Refresh history
         } catch (error) {
             console.error('Generation failed:', error);
             alert('생성에 실패했습니다.');
@@ -31,99 +51,205 @@ export default function ContentFactoryPage() {
         }
     };
 
-    const downloadImage = async () => {
-        if (!result) return;
+    const handleDelete = async (id: string) => {
+        if (!confirm('정말 삭제하시겠습니까?')) return;
 
-        const booksParam = encodeURIComponent(JSON.stringify(result.books));
-        const imageUrl = `/api/curation/image?title=${encodeURIComponent(result.title)}&books=${booksParam}`;
+        try {
+            const response = await fetch(`/api/curation?id=${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                fetchHistory();
+                if (result?.id === id) setResult(null);
+            }
+        } catch (error) {
+            console.error('Delete failed:', error);
+            alert('삭제에 실패했습니다.');
+        }
+    };
+
+    const downloadImage = async (data: any) => {
+        if (!data) return;
+
+        const booksParam = encodeURIComponent(JSON.stringify(data.books));
+        const imageUrl = `/api/curation/image?title=${encodeURIComponent(data.title)}&books=${booksParam}`;
 
         const response = await fetch(imageUrl);
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `bookfit_insta_${result.id}.png`;
+        a.download = `bookfit_insta_${data.id}.png`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
     };
 
     return (
-        <div className="min-h-screen bg-[#f5f5f5] p-8 font-sans">
-            <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
-                <h1 className="text-3xl font-bold mb-6 text-[#061A14]">🏭 BookFit 콘텐츠 팩토리</h1>
-
-                <div className="space-y-4 mb-8">
-                    <label className="block text-sm font-medium text-gray-700">추천 주제 (Theme)</label>
-                    <div className="flex gap-4">
-                        <textarea
-                            className="flex-1 p-4 border rounded-lg focus:ring-2 focus:ring-[#061A14] focus:outline-none resize-none h-24"
-                            placeholder="예: 직장생활에 지친 사람들에게 추천하는 책"
-                            value={theme}
-                            onChange={(e) => setTheme(e.target.value)}
-                        />
-                        <Button
-                            onClick={handleGenerate}
-                            disabled={loading || !theme}
-                            className="h-24 px-8 bg-[#061A14] hover:bg-[#0B2A1F] text-white font-bold text-lg"
-                        >
-                            {loading ? '생성 중...' : '콘텐츠 생성'}
-                        </Button>
-                    </div>
+        <div className="min-h-screen bg-[#f8fafc] p-4 md:p-8 font-sans text-slate-900">
+            <div className="max-w-6xl mx-auto space-y-8">
+                {/* Header */}
+                <div className="flex justify-between items-center">
+                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 flex items-center gap-3">
+                        <span className="p-2 bg-slate-900 text-white rounded-lg">🏭</span>
+                        BookFit 콘텐츠 팩토리
+                    </h1>
                 </div>
 
-                {result && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t pt-8">
-                        {/* Left: Web Content Preview */}
-                        <div className="space-y-6">
-                            <h2 className="text-xl font-bold border-b pb-2">🌐 웹 큐레이션 결과</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Left Column: Generator & Preview */}
+                    <div className="lg:col-span-2 space-y-8">
+                        {/* Generator Card */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                                <LayoutGrid className="w-5 h-5" /> 새 큐레이션 생성
+                            </h2>
+                            <div className="space-y-4">
+                                <textarea
+                                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900 focus:outline-none focus:bg-white transition-all resize-none h-32"
+                                    placeholder="예: 직장생활에 지친 사람들에게 추천하는 책"
+                                    value={theme}
+                                    onChange={(e) => setTheme(e.target.value)}
+                                />
+                                <Button
+                                    onClick={handleGenerate}
+                                    disabled={loading || !theme}
+                                    className="w-full py-6 bg-slate-900 hover:bg-slate-800 text-white font-bold text-lg rounded-xl transition-all"
+                                >
+                                    {loading ? (
+                                        <span className="flex items-center gap-2">
+                                            <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></span>
+                                            콘텐츠 생성 중...
+                                        </span>
+                                    ) : '지금 생성하기'}
+                                </Button>
+                            </div>
+                        </div>
 
-                            <div className="bg-gray-50 p-6 rounded-lg border">
-                                <div className="text-sm text-accent font-bold uppercase mb-1">BookFit Curation</div>
-                                <h3 className="text-2xl font-bold mb-4">{result.title}</h3>
-                                <p className="text-gray-600 mb-6 whitespace-pre-line">{result.description}</p>
+                        {/* Result Preview */}
+                        {result && (
+                            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                                    <h2 className="text-xl font-bold">🧪 생성 결과 미리보기</h2>
+                                    <Button
+                                        onClick={() => downloadImage(result)}
+                                        variant="outline"
+                                        className="gap-2"
+                                    >
+                                        <Download className="w-4 h-4" /> 이미지 다운로드
+                                    </Button>
+                                </div>
 
-                                <div className="space-y-4">
-                                    {result.books.map((book: any) => (
-                                        <div key={book.id} className="flex gap-4 bg-white p-3 rounded border">
-                                            <img src={book.imageUrl} className="w-16 h-24 object-cover rounded" />
-                                            <div>
-                                                <div className="font-bold">{book.title}</div>
-                                                <div className="text-sm text-gray-500">{book.author}</div>
-                                                <div className="text-xs text-blue-600 mt-1">{book.recommendation}</div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-0 overflow-hidden">
+                                    {/* Web Preview */}
+                                    <div className="p-8 space-y-6 border-r border-slate-100">
+                                        <div className="space-y-4">
+                                            <div className="inline-block px-3 py-1 bg-slate-900 text-white text-[10px] font-bold tracking-widest uppercase rounded">Web View</div>
+                                            <h3 className="text-3xl font-black leading-tight text-slate-900">{result.title}</h3>
+                                            <p className="text-slate-600 leading-relaxed text-sm">{result.description}</p>
+                                        </div>
+
+                                        <div className="space-y-3 pt-4">
+                                            {result.books.map((book: any) => (
+                                                <div key={book.id} className="flex gap-4 bg-slate-50 p-3 rounded-xl border border-slate-200 group hover:bg-white hover:shadow-md transition-all">
+                                                    <img src={book.imageUrl} className="w-16 h-24 object-cover rounded shadow-sm group-hover:scale-105 transition-transform" />
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="font-bold text-slate-900 truncate">{book.title}</div>
+                                                        <div className="text-xs text-slate-500 mb-1">{book.author}</div>
+                                                        <div className="text-xs text-blue-600 bg-blue-50 p-1.5 rounded inline-block line-clamp-2">{book.recommendation}</div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Insta Preview */}
+                                    <div className="p-8 bg-slate-50/30 space-y-6">
+                                        <div className="inline-block px-3 py-1 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white text-[10px] font-bold tracking-widest uppercase rounded">Instagram</div>
+
+                                        <div className="aspect-square relative bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden group">
+                                            <img
+                                                src={`/api/curation/image?title=${encodeURIComponent(result.title)}&books=${encodeURIComponent(JSON.stringify(result.books))}`}
+                                                alt="Insta Preview"
+                                                className="w-full h-full object-cover transition-transform group-hover:scale-[1.02]"
+                                            />
+                                        </div>
+
+                                        <div className="p-4 bg-white border border-slate-200 rounded-xl text-xs whitespace-pre-line font-mono text-slate-600 shadow-sm">
+                                            {result.instaCaption}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Right Column: History */}
+                    <div className="space-y-6">
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+                                <h2 className="font-bold text-slate-900 flex items-center gap-2">
+                                    <Clock className="w-5 h-5" /> 큐레이션 히스토리
+                                </h2>
+                                <span className="text-xs font-medium text-slate-400">{history.length} items</span>
+                            </div>
+
+                            <div className="divide-y divide-slate-50 max-h-[calc(100vh-250px)] overflow-y-auto">
+                                {loadingHistory ? (
+                                    <div className="p-12 text-center">
+                                        <div className="inline-block w-6 h-6 border-2 border-slate-100 border-t-slate-400 rounded-full animate-spin"></div>
+                                    </div>
+                                ) : history.length === 0 ? (
+                                    <div className="p-12 text-center text-slate-400 text-sm italic">
+                                        생성된 내역이 없습니다.
+                                    </div>
+                                ) : (
+                                    history.map((item) => (
+                                        <div key={item.id} className="p-4 hover:bg-slate-50 transition-colors group">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div className="text-xs text-slate-400 font-medium">
+                                                    {new Date(item.createdAt).toLocaleDateString()}
+                                                </div>
+                                                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        onClick={() => handleDelete(item.id)}
+                                                        className="p-1.5 text-slate-400 hover:text-red-600 transition-colors"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <h4 className="font-bold text-slate-900 text-sm mb-3 line-clamp-1">{item.title}</h4>
+                                            <div className="flex gap-2 mb-4">
+                                                {item.books?.slice(0, 3).map((book: any) => (
+                                                    <img key={book.id} src={book.imageUrl} className="w-8 h-12 object-cover rounded shadow-sm" />
+                                                ))}
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <Button
+                                                    size="sm"
+                                                    variant="secondary"
+                                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs gap-1.5 h-8"
+                                                    onClick={() => setResult(item)}
+                                                >
+                                                    <ExternalLink className="w-3 h-3" /> 상세보기
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="border-slate-200 text-slate-600 hover:bg-white text-xs px-2.5 h-8"
+                                                    onClick={() => downloadImage(item)}
+                                                >
+                                                    <Download className="w-3 h-3" />
+                                                </Button>
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
+                                    ))
+                                )}
                             </div>
-                        </div>
-
-                        {/* Right: Instagram Content Preview */}
-                        <div className="space-y-6">
-                            <h2 className="text-xl font-bold border-b pb-2">📸 인스타그램 결과</h2>
-
-                            <div className="bg-white border rounded-lg overflow-hidden shadow-sm">
-                                {/* Image Preview using API */}
-                                <div className="aspect-square relative bg-gray-100 flex items-center justify-center">
-                                    <img
-                                        src={`/api/curation/image?title=${encodeURIComponent(result.title)}&books=${encodeURIComponent(JSON.stringify(result.books))}`}
-                                        alt="Insta Preview"
-                                        className="w-full h-full object-contain"
-                                    />
-                                </div>
-
-                                {/* Caption */}
-                                <div className="p-4 bg-gray-50 text-sm whitespace-pre-line font-mono text-gray-600 border-t">
-                                    {result.instaCaption}
-                                </div>
-                            </div>
-
-                            <Button onClick={downloadImage} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                                📥 이미지 다운로드
-                            </Button>
                         </div>
                     </div>
-                )}
+                </div>
             </div>
         </div>
     );

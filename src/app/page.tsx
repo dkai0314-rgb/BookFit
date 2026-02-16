@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Sparkles, MessageSquare, BookCheck, Lightbulb } from "lucide-react";
-import BookList from "@/components/BookList";
+import CurationSection from "@/components/CurationSection";
 
 export default function Home() {
   return (
@@ -68,20 +68,8 @@ export default function Home() {
         </section>
 
 
-        {/* BookFit Choice (Previously Bestsellers) - Moved UP */}
-        <section className="w-full py-20 px-6 max-w-6xl">
-          <div className="flex justify-between items-end mb-12">
-            <div className="flex flex-col space-y-2 text-center md:text-left">
-              <h2 className="text-3xl md:text-4xl font-bold text-white font-serif">BookFit Choice</h2>
-              <p className="text-gray-400 font-light">이번 달, 북핏의 큐레이터들이 선정한 깊이 있는 사유의 조각들입니다.</p>
-            </div>
-            <a href="#" className="hidden md:block text-sm text-accent hover:text-white transition-colors font-medium">View All Collection →</a>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <BookList />
-          </div>
-        </section>
+        {/* BookFit Choice section */}
+        <CurationSection />
 
         {/* Your BookFit Journey (Previously The BookFit Approach) - Updated */}
         <section className="w-full py-24 px-6 relative">
