@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Loader2, ArrowLeft } from "lucide-react";
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface AladinBook {
     title: string;
@@ -72,10 +73,11 @@ export default function BestsellersPage() {
                                 {/* Cover Image Container */}
                                 <div className="aspect-[1/1.5] w-full relative overflow-hidden bg-black/50">
                                     {book.cover ? (
-                                        <img
+                                        <Image
                                             src={book.cover.replace("coversum", "cover500")}
                                             alt={book.title}
-                                            className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                                            fill
+                                            className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs">No Image</div>

@@ -1,4 +1,6 @@
 
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 const { PrismaClient } = require('@prisma/client');
 const axios = require('axios');
 const { GoogleGenerativeAI } = require("@google/generative-ai");

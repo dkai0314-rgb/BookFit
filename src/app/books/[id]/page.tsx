@@ -2,6 +2,7 @@
 import { prisma } from '@/lib/db';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
+import Image from 'next/image';
 
 async function getBook(id: string) {
     const book = await prisma.book.findUnique({
@@ -34,10 +35,11 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                 <div className="w-full md:w-1/3 flex flex-col items-center">
                     <div className="w-full aspect-[1/1.5] relative rounded-md overflow-hidden shadow-2xl border border-white/10 mb-6">
                         {book.imageUrl && (
-                            <img
+                            <Image
                                 src={book.imageUrl.replace("coversum", "cover500")}
                                 alt={book.title}
-                                className="w-full h-full object-cover"
+                                fill
+                                className="object-cover"
                                 referrerPolicy="no-referrer"
                             />
                         )}

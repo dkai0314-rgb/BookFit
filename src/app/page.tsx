@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Heart, Sparkles, MessageSquare, BookCheck, Lightbulb } from "lucide-react";
+import { Sparkles, MessageSquare, BookCheck, Lightbulb } from "lucide-react";
 import BookList from "@/components/BookList";
 
 export default function Home() {

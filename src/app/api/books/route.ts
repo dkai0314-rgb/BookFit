@@ -13,14 +13,13 @@ export async function GET(request: Request) {
             orderBy: { createdAt: 'desc' }
         });
         return NextResponse.json(books);
-    } catch (error: any) {
+    } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
         console.error("Database Error:", error);
         return NextResponse.json({
             error: 'Failed to fetch books',
             details: error.message,
             stack: error.stack,
             cwd: process.cwd(),
-            // @ts-ignore
             envUrl: process.env.DATABASE_URL
         }, { status: 500 });
     }
@@ -43,7 +42,7 @@ export async function POST(request: Request) {
             }
         });
         return NextResponse.json(book);
-    } catch (error) {
+    } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
         return NextResponse.json({ error: 'Failed to create book' }, { status: 500 });
     }
 }

@@ -72,7 +72,7 @@ export async function getBestsellers(): Promise<AladinBook[]> {
             return [];
         }
 
-        return items.map((book: any) => ({
+        return items.map((book: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
             title: book.title,
             author: book.author.split('(')[0].trim(),
             description: book.description,

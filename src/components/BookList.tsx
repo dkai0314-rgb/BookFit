@@ -2,9 +2,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sparkles } from "lucide-react";
-
 import Link from "next/link";
+import Image from "next/image";
 
 interface Book {
     id: string;
@@ -42,10 +41,11 @@ export default function BookList() {
                 <Link key={i} href={`/books/${book.id}`} className="group relative space-y-4 cursor-pointer block">
                     <div className="aspect-[1/1.5] w-full overflow-hidden rounded-sm bg-[#0B2A1F] shadow-2xl border border-[rgba(255,255,255,0.05)] group-hover:shadow-[0_20px_50px_-12px_rgba(30,142,90,0.25)] transition-all duration-500 group-hover:-translate-y-2 relative">
                         {book.imageUrl ? (
-                            <img
+                            <Image
                                 src={book.imageUrl.replace("coversum", "cover500")}
                                 alt={book.title}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                fill
+                                className="object-cover transition-transform duration-700 group-hover:scale-105"
                                 referrerPolicy="no-referrer"
                             />
                         ) : (

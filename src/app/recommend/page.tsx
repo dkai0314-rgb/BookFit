@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Sparkles, Heart, Brain, ArrowRight, BookOpen, Loader2, Quote as QuoteIcon } from "lucide-react";
+import { Sparkles, Heart, Brain, ArrowRight, Loader2 } from "lucide-react";
 import Image from 'next/image';
 
 type Mode = 'SELECT' | 'TASTE' | 'MIND';
@@ -119,7 +119,7 @@ export default function RecommendPage() {
                                 </div>
                                 <h2 className="text-2xl font-bold mb-3 group-hover:text-accent transition-colors">취향 추천</h2>
                                 <p className="text-gray-400 text-sm leading-relaxed mb-6 flex-1">
-                                    "관심사와 독서 성향을 바탕으로,<br />지금 읽기 좋은 책을 정교하게 추천합니다."
+                                    &quot;관심사와 독서 성향을 바탕으로,<br />지금 읽기 좋은 책을 정교하게 추천합니다.&quot;
                                 </p>
                                 <div className="text-accent text-sm font-semibold flex items-center gap-2">
                                     시작하기 <ArrowRight size={16} />
@@ -136,7 +136,7 @@ export default function RecommendPage() {
                                 </div>
                                 <h2 className="text-2xl font-bold mb-3 group-hover:text-[#FF5678] transition-colors">마음 추천</h2>
                                 <p className="text-gray-400 text-sm leading-relaxed mb-6 flex-1">
-                                    "감정과 상황을 담아,<br />오늘의 당신에게 필요한 문장을 가진<br />책을 추천합니다."
+                                    &quot;감정과 상황을 담아,<br />오늘의 당신에게 필요한 문장을 가진<br />책을 추천합니다.&quot;
                                 </p>
                                 <div className="text-[#FF5678] text-sm font-semibold flex items-center gap-2">
                                     시작하기 <ArrowRight size={16} />
@@ -317,10 +317,11 @@ export default function RecommendPage() {
                                     <div className="w-full md:w-32 flex-shrink-0">
                                         <div className="aspect-[1/1.5] w-28 mx-auto md:w-full rounded-md overflow-hidden bg-black/50 relative shadow-lg">
                                             {book.imageUrl ? (
-                                                <img
+                                                <Image
                                                     src={book.imageUrl.replace("coversum", "cover500")}
                                                     alt={book.displayTitle}
-                                                    className="w-full h-full object-cover"
+                                                    fill
+                                                    className="object-cover"
                                                 />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">No Image</div>
@@ -344,7 +345,7 @@ export default function RecommendPage() {
 
                                         <div className={`p-4 rounded-lg relative ${mode === 'TASTE' ? 'bg-accent/5 border border-accent/10' : 'bg-[#FF5678]/5 border border-[#FF5678]/10'}`}>
                                             <p className="text-gray-200 text-sm leading-relaxed font-medium">
-                                                "{book.reason}"
+                                                &quot;{book.reason}&quot;
                                             </p>
                                         </div>
 
