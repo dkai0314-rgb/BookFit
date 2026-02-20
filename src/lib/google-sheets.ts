@@ -4,8 +4,8 @@ import { JWT } from 'google-auth-library';
 import { searchBookInAladin } from './aladin';
 
 // Environment variables
-const SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+const SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL?.replace(/^"|"$/g, '').trim();
+const SHEET_ID = process.env.GOOGLE_SHEET_ID?.replace(/^"|"$/g, '').trim();
 
 // Robust Private Key Formatting
 const formatPrivateKey = (key: string | undefined) => {
