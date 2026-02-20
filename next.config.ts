@@ -9,11 +9,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  outputFileTracingIncludes: {
+    '/**/*': ['./dev.db', './prisma/dev.db'],
+  },
   experimental: {
-    // @ts-expect-error: outputFileTracingIncludes is a valid next.js config but missing from types
-    outputFileTracingIncludes: {
-      '/**/*': ['./dev.db', './prisma/dev.db'],
-    },
   },
 };
 

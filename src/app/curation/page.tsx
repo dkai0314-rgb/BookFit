@@ -6,6 +6,7 @@ import { Sparkles, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs'; // Ensure Node.js runtime for Google libraries
 
 export default async function CurationPage() {
     const curation = await fetchCurationFromSheet();

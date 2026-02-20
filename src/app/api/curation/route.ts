@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { fetchCurationFromSheet } from '@/lib/google-sheets';
 
 export const dynamic = 'force-dynamic'; // Disable caching to see Sheet updates
+export const runtime = 'nodejs'; // Ensure Node.js runtime for Google libraries
 
 // GET /api/curation - Fetch curation from Google Sheets
 export async function GET() {
