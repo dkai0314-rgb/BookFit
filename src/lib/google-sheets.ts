@@ -102,7 +102,7 @@ export async function fetchCurationFromSheet(): Promise<SheetCuration | null> {
 
         if (books.length === 0) {
             console.warn("No valid books extracted from sheet.");
-            return null;
+            throw new Error(`Parsed 0 books. Rows analyzed: 5-199. Check sheet format.`);
         }
 
         return {
@@ -115,9 +115,7 @@ export async function fetchCurationFromSheet(): Promise<SheetCuration | null> {
 
     } catch (error: any) {
         console.error("Google Sheets Fetch Error:", error);
-        if (error.response) {
-            console.error("Error Response Body:", JSON.stringify(error.response.data, null, 2));
-        }
-        return null;
+        // Throw the error so the API route can see it
+        throw error;
     }
 }
