@@ -5,8 +5,27 @@ import { searchBookInAladin } from './aladin';
 
 // Environment variables
 const SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-const PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'); // Handle newlines
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+
+// Robust Private Key Formatting
+const formatPrivateKey = (key: string | undefined) => {
+    if (!key) return undefined;
+
+    // 1. Remove surrounding double quotes if present (common Vercel issue)
+    let cleanKey = key.replace(/^"|"$/g, '');
+
+    // 2. Unescape newline characters (\\n -> \n)
+    cleanKey = cleanKey.replace(/\\n/g, '\n');
+
+    // 3. Ensure correct PEM formatting if headers are missing (optional but safe)
+    if (!cleanKey.startsWith('-----BEGIN PRIVATE KEY-----')) {
+        cleanKey = `-----BEGIN PRIVATE KEY-----\n${cleanKey}\n-----END PRIVATE KEY-----`;
+    }
+
+    return cleanKey;
+};
+
+const PRIVATE_KEY = formatPrivateKey(process.env.GOOGLE_PRIVATE_KEY);
 
 export interface SheetCuration {
     id: string; // Use Sheet ID or generated ID
