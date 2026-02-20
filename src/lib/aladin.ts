@@ -10,6 +10,7 @@ export interface AladinBook {
     cover: string;
     link: string;
     categoryName: string;
+    viewerUrl?: string;
 }
 
 export async function searchBookInAladin(title: string): Promise<AladinBook | null> {
@@ -38,13 +39,32 @@ export async function searchBookInAladin(title: string): Promise<AladinBook | nu
         // Clean author name "Author (Author)" -> "Author"
         const authorClean = bookData.author.split('(')[0].trim();
 
+        // Extract ItemId from Link or use itemId if available
+        // Link format: http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=34465476&...
+        let itemId = bookData.itemId;
+        if (!itemId && bookData.link) {
+            const match = bookData.link.match(/ItemId=(\d+)/);
+            if (match) {
+                itemId = match[1];
+            }
+        }
+
+        // Upgrade cover image to high resolution (cover500)
+        // Original: https://image.aladin.co.kr/product/3446/54/coversum/8968480699_1.jpg
+        // Target: https://image.aladin.co.kr/product/3446/54/cover500/8968480699_1.jpg
+        const coverUrl = bookData.cover ? bookData.cover.replace('coversum', 'cover500') : "";
+
+        // Construct 360 Viewer URL
+        const viewerUrl = itemId ? `https://www.aladin.co.kr/shop/book/wletslookViewer.aspx?ItemId=${itemId}` : undefined;
+
         return {
             title: bookData.title,
             author: authorClean,
             description: bookData.description,
-            cover: bookData.cover,
+            cover: coverUrl,
             link: bookData.link,
-            categoryName: bookData.categoryName
+            categoryName: bookData.categoryName,
+            viewerUrl: viewerUrl
         };
 
     } catch (error) {

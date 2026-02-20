@@ -15,23 +15,40 @@ export async function POST(request: Request) {
         }
 
         // 2. Fetch Metadata from Aladin (Parallel)
-        const enrichedBooks = await Promise.all(aiRecommendations.map(async (rec) => {
+        // 2. Fetch Metadata from Aladin (Parallel)
+        const enrichedBooksPromises = aiRecommendations.map(async (rec) => {
             const aladinData = await searchBookInAladin(rec.title);
+
+            // Verification Step: If Aladin returns null, this book does not exist or title is wrong.
+            if (!aladinData) {
+                console.warn(`Verification Failed: "${rec.title}" not found in Aladin.`);
+                return null;
+            }
+
             return {
                 ...rec,
-                imageUrl: aladinData?.cover || null,
-                link: aladinData?.link || null,
-                category: aladinData?.categoryName || "General",
-                // If Aladin found a slightly different title/author, use ours or keep Aladin's?
-                // Visual consistency implies using Aladin's if we show its cover.
-                // But Gemini's reason is tied to its chosen title.
-                // Let's rely on Aladin's title if found, as it matches the image.
-                displayTitle: aladinData?.title || rec.title,
-                displayAuthor: aladinData?.author || rec.author
+                thumbnail: aladinData.cover || null,
+                imageUrl: aladinData.cover || null,
+                link: aladinData.link || null,
+                viewerUrl: aladinData.viewerUrl || null,
+                category: aladinData.categoryName || "General",
+                displayTitle: aladinData.title || rec.title,
+                displayAuthor: aladinData.author || rec.author
             };
-        }));
+        });
 
-        return NextResponse.json(enrichedBooks);
+        const enrichedBooksResults = await Promise.all(enrichedBooksPromises);
+
+        // 3. Filter Verified Books & Limit to 3
+        const validBooks = enrichedBooksResults.filter((book) => book !== null && book.thumbnail); // Must have thumbnail
+
+        if (validBooks.length === 0) {
+            // Fallback: If strict verification kills all books, what to do?
+            // For now, return error to trigger retry or handle gracefully.
+            return NextResponse.json({ error: "No verified books found matching your request." }, { status: 404 });
+        }
+
+        return NextResponse.json(validBooks.slice(0, 3));
 
     } catch (error) {
         console.error("Recommendation API Error:", error);

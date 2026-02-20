@@ -8,6 +8,7 @@ export interface Book {
     thumbnail: string;
     infoLink: string;
     isbn?: string; // Add ISBN
+    viewerUrl?: string; // Add 360 Viewer URL
     reason?: string;
 }
 

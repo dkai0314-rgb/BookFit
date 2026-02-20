@@ -1,41 +1,24 @@
 
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { fetchCurationFromSheet } from '@/lib/google-sheets';
 
-// GET /api/curation - Fetch all curations
+export const dynamic = 'force-dynamic'; // Disable caching to see Sheet updates
+
+// GET /api/curation - Fetch curation from Google Sheets
 export async function GET() {
     try {
-        const curations = await prisma.curation.findMany({
-            include: {
-                books: true
-            },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        });
-        return NextResponse.json(curations);
+        const curation = await fetchCurationFromSheet();
+
+        if (!curation) {
+            // Return empty array to match previous API behavior (not found)
+            return NextResponse.json([]);
+        }
+
+        // Return as array (single item) to match previous API structure
+        return NextResponse.json([curation]);
     } catch (error) {
         console.error('Failed to fetch curations:', error);
         return NextResponse.json({ error: 'Failed to fetch curations' }, { status: 500 });
     }
 }
 
-// DELETE /api/curation?id={id} - Delete a curation
-export async function DELETE(request: Request) {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-
-    if (!id) {
-        return NextResponse.json({ error: 'ID is required' }, { status: 400 });
-    }
-
-    try {
-        await prisma.curation.delete({
-            where: { id }
-        });
-        return NextResponse.json({ message: 'Curation deleted successfully' });
-    } catch (error) {
-        console.error('Failed to delete curation:', error);
-        return NextResponse.json({ error: 'Failed to delete curation' }, { status: 500 });
-    }
-}

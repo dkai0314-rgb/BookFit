@@ -14,7 +14,11 @@ interface Curation {
     books: any[];
 }
 
-export default function CurationSection() {
+interface CurationProps {
+    id?: string;
+}
+
+export default function CurationSection({ id }: CurationProps = {}) {
     const [curation, setCuration] = useState<Curation | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -39,7 +43,7 @@ export default function CurationSection() {
 
     if (loading) {
         return (
-            <div className="w-full py-20 flex justify-center">
+            <div id={id} className="w-full py-20 flex justify-center">
                 <div className="w-8 h-8 border-2 border-accent/20 border-t-accent rounded-full animate-spin"></div>
             </div>
         );
@@ -47,7 +51,7 @@ export default function CurationSection() {
 
     if (!curation) {
         return (
-            <section className="w-full py-24 px-6 max-w-6xl mx-auto text-center border-y border-white/5 bg-white/2">
+            <section id={id} className="w-full py-24 px-6 max-w-6xl mx-auto text-center border-y border-white/5 bg-white/2">
                 <div className="space-y-6">
                     <h2 className="text-3xl font-serif text-white opacity-50">BookFit Choice</h2>
                     <p className="text-gray-500 font-light">곧 새로운 큐레이션이 공개됩니다. 잠시만 기다려 주세요!</p>
@@ -62,30 +66,25 @@ export default function CurationSection() {
     }
 
     return (
-        <section className="w-full py-24 px-6 max-w-6xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-12 items-start">
-                {/* Left: Curation Info */}
-                <div className="flex-1 space-y-6">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
-                        <Sparkles className="w-3 h-3" /> BookFit Choice
+        <section id={id} className="w-full py-24 px-6 max-w-6xl mx-auto">
+            <div className="flex flex-col gap-10">
+                {/* Header: Title & Description */}
+                <div className="text-center max-w-3xl mx-auto space-y-4">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest mb-2">
+                        <Sparkles className="w-3 h-3" /> Monthly Selection
                     </div>
-                    <div className="space-y-4">
-                        <h2 className="text-4xl md:text-5xl font-black text-white font-serif leading-tight">
-                            {curation.title}
-                        </h2>
-                        <p className="text-xl text-gray-400 font-light leading-relaxed whitespace-pre-line">
-                            {curation.description}
-                        </p>
-                    </div>
-                    <div className="pt-4">
-                        <div className="text-sm text-gray-500 font-medium">Theme: {curation.theme}</div>
-                    </div>
+                    <h2 className="text-3xl md:text-5xl font-black text-white font-serif leading-tight">
+                        BookFit Choice
+                    </h2>
+                    <p className="text-lg text-gray-400 font-light leading-relaxed whitespace-pre-line">
+                        이번 달, 북핏의 큐레이터들이 선정한 깊이 있는 사유의 조각들입니다.
+                    </p>
                 </div>
 
-                {/* Right: Books Grid */}
-                <div className="flex-[1.5] grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    {curation.books.map((book, i) => (
-                        <Link key={book.id} href={`/books/${book.id}`} className="group space-y-4 block">
+                {/* Books Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    {curation.books.slice(0, 10).map((book, i) => (
+                        <Link key={book.id} href={book.coupangLink || "#"} target="_blank" rel="noopener noreferrer" className="group space-y-4 block">
                             <div className="aspect-[1/1.5] relative rounded-sm overflow-hidden shadow-2xl border border-white/5 group-hover:shadow-accent/20 transition-all duration-500 group-hover:-translate-y-2">
                                 {book.imageUrl ? (
                                     <Image
@@ -98,20 +97,37 @@ export default function CurationSection() {
                                 ) : (
                                     <div className="w-full h-full bg-slate-800 flex items-center justify-center text-gray-500">No Image</div>
                                 )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-                                <div className="absolute bottom-4 left-4 right-4">
+                                {book.category && (
+                                    <div className="absolute top-0 left-0 bg-accent text-[#061A14] text-[10px] font-bold px-3 py-1 rounded-br-lg rounded-tl-sm z-10 shadow-md">
+                                        {book.category}
+                                    </div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90" />
+                                <div className="absolute bottom-4 left-4 right-4 text-left">
                                     <div className="text-[10px] text-accent font-bold uppercase tracking-tighter mb-1">Pick {i + 1}</div>
-                                    <div className="text-white font-bold text-sm line-clamp-1">{book.title}</div>
+                                    <div className="text-white font-bold text-sm leading-tight line-clamp-2 drop-shadow-md">{book.title}</div>
                                 </div>
                             </div>
                             <div className="space-y-1">
-                                <p className="text-xs text-blue-400 font-medium bg-blue-400/10 p-2 rounded line-clamp-3 leading-relaxed">
-                                    {book.recommendation}
-                                </p>
+                                <div className="bg-white/5 border border-white/10 rounded-md p-3 hover:bg-white/10 transition-colors">
+                                    <p className="text-xs text-gray-300 font-light leading-relaxed line-clamp-3">
+                                        {book.recommendation}
+                                    </p>
+                                </div>
                             </div>
                         </Link>
                     ))}
                 </div>
+            </div>
+
+            {/* View All Button */}
+            <div className="mt-12 flex justify-center">
+                <Link href="/curation">
+                    <button className="px-8 py-3 rounded-full border border-white/20 hover:bg-white/10 text-white font-medium transition-all group flex items-center gap-2">
+                        View All Collection
+                        <Sparkles className="w-4 h-4 text-accent opacity-50 group-hover:opacity-100 transition-opacity" />
+                    </button>
+                </Link>
             </div>
         </section>
     );

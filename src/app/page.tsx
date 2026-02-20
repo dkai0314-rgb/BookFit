@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Sparkles, MessageSquare, BookCheck, Lightbulb } from "lucide-react";
-import BookList from "@/components/BookList";
+import CurationSection from "@/components/CurationSection";
+import BeehiivEmbed from "@/components/BeehiivEmbed";
 
 export default function Home() {
   return (
@@ -13,7 +14,7 @@ export default function Home() {
             <span className="bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent drop-shadow-sm">BookFit</span>
           </div>
           <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-            <a href="#" className="hover:text-accent transition-colors">이달의북핏</a>
+            <Link href="#curation" className="hover:text-accent transition-colors">이달의북핏</Link>
             <Link href="/bestsellers" className="hover:text-accent transition-colors">베스트셀러</Link>
           </nav>
           <div className="flex items-center gap-4">
@@ -68,20 +69,8 @@ export default function Home() {
         </section>
 
 
-        {/* BookFit Choice (Previously Bestsellers) - Moved UP */}
-        <section className="w-full py-20 px-6 max-w-6xl">
-          <div className="flex justify-between items-end mb-12">
-            <div className="flex flex-col space-y-2 text-center md:text-left">
-              <h2 className="text-3xl md:text-4xl font-bold text-white font-serif">BookFit Choice</h2>
-              <p className="text-gray-400 font-light">이번 달, 북핏의 큐레이터들이 선정한 깊이 있는 사유의 조각들입니다.</p>
-            </div>
-            <a href="#" className="hidden md:block text-sm text-accent hover:text-white transition-colors font-medium">View All Collection →</a>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <BookList />
-          </div>
-        </section>
+        {/* BookFit Choice (Google Sheets Integration) */}
+        <CurationSection id="curation" />
 
         {/* Your BookFit Journey (Previously The BookFit Approach) - Updated */}
         <section className="w-full py-24 px-6 relative">
@@ -123,7 +112,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Email Subscription Section - NEW */}
+        {/* Email Subscription Section - Beehiiv Integration */}
         <section className="w-full py-24 px-6 relative mt-10">
           <div className="max-w-4xl mx-auto bg-gradient-to-br from-[#0B2A1F] to-[#04120e] rounded-2xl p-10 md:p-16 text-center border border-[rgba(255,255,255,0.05)] shadow-2xl relative overflow-hidden">
             {/* Background Glow */}
@@ -139,15 +128,9 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto pt-4">
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="flex-1 bg-white/5 border border-white/10 rounded-md px-4 py-3 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-all hover:bg-white/10"
-                />
-                <button className="bg-white text-[#061A14] font-bold text-sm px-6 py-3 rounded-md hover:bg-gray-100 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0">
-                  Subscribe
-                </button>
+              {/* Beehiiv Embed Component */}
+              <div className="pt-4">
+                <BeehiivEmbed />
               </div>
             </div>
           </div>

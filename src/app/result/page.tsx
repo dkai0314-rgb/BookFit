@@ -6,7 +6,7 @@ import { useSurveyStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { ArrowLeft, ShoppingCart, RefreshCw, BookOpen } from "lucide-react";
+import { ArrowLeft, ShoppingCart, RefreshCw, BookOpen, ExternalLink, Box } from "lucide-react";
 
 export default function ResultPage() {
     const router = useRouter();
@@ -115,7 +115,17 @@ export default function ResultPage() {
                                     </div>
 
                                     {/* Actions */}
-                                    <div className="pt-2">
+                                    <div className="pt-2 flex flex-col gap-2">
+                                        {book.viewerUrl && (
+                                            <Button
+                                                variant="outline"
+                                                className="w-full border-primary/20 hover:bg-primary/5 text-primary font-medium"
+                                                onClick={() => window.open(book.viewerUrl, 'Aladin360', 'width=1024,height=800,resizable=yes,scrollbars=yes')}
+                                            >
+                                                <Box className="w-4 h-4 mr-2" />
+                                                3D 입체보기 (알라딘)
+                                            </Button>
+                                        )}
                                         <Button
                                             className="w-full bg-accent hover:bg-accent/90 text-white shadow-md font-bold"
                                             onClick={() => {
