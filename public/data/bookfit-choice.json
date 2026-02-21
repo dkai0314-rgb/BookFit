@@ -1,0 +1,249 @@
+{
+  "id": "1fgZA2w4Gghidl5i6hSFtmAvnss8_gHVAgvG-DHdYipM",
+  "theme": "책 제목",
+  "title": "BookFit Choice",
+  "description": "이번 달, 북핏의 큐레이터들이 선정한 깊이 있는 사유의 조각들입니다.",
+  "books": [
+    {
+      "id": "choice-5",
+      "title": "쓰면서 완성하는 아주 작은 습관의 힘 (공식 워크북)",
+      "author": "제임스 클리어 (지은이), 신솔잎 (옮긴이)",
+      "category": "자기계발",
+      "recommendation": "거창한 결심보다 작은 행동의 반복이 인생을 바꾼다는 실전 습관서입니다. 시스템(환경·규칙)을 설계해 좋은 습관은 쉽게, 나쁜 습관은 어렵게 만드는 방법을 제시해요.",
+      "coupangLink": "https://link.coupang.com/a/dOYPb6",
+      "imageUrl": "https://image.aladin.co.kr/product/37890/98/coversum/k182033525_1.jpg",
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-6",
+      "title": "딥 워크 - 강렬한 몰입, 최고의 성과",
+      "author": "칼 뉴포트 (지은이), 김태훈 (옮긴이)",
+      "category": "자기계발",
+      "recommendation": "산만함의 시대에 경쟁력을 만드는 건 **깊은 집중(딥 워크)**이라고 말합니다. 집중을 방해하는 습관을 걷어내고, 의식적으로 몰입 시간을 확보하는 훈련법이 핵심이에요.",
+      "coupangLink": "https://link.coupang.com/a/dOYQpK",
+      "imageUrl": "https://image.aladin.co.kr/product/10672/44/coversum/8937434083_2.jpg",
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-7",
+      "title": "마인드셋 (리커버 에디션) - 스탠퍼드 인간 성장 프로젝트",
+      "author": "캐롤 드웩 (지은이), 김준수 (옮긴이)",
+      "category": "자기계발",
+      "recommendation": "능력은 고정이 아니라 성장 가능하다는 “성장 마인드셋”을 설명합니다. 실패를 ‘나는 못해’가 아니라 ‘아직은’으로 해석할 때 학습과 성과가 확 달라진다는 메시지예요.",
+      "coupangLink": "https://link.coupang.com/a/dOYQYA",
+      "imageUrl": "https://image.aladin.co.kr/product/30664/44/coversum/k542830039_1.jpg",
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-8",
+      "title": "성공하는 사람들의 7가지 습관 - 30주년 뉴에디션",
+      "author": "스티븐 코비 (지은이), 김경섭 (옮긴이)",
+      "category": "자기계발",
+      "recommendation": "성과 이전에 인격과 원칙 중심의 삶을 세우는 습관 프레임입니다. 주도성, 목표, 우선순위, 윈윈, 경청, 시너지, 갱신으로 일·관계·삶 전반의 운영체제를 바꿔요.",
+      "coupangLink": "https://link.coupang.com/a/dOYRPG",
+      "imageUrl": "https://image.aladin.co.kr/product/31955/39/coversum/8934965959_1.jpg",
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-9",
+      "title": "사피엔스 - 유인원에서 사이보그까지, 인간 역사의 대담하고 위대한 질문",
+      "author": "유발 하라리 (지은이), 조현욱 (옮긴이), 이태수 (감수)",
+      "category": "인문",
+      "recommendation": "인류가 어떻게 지구의 지배종이 되었는지 인지혁명·농업·자본·종교·제국의 흐름으로 풀어냅니다. “우리가 믿는 질서”가 사실은 **공유된 이야기(허구)**라는 관점이 강력해요.",
+      "coupangLink": "https://link.coupang.com/a/dOZ7hC",
+      "imageUrl": "https://image.aladin.co.kr/product/31424/4/coversum/k482832219_1.jpg",
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-10",
+      "title": "총, 균, 쇠",
+      "author": "재레드 다이아몬드",
+      "category": "인문",
+      "recommendation": "문명의 격차를 인종이 아니라 지리·환경·가축화·질병 같은 구조로 설명합니다. “누가 더 똑똑해서가 아니라, 출발선이 달랐다”는 큰 그림의 역사 해석이에요.",
+      "coupangLink": "https://link.coupang.com/a/dOZ7J8",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-11",
+      "title": "정의란 무엇인가",
+      "author": "마이클 샌델",
+      "category": "인문",
+      "recommendation": "정의를 둘러싼 딜레마를 통해 공리주의·자유주의·공동체주의를 비교합니다. 정답을 주기보다 “나는 왜 그렇게 판단했나”를 캐묻게 만드는 사고 훈련에 가까워요.",
+      "coupangLink": "https://link.coupang.com/a/dOZ8kk",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-12",
+      "title": "명상록",
+      "author": "마르쿠스 아우렐리우스",
+      "category": "인문",
+      "recommendation": "로마 황제가 스스로에게 남긴 내면의 메모 같은 스토아 철학서입니다. 통제 가능한 것에 집중하고, 감정의 폭풍 속에서도 품위와 평정을 지키는 태도를 다룹니다.",
+      "coupangLink": "https://link.coupang.com/a/dOZ85h",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-13",
+      "title": "봄밤의 모든 것",
+      "author": "백수린",
+      "category": "소설/에세이",
+      "recommendation": "조용하고 섬세한 문장으로 관계의 온도와 상실 이후의 감각을 포착합니다. 크게 사건이 터지기보다, 일상의 미세한 떨림이 잔잔하게 오래 남는 작품이에요.",
+      "coupangLink": "https://link.coupang.com/a/dOZ9JN",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-14",
+      "title": "혼모노",
+      "author": "성해나",
+      "category": "소설/에세이",
+      "recommendation": "“진짜(혼모노)”를 둘러싼 욕망과 불안을 날카롭게 해부하는 이야기들로 읽힙니다. 겉으로 멀쩡한 사람들 안쪽의 균열을 보여주며 현대의 진정성 콤플렉스를 건드립니다.",
+      "coupangLink": "https://link.coupang.com/a/dOZtkb",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-15",
+      "title": "첫 여름, 완주",
+      "author": "김금희",
+      "category": "소설/에세이",
+      "recommendation": "여름의 시간 속에서 인물들이 조금씩 단단해지는 성장을 담습니다. 완주라는 말처럼, 거창한 승리가 아니라 끝까지 살아내는 마음의 체력이 주제예요.",
+      "coupangLink": "https://link.coupang.com/a/dO0aiQ",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-16",
+      "title": "그 개와 혁명",
+      "author": "예소연 외",
+      "category": "소설/에세이",
+      "recommendation": "일상적인 장면을 비틀어 사회의 모순을 드러내는 단편 앤솔로지 성격이 강합니다. ‘혁명’이 거대한 구호가 아니라 개인 삶의 틈에서 시작되는 변화로 보이게 만들어요.",
+      "coupangLink": "https://link.coupang.com/a/dO0aMe",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-17",
+      "title": "포지셔닝",
+      "author": "알 리스 / 잭 트라우트",
+      "category": "마케팅",
+      "recommendation": "마케팅은 제품보다 고객의 머릿속 자리를 선점하는 싸움이라는 고전입니다. 차별점은 “우리가 뭐가 더 좋다”가 아니라 어떤 단어로 기억되느냐에 달려 있어요.",
+      "coupangLink": "https://link.coupang.com/a/dO0baJ",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-18",
+      "title": "비범한 평범",
+      "author": "조수용",
+      "category": "마케팅",
+      "recommendation": "특별함은 멀리 있지 않고, 평범함을 비범하게 다듬는 디테일에서 나온다고 말합니다. 브랜드는 메시지보다 경험의 일관성으로 쌓인다는 관점이 인상적이에요.",
+      "coupangLink": "https://link.coupang.com/a/dO0bQH",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-19",
+      "title": "무기가 되는 스토리 - 브랜드 전쟁에서 살아남는 7가지 문장 공식",
+      "author": "도널드 밀러 (지은이), 이지연 (옮긴이)",
+      "category": "마케팅",
+      "recommendation": "고객을 주인공으로 두고, 브랜드는 조력자가 되어야 한다는 스토리 설계법입니다. 복잡한 설명 대신 명확한 갈등-해결-행동 구조로 메시지를 정리하게 해줘요.",
+      "coupangLink": "https://link.coupang.com/a/dO0cn9",
+      "imageUrl": "https://image.aladin.co.kr/product/16901/95/coversum/k022534274_1.jpg",
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-20",
+      "title": "마케팅 설계자 - 자동 수익을 실현하는 28가지 마케팅 과학",
+      "author": "러셀 브런슨 (지은이), 이경식 (옮긴이)",
+      "category": "마케팅",
+      "recommendation": "관심을 구매로 바꾸는 **퍼널(단계별 설계)**을 실전 중심으로 안내합니다. ‘어떤 광고’보다 **어떤 흐름(페이지·오퍼·후속)**을 짜느냐가 성패를 가른다는 책이에요.",
+      "coupangLink": "https://link.coupang.com/a/dO0cOA",
+      "imageUrl": "https://image.aladin.co.kr/product/30707/77/coversum/k572830145_1.jpg",
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-21",
+      "title": "린 스타트업 - 지속적 혁신을 실현하는 창업의 과학",
+      "author": "에릭 리스 (지은이), 이창수, 송우일 (옮긴이)",
+      "category": "비즈니스",
+      "recommendation": "완벽히 만들고 출시가 아니라, 빠르게 검증하는 MVP(최소 기능 제품) 철학입니다. Build-Measure-Learn 루프로 낭비를 줄이고 학습 속도를 올리는 게 핵심이에요.",
+      "coupangLink": "https://link.coupang.com/a/dOYmVK",
+      "imageUrl": "https://image.aladin.co.kr/product/2064/86/coversum/8966260578_1.jpg",
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-22",
+      "title": "제로 투 원 (10주년 기념판) - 스탠퍼드대학교 스타트업 최고 명강의",
+      "author": "피터 틸, 블레이크 매스터스 (지은이), 이지연 (옮긴이)",
+      "category": "비즈니스",
+      "recommendation": "경쟁을 이기는 법보다 **독점에 가까운 차별(0→1)**을 만들라고 주장합니다. “남들이 하는 걸 더 잘”이 아니라 아예 새로운 시장/가치를 만드는 사고를 자극해요.",
+      "coupangLink": "https://link.coupang.com/a/dOYnAt",
+      "imageUrl": "https://image.aladin.co.kr/product/36235/91/coversum/k102038607_1.jpg",
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-23",
+      "title": "하드씽 - 경영의 난제를 푸는 최선의 한 수",
+      "author": "벤 호로위츠 (지은이), 안진환 (옮긴이)",
+      "category": "비즈니스",
+      "recommendation": "스타트업 현실은 교과서가 아니라 피·땀·멘탈이라는 걸 정면으로 다룹니다. 해고, 위기, 갈등 같은 ‘어려운 문제’를 대표의 결단과 운영 관점에서 솔직히 풀어요.",
+      "coupangLink": "https://link.coupang.com/a/dOYZvD",
+      "imageUrl": "https://image.aladin.co.kr/product/26666/69/coversum/8947547034_1.jpg",
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-24",
+      "title": "OKR",
+      "author": "존 도어",
+      "category": "비즈니스",
+      "recommendation": "목표(Objectives)와 핵심 결과(Key Results)로 집중과 정렬을 만드는 프레임입니다. “열심히”가 아니라 측정 가능한 임팩트에 팀 에너지를 꽂는 방식으로 설명해요.",
+      "coupangLink": "https://link.coupang.com/a/dOY10f",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-25",
+      "title": "죽음의 수용소에서",
+      "author": "빅터 프랭클",
+      "category": "심리/마음치유",
+      "recommendation": "극한의 상황에서도 인간을 버티게 하는 건 의미라는 메시지를 전합니다. 고통을 없애기보다, 고통 속에서도 삶의 이유를 발견하는 태도를 말해요.",
+      "coupangLink": "https://link.coupang.com/a/dO0dkv",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-26",
+      "title": "몸은 기억한다",
+      "author": "베셀 반 데어 콜크",
+      "category": "심리/마음치유",
+      "recommendation": "트라우마가 기억만이 아니라 신체 반응과 감각에 새겨진다는 관점을 다룹니다. 회복은 단순한 ‘이해’가 아니라 몸의 안전감 회복과 조절 능력을 키우는 과정이에요.",
+      "coupangLink": "https://link.coupang.com/a/dO0dNU",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-27",
+      "title": "지금 이 순간을 살아라",
+      "author": "에크하르트 톨레",
+      "category": "심리/마음치유",
+      "recommendation": "불안과 후회의 뿌리는 과거/미래에 붙잡힌 ذهن이라고 말합니다. 현재에 머무는 연습을 통해 생각과 나를 분리하고, 고요를 회복하게 도와줘요.",
+      "coupangLink": "https://link.coupang.com/a/dO0ehq",
+      "imageUrl": null,
+      "viewerUrl": null
+    },
+    {
+      "id": "choice-28",
+      "title": "미움받을 용기",
+      "author": "기시미 이치로 / 고가 후미타케",
+      "category": "심리/마음치유",
+      "recommendation": "아들러 심리학을 대화 형식으로 풀며, 행복은 타인의 인정이 아니라 자기 선택이라고 강조합니다. 과제 분리(내 일/네 일)를 통해 관계의 피로를 줄이고 주도권을 되찾는 메시지가 강해요.",
+      "coupangLink": "https://link.coupang.com/a/dO0eMo",
+      "imageUrl": null,
+      "viewerUrl": null
+    }
+  ],
+  "updatedAt": "2026-02-21T15:57:17.671Z"
+}

@@ -90,13 +90,13 @@ export default function RecommendPage() {
 
     return (
         <div className="min-h-screen bg-[#061A14] text-white flex flex-col items-center py-20 px-4">
-            <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
-                <Link href="/" className="cursor-pointer text-2xl font-bold font-serif tracking-tight text-white hover:text-accent transition-colors">
+            <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]" role="banner">
+                <Link href="/" className="cursor-pointer text-2xl font-bold font-serif tracking-tight text-white hover:text-accent transition-colors" aria-label="BookFit 홈으로 이동">
                     BookFit AI
                 </Link>
             </header>
 
-            <main className="w-full max-w-2xl mt-12">
+            <main className="w-full max-w-2xl mt-12" role="main">
                 {/* 1. Mode Selection */}
                 {mode === 'SELECT' && (
                     <div className="space-y-12 animate-fade-in-up">
@@ -114,8 +114,9 @@ export default function RecommendPage() {
                             <button
                                 onClick={() => setMode('TASTE')}
                                 className="group relative bg-[#0B2A1F] p-8 rounded-xl border border-white/10 hover:border-accent hover:-translate-y-1 transition-all duration-300 text-left flex flex-col h-full"
+                                aria-label="취향 기반 도서 추천 시작하기"
                             >
-                                <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-100 group-hover:text-accent transition-all">
+                                <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-100 group-hover:text-accent transition-all" aria-hidden="true">
                                     <Brain size={32} />
                                 </div>
                                 <h2 className="text-2xl font-bold mb-3 group-hover:text-accent transition-colors">취향 추천</h2>
@@ -131,8 +132,9 @@ export default function RecommendPage() {
                             <button
                                 onClick={() => setMode('MIND')}
                                 className="group relative bg-[#0B2A1F] p-8 rounded-xl border border-white/10 hover:border-[#FF5678] hover:-translate-y-1 transition-all duration-300 text-left flex flex-col h-full"
+                                aria-label="심리/마음 상태 기반 도서 추천 시작하기"
                             >
-                                <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-100 group-hover:text-[#FF5678] transition-all">
+                                <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-100 group-hover:text-[#FF5678] transition-all" aria-hidden="true">
                                     <Heart size={32} />
                                 </div>
                                 <h2 className="text-2xl font-bold mb-3 group-hover:text-[#FF5678] transition-colors">마음 추천</h2>
@@ -149,19 +151,20 @@ export default function RecommendPage() {
 
                 {/* 2. Input Form - Taste */}
                 {mode === 'TASTE' && !loading && result.length === 0 && (
-                    <div className="space-y-8 animate-fade-in">
+                    <section className="space-y-8 animate-fade-in" aria-labelledby="taste-title">
                         <div className="text-center space-y-2">
-                            <h2 className="text-3xl font-bold font-serif text-accent">취향 추천</h2>
+                            <h2 id="taste-title" className="text-3xl font-bold font-serif text-accent">취향 추천</h2>
                             <p className="text-gray-400">당신의 독서 취향을 알려주세요.</p>
                         </div>
 
                         <div className="space-y-6 bg-[#0B2A1F]/50 p-8 rounded-xl border border-white/5">
                             {/* Custom Query Section (Primary) */}
                             <div className="space-y-3">
-                                <label className="text-sm font-bold text-gray-300 uppercase tracking-wider">
+                                <label htmlFor="taste-input" className="text-sm font-bold text-gray-300 uppercase tracking-wider">
                                     어떤 책을 찾으시나요? (필수)
                                 </label>
                                 <textarea
+                                    id="taste-input"
                                     rows={4}
                                     placeholder="찾으시는 책의 주제, 목적, 난이도를 자유롭게 적어주세요.&#13;&#10;(예: 마케팅 초보자인데, 브랜딩의 기초부터 실무까지 쉽게 배울 수 있는 책을 추천해줘.)"
                                     className="w-full bg-[#061A14] border border-white/10 rounded-md px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-accent transition-colors resize-none text-lg leading-relaxed"
@@ -169,19 +172,20 @@ export default function RecommendPage() {
                                     onChange={(e) => setTasteCustomTopic(e.target.value)}
                                 />
                                 <p className="text-xs text-accent/70 flex items-center gap-1">
-                                    <Sparkles size={12} />
+                                    <Sparkles size={12} aria-hidden="true" />
                                     Tip: [주제 + 난이도 + 목적]을 구체적으로 적으면 더 정확한 추천을 받을 수 있습니다.
                                 </p>
                             </div>
 
                             {/* Topic Tags Section (Secondary) */}
                             <div className="space-y-3 opacity-80 hover:opacity-100 transition-opacity">
-                                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">관심 키워드 (참고용)</label>
-                                <div className="flex flex-wrap gap-2">
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">관심 키워드 (참고용)</span>
+                                <div className="flex flex-wrap gap-2" role="group" aria-label="관심 키워드 선택">
                                     {TASTE_TAGS.map(tag => (
                                         <button
                                             key={tag}
                                             onClick={() => toggleTasteTag(tag)}
+                                            aria-pressed={tasteTopics.includes(tag)}
                                             className={`px-3 py-1.5 rounded-full text-xs transition-all border ${tasteTopics.includes(tag)
                                                 ? 'bg-accent/20 text-accent border-accent font-bold'
                                                 : 'bg-transparent text-gray-500 border-white/10 hover:border-white/30'
@@ -195,12 +199,14 @@ export default function RecommendPage() {
 
                             {/* Style Section */}
                             <div className="space-y-3 opacity-80 hover:opacity-100 transition-opacity">
-                                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">선호 스타일</label>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">선호 스타일</span>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2" role="radiogroup" aria-label="선호 스타일 선택">
                                     {TASTE_STYLES.map(style => (
                                         <button
                                             key={style}
                                             onClick={() => setTasteStyle(style)}
+                                            role="radio"
+                                            aria-checked={tasteStyle === style}
                                             className={`px-3 py-2 rounded-lg text-xs transition-all border text-center ${tasteStyle === style
                                                 ? 'bg-accent/20 text-accent border-accent font-bold'
                                                 : 'bg-transparent text-gray-500 border-white/10 hover:border-white/30'
@@ -219,29 +225,31 @@ export default function RecommendPage() {
                                 onClick={handleRecommend}
                                 disabled={!tasteCustomTopic || tasteCustomTopic.length < 5}
                                 className="bg-accent text-[#061A14] hover:bg-white px-8 py-6 rounded-lg text-lg font-bold shadow-[0_0_15px_rgba(56,255,168,0.2)] hover:shadow-[0_0_25px_rgba(56,255,168,0.4)] transition-all"
+                                aria-label="입력한 취향에 따른 도서 추천 받기"
                             >
-                                <Sparkles className="mr-2 h-5 w-5" />
+                                <Sparkles className="mr-2 h-5 w-5" aria-hidden="true" />
                                 AI 맞춤 추천 받기
                             </Button>
                         </div>
-                    </div>
+                    </section>
                 )}
 
                 {/* 2. Input Form - Mind */}
                 {mode === 'MIND' && !loading && result.length === 0 && (
-                    <div className="space-y-8 animate-fade-in">
+                    <section className="space-y-8 animate-fade-in" aria-labelledby="mind-title">
                         <div className="text-center space-y-2">
-                            <h2 className="text-3xl font-bold font-serif text-[#FF5678]">마음 추천</h2>
+                            <h2 id="mind-title" className="text-3xl font-bold font-serif text-[#FF5678]">마음 추천</h2>
                             <p className="text-gray-400">오늘 당신의 마음은 어떤가요?</p>
                         </div>
 
                         <div className="space-y-6 bg-[#0B2A1F]/50 p-8 rounded-xl border border-white/5">
                             {/* Situation Input (Primary) */}
                             <div className="space-y-3">
-                                <label className="text-sm font-bold text-gray-300 uppercase tracking-wider">
+                                <label htmlFor="mind-input" className="text-sm font-bold text-gray-300 uppercase tracking-wider">
                                     상황 설명 (필수)
                                 </label>
                                 <textarea
+                                    id="mind-input"
                                     rows={4}
                                     placeholder="지금 겪고 있는 상황이나 고민을 구체적으로 적어주세요. (예: 요즘 번아웃이 와서 아무것도 하기 싫고 무기력해요. 위로가 필요합니다.)"
                                     className="w-full bg-[#061A14] border border-white/10 rounded-md px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#FF5678] transition-colors resize-none text-lg leading-relaxed"
@@ -252,12 +260,13 @@ export default function RecommendPage() {
 
                             {/* Emotion Section */}
                             <div className="space-y-3 opacity-80 hover:opacity-100 transition-opacity">
-                                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">감정/상태 키워드 (참고용)</label>
-                                <div className="flex flex-wrap gap-2">
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">감정/상태 키워드 (참고용)</span>
+                                <div className="flex flex-wrap gap-2" role="group" aria-label="감정/상태 키워드 선택">
                                     {MIND_EMOTIONS.map(tag => (
                                         <button
                                             key={tag}
                                             onClick={() => toggleMindEmotion(tag)}
+                                            aria-pressed={mindEmotions.includes(tag)}
                                             className={`px-3 py-1.5 rounded-full text-xs transition-all border ${mindEmotions.includes(tag)
                                                 ? 'bg-[#FF5678] text-white border-[#FF5678] font-bold'
                                                 : 'bg-transparent text-gray-500 border-white/10 hover:border-white/30'
@@ -276,17 +285,18 @@ export default function RecommendPage() {
                                 onClick={handleRecommend}
                                 disabled={!mindSituation || mindSituation.length < 5}
                                 className="bg-[#FF5678] text-white hover:bg-white hover:text-[#FF5678] px-8 py-6 rounded-lg text-lg font-bold shadow-[0_0_15px_rgba(255,86,120,0.3)] hover:shadow-[0_0_25px_rgba(255,86,120,0.5)] transition-all"
+                                aria-label="현재 마음 상태에 따른 도서 처방 받기"
                             >
-                                <Heart className="mr-2 h-5 w-5" />
+                                <Heart className="mr-2 h-5 w-5" aria-hidden="true" />
                                 공감 처방 받기
                             </Button>
                         </div>
-                    </div>
+                    </section>
                 )}
 
                 {/* 3. Loading */}
                 {loading && (
-                    <div className="flex flex-col items-center justify-center py-20 space-y-6 animate-pulse">
+                    <div className="flex flex-col items-center justify-center py-20 space-y-6 animate-pulse" role="status" aria-live="polite">
                         <Loader2 size={48} className={`animate-spin ${mode === 'TASTE' ? 'text-accent' : 'text-[#FF5678]'}`} />
                         <div className="text-center">
                             <h3 className="text-2xl font-bold font-serif mb-2">
@@ -301,9 +311,9 @@ export default function RecommendPage() {
 
                 {/* 4. Results */}
                 {result.length > 0 && (
-                    <div className="space-y-12 animate-fade-in">
+                    <section className="space-y-12 animate-fade-in" aria-labelledby="results-title">
                         <div className="text-center space-y-2">
-                            <h2 className="text-3xl font-bold font-serif text-white">
+                            <h2 id="results-title" className="text-3xl font-bold font-serif text-white">
                                 {mode === 'TASTE' ? <span className="text-accent">당신의 취향을 위한 큐레이션</span> : <span className="text-[#FF5678]">당신을 위해 준비했습니다</span>}
                             </h2>
                             <p className="text-gray-400">
@@ -313,14 +323,14 @@ export default function RecommendPage() {
 
                         <div className="grid gap-8">
                             {result.map((book, i) => (
-                                <div key={i} className="flex flex-col md:flex-row gap-6 bg-[#0B2A1F]/30 border border-white/5 p-6 rounded-xl hover:border-white/20 transition-all">
+                                <article key={i} className="flex flex-col md:flex-row gap-6 bg-[#0B2A1F]/30 border border-white/5 p-6 rounded-xl hover:border-white/20 transition-all">
                                     {/* Cover */}
                                     <div className="w-full md:w-32 flex-shrink-0">
                                         <div className="aspect-[1/1.5] w-28 mx-auto md:w-full rounded-md overflow-hidden bg-black/50 relative shadow-lg">
                                             {book.imageUrl ? (
                                                 <Image
                                                     src={book.imageUrl.replace("coversum", "cover500")}
-                                                    alt={book.displayTitle}
+                                                    alt={`${book.displayTitle} 도서 커버`}
                                                     fill
                                                     className="object-cover"
                                                 />
@@ -338,7 +348,7 @@ export default function RecommendPage() {
                                                     {book.userConnectionPoint}
                                                 </span>
                                             </div>
-                                            <h3 className="text-xl font-bold text-white mb-1 group-hover:text-accent transition-colors">
+                                            <h3 className="text-xl font-bold text-white mb-1">
                                                 {book.displayTitle}
                                             </h3>
                                             <p className="text-sm text-gray-400">{book.displayAuthor}</p>
@@ -352,25 +362,25 @@ export default function RecommendPage() {
 
                                         <div className="flex justify-between items-center pt-2">
                                             <p className="text-xs text-gray-500 italic">
-                                                Key: {book.coreMessage}
+                                                핵심 키워드: {book.coreMessage}
                                             </p>
                                             {book.link && (
-                                                <a href={book.link} target="_blank" rel="noopener noreferrer" className="text-xs text-white/50 hover:text-white underline underline-offset-4">
+                                                <a href={book.link} target="_blank" rel="noopener noreferrer" className="text-xs text-white/50 hover:text-white underline underline-offset-4" aria-label={`${book.displayTitle} 구매 페이지로 이동`}>
                                                     구매하기
                                                 </a>
                                             )}
                                         </div>
                                     </div>
-                                </div>
+                                </article>
                             ))}
                         </div>
 
                         <div className="text-center pt-10">
-                            <Button onClick={reset} variant="outline" className="border-white/20 text-gray-400 hover:text-white hover:bg-white/10">
+                            <Button onClick={reset} variant="outline" className="border-white/20 text-gray-400 hover:text-white hover:bg-white/10" aria-label="추천 다시 받으러 가기">
                                 다시 추천 받기
                             </Button>
                         </div>
-                    </div>
+                    </section>
                 )}
             </main>
         </div>

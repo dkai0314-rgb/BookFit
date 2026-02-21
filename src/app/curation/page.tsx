@@ -9,7 +9,19 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs'; // Ensure Node.js runtime for Google libraries
 
 export default async function CurationPage() {
-    const curation = await fetchCurationFromSheet();
+    const fs = require('fs');
+    const path = require('path');
+    const jsonPath = path.join(process.cwd(), 'public/data/bookfit-choice.json');
+
+    let curation = null;
+
+    if (fs.existsSync(jsonPath)) {
+        const fileContent = fs.readFileSync(jsonPath, 'utf8');
+        curation = JSON.parse(fileContent);
+    } else {
+        // Fallback to Google Sheets
+        curation = await fetchCurationFromSheet();
+    }
 
     if (!curation) {
         return (
@@ -28,14 +40,14 @@ export default async function CurationPage() {
     }
 
     // Group books by category
-    const booksByCategory = curation.books.reduce((acc, book) => {
-        const category = book.category || "Uncategorized";
+    const booksByCategory = curation.books.reduce((acc: Record<string, any[]>, book: any) => {
+        const category = (book.category as string) || "Uncategorized";
         if (!acc[category]) {
             acc[category] = [];
         }
         acc[category].push(book);
         return acc;
-    }, {} as Record<string, typeof curation.books>);
+    }, {} as Record<string, any[]>);
 
 
     // Order categories? For now, just Object.keys or specific order if needed.
@@ -93,7 +105,7 @@ export default async function CurationPage() {
                                 {category}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                                {booksByCategory[category].map((book, i) => (
+                                {booksByCategory[category].map((book: any, i: number) => (
                                     <Link key={book.id} href={book.coupangLink || "#"} target="_blank" rel="noopener noreferrer" className="group space-y-4 block">
                                         <div className="aspect-[1/1.5] relative rounded-md overflow-hidden shadow-2xl border border-white/5 group-hover:shadow-accent/20 transition-all duration-500 group-hover:-translate-y-2">
                                             {book.imageUrl ? (
