@@ -114,13 +114,13 @@ export default function Home() {
 
         {/* Email Subscription Section - Beehiiv Integration */}
         <section className="w-full py-24 px-6 relative mt-10" aria-labelledby="subscription-title">
-          <div className="max-w-4xl mx-auto bg-gradient-to-br from-[#0B2A1F] to-[#04120e] rounded-2xl p-10 md:p-16 text-center border border-[rgba(255,255,255,0.05)] shadow-2xl relative overflow-hidden">
+          <div className="max-w-4xl mx-auto bg-gradient-to-br from-[#0B2A1F] to-[#04120e] rounded-2xl p-6 sm:p-10 md:p-16 text-center border border-[rgba(255,255,255,0.05)] shadow-2xl relative overflow-hidden">
             {/* Background Glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-accent/5 blur-3xl pointer-events-none" aria-hidden="true"></div>
 
             <div className="relative z-10 space-y-8">
               <div className="space-y-4">
-                <h2 id="subscription-title" className="text-3xl md:text-4xl font-bold text-white font-serif leading-tight">
+                <h2 id="subscription-title" className="text-2xl sm:text-3xl md:text-4xl font-bold text-white font-serif leading-tight">
                   당신만의 서재를 <br />완성할 준비가 되셨나요?
                 </h2>
                 <p className="text-gray-400 font-light">

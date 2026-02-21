@@ -22,18 +22,17 @@ export default function BeehiivEmbed() {
     }, []);
 
     return (
-        <div className="w-full max-w-md mx-auto flex justify-center">
+        <div className="w-full max-w-[320px] sm:max-w-md mx-auto flex justify-center px-2 sm:px-0">
             <iframe
                 src="https://subscribe-forms.beehiiv.com/fa2ef120-ce5b-4bce-9201-5f5b40f4d753"
                 data-test-id="beehiiv-embed"
                 frameBorder="0"
                 scrolling="no"
+                className="w-full h-[300px] sm:h-[350px]"
                 style={{
                     margin: 0,
                     borderRadius: "0px",
                     backgroundColor: "transparent",
-                    width: "100%",
-                    height: "350px" // Adjusted height slightly to ensure it fits
                 }}
             />
         </div>

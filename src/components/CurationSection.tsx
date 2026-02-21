@@ -91,9 +91,9 @@ export default function CurationSection({ id }: CurationProps = {}) {
                     </p>
                 </div>
 
-                {/* Books Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    {curation.books.slice(0, 10).map((book, i) => (
+                {/* Books Grid — 4열×3행 */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    {curation.books.slice(0, 12).map((book, i) => (
                         <Link key={book.id} href={book.coupangLink || "#"} target="_blank" rel="noopener noreferrer" className="group space-y-4 block">
                             <div className="aspect-[1/1.5] relative rounded-sm overflow-hidden shadow-2xl border border-white/5 group-hover:shadow-accent/20 transition-all duration-500 group-hover:-translate-y-2">
                                 {book.imageUrl ? (
@@ -115,12 +115,12 @@ export default function CurationSection({ id }: CurationProps = {}) {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90" />
                                 <div className="absolute bottom-4 left-4 right-4 text-left">
                                     <div className="text-[10px] text-accent font-bold uppercase tracking-tighter mb-1">Pick {i + 1}</div>
-                                    <div className="text-white font-bold text-sm leading-tight line-clamp-2 drop-shadow-md">{book.title}</div>
+                                    <div className="text-white font-bold text-sm leading-tight drop-shadow-md">{book.title}</div>
                                 </div>
                             </div>
                             <div className="space-y-1">
                                 <div className="bg-white/5 border border-white/10 rounded-md p-3 hover:bg-white/10 transition-colors">
-                                    <p className="text-xs text-gray-300 font-light leading-relaxed line-clamp-3">
+                                    <p className="text-xs text-gray-300 font-light leading-relaxed">
                                         {book.recommendation}
                                     </p>
                                 </div>
