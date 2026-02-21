@@ -22,28 +22,51 @@ if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
 }
 
-async function searchBookInAladin(title) {
+async function searchBookInAladin(title, author = '') {
     if (!ALADIN_API_KEY) return null;
-    try {
-        const response = await axios.get('http://www.aladin.co.kr/ttb/api/ItemSearch.aspx', {
-            params: {
-                ttbkey: ALADIN_API_KEY,
-                Query: title,
-                QueryType: 'Title',
-                MaxResults: 1,
-                start: 1,
-                SearchTarget: 'Book',
-                output: 'js',
-                Version: '20131101'
-            },
-            timeout: 5000
-        });
-        return response.data.item?.[0] || null;
-    } catch (e) {
-        console.warn(`⚠️ Aladin search failed for "${title}":`, e.message);
-        return null;
+
+    // 검색 전략 목록 (순서대로 시도)
+    const strategies = [
+        { query: title, queryType: 'Title' },
+        { query: `${title} ${author.split('/')[0].split('(')[0].trim()}`, queryType: 'Keyword' },
+        { query: title.replace(/\s*[-–:·]\s*.+$/, '').trim(), queryType: 'Title' }, // 부제목 제거
+    ];
+
+    for (const strategy of strategies) {
+        if (!strategy.query || strategy.query.length < 2) continue;
+        try {
+            const response = await axios.get('http://www.aladin.co.kr/ttb/api/ItemSearch.aspx', {
+                params: {
+                    ttbkey: ALADIN_API_KEY,
+                    Query: strategy.query,
+                    QueryType: strategy.queryType,
+                    MaxResults: 3,
+                    start: 1,
+                    SearchTarget: 'Book',
+                    output: 'js',
+                    Version: '20131101'
+                },
+                timeout: 5000
+            });
+            const items = response.data.item || [];
+            if (items.length > 0) {
+                // 커버 이미지가 있는 결과 우선 선택
+                const withCover = items.find(item => item.cover && !item.cover.includes('noimage'));
+                return withCover || items[0];
+            }
+        } catch (e) {
+            console.warn(`⚠️ Aladin search failed for "${strategy.query}":`, e.message);
+        }
+        await sleep(300); // API rate limit 방지
     }
+    console.warn(`⚠️ No image found for "${title}"`);
+    return null;
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 function parseCSV(csvText) {
     const result = [];
@@ -127,7 +150,7 @@ async function sync() {
             console.log(`🔍 Processing: ${bookTitle}`);
 
             // Enrich with Aladin
-            const aladinData = await searchBookInAladin(bookTitle);
+            const aladinData = await searchBookInAladin(bookTitle, author);
 
             books.push({
                 id: `choice-${i}`,

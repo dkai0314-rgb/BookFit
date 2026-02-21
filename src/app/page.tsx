@@ -14,7 +14,7 @@ export default function Home() {
             <span className="bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent drop-shadow-sm">BookFit</span>
           </Link>
           <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-400" aria-label="메인 네비게이션">
-            <Link href="#curation" className="hover:text-accent transition-colors">이달의북핏</Link>
+            <Link href="/curation" className="hover:text-accent transition-colors">이달의북핏</Link>
             <Link href="/bestsellers" className="hover:text-accent transition-colors">베스트셀러</Link>
           </nav>
           <div className="flex items-center gap-4">
