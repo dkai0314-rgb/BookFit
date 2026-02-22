@@ -36,16 +36,16 @@ export default function ResultPage() {
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 text-secondary-foreground text-sm font-medium mb-4"
+                        className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 text-secondary-foreground text-base font-medium mb-4"
                     >
-                        AI 북 카운셀러 처방전 💊
+                        AI �?카운?�??처방???��
                     </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className="text-3xl md:text-5xl font-bold text-primary break-keep"
                     >
-                        당신을 위한 맞춤 도서입니다
+                        ?�신???�한 맞춤 ?�서?�니??
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -53,7 +53,7 @@ export default function ResultPage() {
                         transition={{ delay: 0.2 }}
                         className="text-muted-foreground"
                     >
-                        요청하신 &quot;{answers.userRequest}&quot;에 맞춰 엄선했습니다.
+                        ?�청?�신 &quot;{answers.userRequest}&quot;??맞춰 ?�선?�습?�다.
                     </motion.p>
                 </div>
 
@@ -82,7 +82,7 @@ export default function ResultPage() {
                                         </div>
                                     )}
                                     <div className="absolute top-0 right-0 p-2">
-                                        <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded">
+                                        <span className="bg-primary text-primary-foreground text-base font-bold px-2 py-1 rounded">
                                             추천 {index + 1}
                                         </span>
                                     </div>
@@ -94,22 +94,22 @@ export default function ResultPage() {
                                         <h3 className="font-bold text-lg leading-tight line-clamp-2" title={book.title}>
                                             {book.title}
                                         </h3>
-                                        <p className="text-sm text-muted-foreground line-clamp-1">
+                                        <p className="text-base text-muted-foreground line-clamp-1">
                                             {book.authors.join(", ")}
                                         </p>
                                     </div>
 
                                     {/* AI Reason */}
                                     <div className="bg-primary/5 p-4 rounded-lg flex-1 border border-primary/10">
-                                        <p className="text-sm text-foreground/90 leading-relaxed">
-                                            <span className="font-bold text-primary mr-2">🤖 AI 추천 사유:</span>
+                                        <p className="text-base text-foreground/90 leading-relaxed">
+                                            <span className="font-bold text-primary mr-2">?�� AI 추천 ?�유:</span>
                                             {book.reason}
                                         </p>
                                     </div>
 
                                     {/* Short Description */}
                                     <div className="px-1">
-                                        <p className="text-xs text-muted-foreground line-clamp-2">
+                                        <p className="text-base text-muted-foreground line-clamp-2">
                                             {book.description}
                                         </p>
                                     </div>
@@ -123,7 +123,7 @@ export default function ResultPage() {
                                                 onClick={() => window.open(book.viewerUrl, 'Aladin360', 'width=1024,height=800,resizable=yes,scrollbars=yes')}
                                             >
                                                 <Box className="w-4 h-4 mr-2" />
-                                                3D 입체보기 (알라딘)
+                                                3D ?�체보기 (?�라??
                                             </Button>
                                         )}
                                         <Button
@@ -137,7 +137,7 @@ export default function ResultPage() {
                                             }}
                                         >
                                             <ShoppingCart className="w-4 h-4 mr-2" />
-                                            쿠팡 로켓배송 확인
+                                            쿠팡 로켓배송 ?�인
                                         </Button>
                                     </div>
                                 </div>
@@ -155,11 +155,11 @@ export default function ResultPage() {
                 >
                     <Button variant="outline" size="lg" onClick={() => router.push("/")}>
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        메인으로
+                        메인?�로
                     </Button>
                     <Button variant="ghost" size="lg" onClick={handleRetest}>
                         <RefreshCw className="w-4 h-4 mr-2" />
-                        다시 추천받기
+                        ?�시 추천받기
                     </Button>
                 </motion.div>
             </div>

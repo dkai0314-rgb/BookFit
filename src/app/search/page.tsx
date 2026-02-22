@@ -7,11 +7,11 @@ import { Sparkles, Search, Loader2 } from "lucide-react";
 import { useSurveyStore } from "@/lib/store";
 
 const GUIDE_CHIPS = [
-    "쉽고 잘 읽히는 뇌과학 입문서",
-    "지친 마음을 달래줄 힐링 에세이",
-    "주식 투자 초보를 위한 필독서",
-    "몰입감 넘치는 추리 소설",
-    "마케팅 초보를 위한 필독서",
+    "?�고 ???�히???�과???�문??,
+    "지�?마음???�래�??�링 ?�세??,
+    "주식 ?�자 초보�??�한 ?�독??,
+    "몰입�??�치??추리 ?�설",
+    "마�???초보�??�한 ?�독??,
 ];
 
 export default function SearchPage() {
@@ -50,11 +50,11 @@ export default function SearchPage() {
                 setRecommendations(data.items);
                 router.push("/result");
             } else {
-                alert("추천 결과를 찾지 못했습니다. 다른 키워드로 검색해보세요.");
+                alert("추천 결과�?찾�? 못했?�니?? ?�른 ?�워?�로 검?�해보세??");
             }
         } catch (error) {
             console.error("Search failed:", error);
-            alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+            alert("?�류가 발생?�습?�다. ?�시 ???�시 ?�도?�주?�요.");
         } finally {
             setIsLoading(false);
         }
@@ -82,10 +82,10 @@ export default function SearchPage() {
                         <Sparkles className="w-6 h-6 text-primary" />
                     </div>
                     <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-foreground break-keep leading-tight">
-                        어떤 책을 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">찾고 계신가요?</span>
+                        ?�떤 책을 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">찾고 계신가??</span>
                     </h1>
                     <p className="text-muted-foreground md:text-lg">
-                        AI가 당신의 질문을 분석해 딱 맞는 책을 찾아드립니다.
+                        AI가 ?�신??질문??분석????맞는 책을 찾아?�립?�다.
                     </p>
                 </div>
 
@@ -97,7 +97,7 @@ export default function SearchPage() {
                         <input
                             type="text"
                             className="flex-1 bg-transparent text-lg placeholder:text-muted-foreground/50 focus:outline-none"
-                            placeholder="예) 요즘 마음이 답답한데 위로가 되는 에세이 추천해줘"
+                            placeholder="?? ?�즘 마음???�답?�데 ?�로가 ?�는 ?�세??추천?�줘"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             onKeyDown={handleKeyDown}
@@ -110,15 +110,15 @@ export default function SearchPage() {
                             size="lg"
                             className="rounded-xl px-6"
                         >
-                            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "검색"}
+                            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "검??}
                         </Button>
                     </div>
                 </div>
 
                 {/* Guide Chips */}
                 <div className="space-y-4 text-center">
-                    <p className="text-sm text-muted-foreground">
-                        이런 질문은 어때요? 👇
+                    <p className="text-base text-muted-foreground">
+                        ?�런 질문?� ?�때?? ?��
                     </p>
                     <div className="flex flex-wrap gap-2 justify-center">
                         {GUIDE_CHIPS.map((chip) => (
@@ -128,7 +128,7 @@ export default function SearchPage() {
                                     setQuery(chip);
                                     // Optional: Auto-search on click? or just fill? Let's just fill for now.
                                 }}
-                                className="px-4 py-2 text-sm rounded-full bg-secondary/10 text-secondary-foreground hover:bg-secondary/20 transition-all hover:scale-105 active:scale-95"
+                                className="px-4 py-2 text-base rounded-full bg-secondary/10 text-secondary-foreground hover:bg-secondary/20 transition-all hover:scale-105 active:scale-95"
                             >
                                 {chip}
                             </button>
@@ -138,7 +138,7 @@ export default function SearchPage() {
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-6 text-xs text-muted-foreground">
+            <div className="absolute bottom-6 text-base text-muted-foreground">
                 Powered by Google Gemini & Google Books
             </div>
         </div>

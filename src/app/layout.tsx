@@ -10,16 +10,16 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "BookFit - 당신을 위한 AI 북 카운셀러",
-  description: "현재 상황과 감정에 딱 맞는 책을 처방해드립니다. AI 분석으로 지금 당신에게 필요한 단 한 권의 책을 찾아보세요.",
-  keywords: ["도서 추천", "AI 북 카운셀러", "독서 큐레이션", "심리 기반 도서 추천", "북핏", "BookFit"],
+  title: "BookFit - ?�신???�한 AI �?카운?�??,
+  description: "?�재 ?�황�?감정????맞는 책을 처방?�드립니?? AI 분석?�로 지�??�신?�게 ?�요??????권의 책을 찾아보세??",
+  keywords: ["책추�?, "ai책추�?, "�?추천", "AI �?추천", "?�서 추천", "AI �?카운?�??, "?�서 ?�레?�션", "?�리 기반 ?�서 추천", "북핏", "BookFit"],
   authors: [{ name: "BookFit Team" }],
   alternates: {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: "BookFit - AI 기반 개인 맞춤형 도서 추천 서비스",
-    description: "지금 당신의 감정과 상황에 완벽하게 어울리는 책을 AI가 추천해드립니다.",
+    title: "BookFit - AI 기반 개인 맞춤???�서 추천 ?�비??,
+    description: "지�??�신??감정�??�황???�벽?�게 ?�울리는 책을 AI가 추천?�드립니??",
     url: SITE_URL,
     siteName: "BookFit",
     images: [
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BookFit - AI 북 카운셀러",
-    description: "지금 당신에게 필요한 단 한 권의 책을 AI가 처방해드립니다.",
+    title: "BookFit - AI �?카운?�??,
+    description: "지�??�신?�게 ?�요??????권의 책을 AI가 처방?�드립니??",
     images: [`${SITE_URL}/logo-square.png`],
   },
   robots: {
@@ -56,7 +56,7 @@ export default function RootLayout({
     "name": "BookFit",
     "url": SITE_URL,
     "logo": `${SITE_URL}/logo-square.png`,
-    "description": "AI 기반 개인화 도서 추천 및 독서 경험 가이드 서비스",
+    "description": "AI 기반 개인???�서 추천 �??�서 경험 가?�드 ?�비??,
   };
 
   const websiteData = {

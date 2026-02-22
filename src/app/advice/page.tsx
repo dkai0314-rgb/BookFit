@@ -10,37 +10,37 @@ import Link from "next/link";
 const TOTAL_STEPS = 2;
 
 const EMOTIONS = [
-    { label: "행복함", value: "happy", icon: "😊" },
-    { label: "차분함", value: "calm", icon: "🌿" },
-    { label: "우울함", value: "depressed", icon: "☁️" },
-    { label: "지침", value: "tired", icon: "🔋" },
-    { label: "불안함", value: "anxious", icon: "🌪️" },
-    { label: "설렘", value: "excited", icon: "✨" },
+    { label: "?�복??, value: "happy", icon: "?��" },
+    { label: "차분??, value: "calm", icon: "?��" },
+    { label: "?�울??, value: "depressed", icon: "?�️" },
+    { label: "지�?, value: "tired", icon: "?��" },
+    { label: "불안??, value: "anxious", icon: "?���? },
+    { label: "?�렘", value: "excited", icon: "?? },
 ];
 
 const SITUATIONS = [
-    { label: "인간관계 고민", value: "relationship" },
+    { label: "?�간관�?고�?", value: "relationship" },
     { label: "진로/취업", value: "career" },
-    { label: "번아웃/휴식", value: "burnout" },
-    { label: "자기계발/성장", value: "growth" },
-    { label: "경제/재테크", value: "money" },
-    { label: "단순 심심풀이", value: "killing_time" },
+    { label: "번아???�식", value: "burnout" },
+    { label: "?�기계발/?�장", value: "growth" },
+    { label: "경제/?�테??, value: "money" },
+    { label: "?�순 ?�심?�??, value: "killing_time" },
 ];
 
 // Simple advice mapping (MVP)
 const ADVICE_MAPPING: Record<string, string[]> = {
-    happy: ["즐거운 순간을 만끽하세요! 이 에너지가 당신을 더 멀리 데려갈 거예요.", "지금의 행복을 기록해두면, 힘든 날 큰 위로가 됩니다."],
-    calm: ["평온함은 가장 큰 힘입니다. 이 고요함 속에서 내면의 소리를 들어보세요.", "잠시 멈춰서 차 한 잔의 여유를 즐기기에 완벽한 날이네요."],
-    depressed: ["힘든 날도 지나가기 마련이에요. 오늘은 스스로를 좀 더 다독여주세요.", "작은 성취 하나만 만들어도 충분해요. 이불 개기부터 시작해보는 건 어떨까요?"],
-    tired: ["잠시 멈추라는 신호일 수 있어요. 죄책감 없이 푹 쉬는 것도 능력입니다.", "배터리가 방전되면 충전이 필요하듯, 당신에게도 휴식이 필요해요."],
-    anxious: ["걱정의 대부분은 실제로 일어나지 않아요. 지금 이 순간에 집중해보세요.", "깊게 숨을 들이마시고 내뱉으세요. 당신은 생각보다 훨씬 강합니다."],
-    excited: ["그 설렘이 새로운 시작의 원동력이 될 거예요. 지금 바로 도전해보세요!", "두근거림을 즐기세요! 멋진 일이 당신을 기다리고 있습니다."],
-    relationship: ["관계는 난로와 같아서, 너무 가까우면 데이고 멀면 추워요. 적당한 거리가 필요해요.", "모든 사람에게 사랑받을 필요는 없습니다. 나를 아껴주는 사람들에게 집중하세요."],
-    career: ["방향이 중요하다면 속도는 중요하지 않아요. 당신만의 속도로 나아가세요.", "지금의 고민은 당신이 성장하고 있다는 증거입니다."],
-    burnout: ["아무것도 하지 않는 시간도 인생에는 꼭 필요합니다.", "열심히 달린 당신, 잠시 엔진을 끄고 식히는 시간을 가지세요."],
-    growth: ["어제의 나보다 1%만 더 나아지면 됩니다. 꾸준함이 비결이에요.", "배움에는 끝이 없죠. 당신의 호기심이 당신을 성장시킬 거예요."],
-    money: ["돈은 좋은 하인이지만 나쁜 주인입니다. 돈의 주인이 되세요.", "작은 습관이 모여 큰 부를 만듭니다. 오늘 커피 한 잔 값부터 아껴볼까요?"],
-    killing_time: ["심심함은 창의력의 원천이 되기도 합니다. 멍 때리는 시간을 즐겨보세요.", "평소에 읽지 않던 장르의 책을 펼쳐보는 건 어떨까요?"],
+    happy: ["즐거???�간??만끽?�세?? ???�너지가 ?�신????멀�??�려�?거예??", "지금의 ?�복??기록?�두�? ?�든 ?????�로가 ?�니??"],
+    calm: ["?�온?��? 가?????�입?�다. ??고요???�에???�면???�리�??�어보세??", "?�시 멈춰??�????�의 ?�유�?즐기기에 ?�벽???�이?�요."],
+    depressed: ["?�든 ?�도 지?��?�?마련?�에?? ?�늘?� ?�스로�? 좀 ???�독?�주?�요.", "?��? ?�취 ?�나�?만들?�도 충분?�요. ?�불 개기부???�작?�보??�??�떨까요?"],
+    tired: ["?�시 멈추?�는 ?�호?????�어?? 죄책�??�이 ???�는 것도 ?�력?�니??", "배터리�? 방전?�면 충전???�요?�듯, ?�신?�게???�식???�요?�요."],
+    anxious: ["걱정???�부분�? ?�제�??�어?��? ?�아?? 지�????�간??집중?�보?�요.", "깊게 ?�을 ?�이마시�??�뱉?�세?? ?�신?� ?�각보다 ?�씬 강합?�다."],
+    excited: ["�??�렘???�로???�작???�동?�이 ??거예?? 지�?바로 ?�전?�보?�요!", "?�근거림??즐기?�요! 멋진 ?�이 ?�신??기다리고 ?�습?�다."],
+    relationship: ["관계는 ?�로?� 같아?? ?�무 가까우�??�이�?멀�?추워?? ?�당??거리가 ?�요?�요.", "모든 ?�람?�게 ?�랑받을 ?�요???�습?�다. ?��? ?�껴주는 ?�람?�에�?집중?�세??"],
+    career: ["방향??중요?�다�??�도??중요?��? ?�아?? ?�신만의 ?�도�??�아가?�요.", "지금의 고�??� ?�신???�장?�고 ?�다??증거?�니??"],
+    burnout: ["?�무것도 ?��? ?�는 ?�간???�생?�는 �??�요?�니??", "?�심???�린 ?�신, ?�시 ?�진???�고 ?�히???�간??가지?�요."],
+    growth: ["?�제???�보??1%�????�아지�??�니?? 꾸�??�이 비결?�에??", "배�??�는 ?�이 ?�죠. ?�신???�기?�이 ?�신???�장?�킬 거예??"],
+    money: ["?��? 좋�? ?�인?��?�??�쁜 주인?�니?? ?�의 주인???�세??", "?��? ?��???모여 ??부�?만듭?�다. ?�늘 커피 ????값�????�껴볼까??"],
+    killing_time: ["?�심?��? 창의?�의 ?�천???�기???�니?? �??�리???�간??즐겨보세??", "?�소???��? ?�던 ?�르??책을 ?�쳐보는 �??�떨까요?"],
 };
 
 export default function AdvicePage() {
@@ -93,7 +93,7 @@ export default function AdvicePage() {
                     <div className="space-y-4 text-center">
                         <div className="mb-8">
                             <Link href="/" className="text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-2">
-                                <Sparkles className="w-4 h-4" /> BookFit 홈으로
+                                <Sparkles className="w-4 h-4" /> BookFit ?�으�?
                             </Link>
                         </div>
                         <div className="w-full bg-secondary/30 h-2 rounded-full overflow-hidden">
@@ -104,7 +104,7 @@ export default function AdvicePage() {
                                 transition={{ duration: 0.5, ease: "easeInOut" }}
                             />
                         </div>
-                        <p className="text-sm font-medium text-muted-foreground">
+                        <p className="text-base font-medium text-muted-foreground">
                             {step} / {TOTAL_STEPS}
                         </p>
                     </div>
@@ -123,7 +123,7 @@ export default function AdvicePage() {
                         {step === 1 && (
                             <>
                                 <h2 className="text-2xl md:text-3xl font-bold text-center text-primary break-keep">
-                                    오늘 하루, 기분이 어떠신가요?
+                                    ?�늘 ?�루, 기분???�떠?��???
                                 </h2>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                     {EMOTIONS.map((item) => (
@@ -142,7 +142,7 @@ export default function AdvicePage() {
                         {step === 2 && (
                             <>
                                 <h2 className="text-2xl md:text-3xl font-bold text-center text-primary break-keep">
-                                    요즘 가장 큰 고민거리는 무엇인가요?
+                                    ?�즘 가????고�?거리??무엇?��???
                                 </h2>
                                 <div className="grid grid-cols-2 gap-4">
                                     {SITUATIONS.map((item) => (
@@ -169,7 +169,7 @@ export default function AdvicePage() {
                                         <Sparkles className="w-12 h-12 text-primary" />
                                     </div>
                                     <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                                        오늘의 조언
+                                        ?�늘??조언
                                     </h2>
                                     <div className="bg-card border border-border/50 p-8 rounded-2xl shadow-sm max-w-lg mx-auto">
                                         <p className="text-lg md:text-xl text-muted-foreground whitespace-pre-line leading-relaxed">
@@ -178,11 +178,11 @@ export default function AdvicePage() {
                                     </div>
                                     <div className="flex gap-4 justify-center pt-8">
                                         <Button onClick={reset} variant="outline" className="gap-2">
-                                            <RefreshCcw className="w-4 h-4" /> 다시 하기
+                                            <RefreshCcw className="w-4 h-4" /> ?�시 ?�기
                                         </Button>
                                         <Link href="/search">
                                             <Button className="gap-2 bg-primary hover:bg-primary/90">
-                                                이 기분에 맞는 책 찾기 <ChevronRight className="w-4 h-4" />
+                                                ??기분??맞는 �?찾기 <ChevronRight className="w-4 h-4" />
                                             </Button>
                                         </Link>
                                     </div>
@@ -202,14 +202,14 @@ export default function AdvicePage() {
                             className="text-muted-foreground hover:text-primary"
                         >
                             <ChevronLeft className="w-4 h-4 mr-2" />
-                            이전
+                            ?�전
                         </Button>
                         <Button
                             onClick={handleNext}
                             disabled={(step === 1 && !emotion) || (step === 2 && !situation)}
                             className="bg-primary hover:bg-primary/90 text-white px-8 rounded-full shadow-lg transition-all"
                         >
-                            {step === TOTAL_STEPS ? "조언 보기" : "다음"}
+                            {step === TOTAL_STEPS ? "조언 보기" : "?�음"}
                             {step !== TOTAL_STEPS && <ChevronRight className="w-4 h-4 ml-2" />}
                             {step === TOTAL_STEPS && <Sparkles className="w-4 h-4 ml-2" />}
                         </Button>

@@ -12,14 +12,14 @@ export interface Book {
     reason?: string;
 }
 
-// 설문 데이터 타입 정의
+// ?�문 ?�이???�???�의
 export interface SurveyState {
     step: number;
     answers: {
         emotion: string[]; // Step 1: 기분/감정
-        situation: string[]; // Step 2: 현재 상황/고민
-        style: string; // Step 3: 선호하는 독서 스타일
-        userRequest: string; // Step 4: 사용자 요청 (자연어)
+        situation: string[]; // Step 2: ?�재 ?�황/고�?
+        style: string; // Step 3: ?�호?�는 ?�서 ?��???
+        userRequest: string; // Step 4: ?�용???�청 (?�연??
     };
     recommendations: Book[]; // API Result
     setStep: (step: number) => void;

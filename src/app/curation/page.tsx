@@ -74,14 +74,14 @@ export default async function CurationPage() {
                 <div className="max-w-6xl mx-auto space-y-24">
                     {/* Hero Section of Curation */}
                     <div className="text-center space-y-6 max-w-3xl mx-auto">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-bold uppercase tracking-widest">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-base font-bold uppercase tracking-widest">
                             <Sparkles className="w-4 h-4" /> Monthly Curation
                         </div>
                         <h1 className="text-4xl md:text-6xl font-black font-serif leading-tight">
-                            북핏초이스
+                            북핏초이??
                         </h1>
                         <p className="text-xl text-gray-300 font-light leading-relaxed whitespace-pre-line">
-                            북핏 큐레이터들이 선정한 베스트셀러
+                            북핏 ?�레?�터?�이 ?�정??베스?��???
                         </p>
 
                         {/* Category Navigation Buttons */}
@@ -90,7 +90,7 @@ export default async function CurationPage() {
                                 <Link
                                     key={category}
                                     href={`#category-${category}`}
-                                    className="px-4 py-2 rounded-full border border-white/10 hover:border-accent hover:text-accent hover:bg-accent/5 bg-white/5 text-sm text-gray-300 transition-all duration-300"
+                                    className="px-4 py-2 rounded-full border border-white/10 hover:border-accent hover:text-accent hover:bg-accent/5 bg-white/5 text-base text-gray-300 transition-all duration-300"
                                 >
                                     {category}
                                 </Link>
@@ -121,19 +121,19 @@ export default async function CurationPage() {
                                             )}
                                             {/* Category Badge removed from image as it is now a section header */}
                                             {/* but user might still want it? Plan said "Group books by category", likely section header is better than badge everywhere if grouped. 
-                                                Actually user "이미지아래 설명란이 중요한데 잘리면 안돼. 그래서 /curation 이 페이지는 책을 4개씩 배치하면 어때? 그리고 카테고리별로 섹션 구분이 있으면 좋겠어~"
+                                                Actually user "?��?지?�래 ?�명?�??중요?�데 ?�리�??�돼. 그래??/curation ???�이지??책을 4개씩 배치?�면 ?�때? 그리�?카테고리별로 ?�션 구분???�으�?좋겠??"
                                                 So Section grouping is key. I will keep the badge OFF the image in this view since it's grouped by section to avoid redundancy? 
                                                 Or keep it? Let's keep it clean since it's under a category header. */}
 
                                             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90" />
                                             <div className="absolute bottom-4 left-4 right-4">
                                                 <div className="text-white font-bold text-lg leading-tight line-clamp-2 drop-shadow-md mb-1">{book.title}</div>
-                                                <div className="text-gray-400 text-sm line-clamp-1">{book.author}</div>
+                                                <div className="text-gray-400 text-base line-clamp-1">{book.author}</div>
                                             </div>
                                         </div>
                                         <div className="space-y-2 pl-1">
                                             <div className="bg-white/5 border border-white/10 rounded-md p-4 hover:bg-white/10 transition-colors">
-                                                <p className="text-sm text-gray-300 font-light leading-relaxed whitespace-pre-line">
+                                                <p className="text-base text-gray-300 font-light leading-relaxed whitespace-pre-line">
                                                     {book.recommendation}
                                                 </p>
                                             </div>

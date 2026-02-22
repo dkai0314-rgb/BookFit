@@ -46,7 +46,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                     </div>
 
                     <div className="w-full bg-[#0B2A1F]/50 border border-white/10 rounded-lg p-3">
-                        <p className="text-xs text-gray-400 text-center leading-relaxed">
+                        <p className="text-base text-gray-400 text-center leading-relaxed">
                             ℹ️ 이 게시물은 쿠팡 파트너스 활동의 일환으로,<br />
                             이에 따른 일정액의 수수료를 제공받습니다.
                         </p>
@@ -56,7 +56,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                 {/* Right: Content */}
                 <div className="w-full md:w-2/3 space-y-8 text-white">
                     <div className="space-y-2 border-b border-white/10 pb-6">
-                        <div className="text-accent text-sm font-semibold tracking-wider uppercase mb-1">{book.category}</div>
+                        <div className="text-accent text-base font-semibold tracking-wider uppercase mb-1">{book.category}</div>
                         <h1 className="text-4xl md:text-5xl font-bold font-serif leading-tight">{book.title}</h1>
                         <p className="text-xl text-gray-400 font-light">{book.author}</p>
                     </div>
