@@ -19,7 +19,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                         "bg-accent text-accent-foreground hover:bg-accent/90": variant === "accent",
                         "border border-input bg-background hover:bg-accent hover:text-accent-foreground": variant === "outline",
                         "hover:bg-accent/10 hover:text-accent": variant === "ghost",
-                        "h-9 px-3 text-base": size === "sm",
+                        "h-9 px-3 text-sm": size === "sm",
                         "h-10 px-4 py-2": size === "md",
                         "h-12 px-8 text-lg rounded-lg": size === "lg",
                     },

@@ -45,14 +45,14 @@ export default function ContentFactoryPage() {
             fetchHistory(); // Refresh history
         } catch (error) {
             console.error('Generation failed:', error);
-            alert('?�성???�패?�습?�다.');
+            alert('생성에 실패했습니다.');
         } finally {
             setLoading(false);
         }
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('?�말 ??��?�시겠습?�까?')) return;
+        if (!confirm('정말 삭제하시겠습니까?')) return;
 
         try {
             const response = await fetch(`/api/curation?id=${id}`, {
@@ -64,7 +64,7 @@ export default function ContentFactoryPage() {
             }
         } catch (error) {
             console.error('Delete failed:', error);
-            alert('??��???�패?�습?�다.');
+            alert('삭제에 실패했습니다.');
         }
     };
 
@@ -91,8 +91,8 @@ export default function ContentFactoryPage() {
                 {/* Header */}
                 <div className="flex justify-between items-center">
                     <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 flex items-center gap-3">
-                        <span className="p-2 bg-slate-900 text-white rounded-lg">?��</span>
-                        BookFit 콘텐�??�토�?
+                        <span className="p-2 bg-slate-900 text-white rounded-lg">🏭</span>
+                        BookFit 콘텐츠 팩토리
                     </h1>
                 </div>
 
@@ -102,12 +102,12 @@ export default function ContentFactoryPage() {
                         {/* Generator Card */}
                         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                             <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                <LayoutGrid className="w-5 h-5" /> ???�레?�션 ?�성
+                                <LayoutGrid className="w-5 h-5" /> 새 큐레이션 생성
                             </h2>
                             <div className="space-y-4">
                                 <textarea
                                     className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900 focus:outline-none focus:bg-white transition-all resize-none h-32"
-                                    placeholder="?? 직장?�활??지�??�람?�에�?추천?�는 �?
+                                    placeholder="예: 직장생활에 지친 사람들에게 추천하는 책"
                                     value={theme}
                                     onChange={(e) => setTheme(e.target.value)}
                                 />
@@ -119,9 +119,9 @@ export default function ContentFactoryPage() {
                                     {loading ? (
                                         <span className="flex items-center gap-2">
                                             <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></span>
-                                            콘텐�??�성 �?..
+                                            콘텐츠 생성 중...
                                         </span>
-                                    ) : '지�??�성?�기'}
+                                    ) : '지금 생성하기'}
                                 </Button>
                             </div>
                         </div>
@@ -130,13 +130,13 @@ export default function ContentFactoryPage() {
                         {result && (
                             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
                                 <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                                    <h2 className="text-xl font-bold">?�� ?�성 결과 미리보기</h2>
+                                    <h2 className="text-xl font-bold">🧪 생성 결과 미리보기</h2>
                                     <Button
                                         onClick={() => downloadImage(result)}
                                         variant="outline"
                                         className="gap-2"
                                     >
-                                        <Download className="w-4 h-4" /> ?��?지 ?�운로드
+                                        <Download className="w-4 h-4" /> 이미지 다운로드
                                     </Button>
                                 </div>
 
@@ -146,7 +146,7 @@ export default function ContentFactoryPage() {
                                         <div className="space-y-4">
                                             <div className="inline-block px-3 py-1 bg-slate-900 text-white text-[10px] font-bold tracking-widest uppercase rounded">Web View</div>
                                             <h3 className="text-3xl font-black leading-tight text-slate-900">{result.title}</h3>
-                                            <p className="text-slate-600 leading-relaxed text-base">{result.description}</p>
+                                            <p className="text-slate-600 leading-relaxed text-sm">{result.description}</p>
                                         </div>
 
                                         <div className="space-y-3 pt-4">
@@ -155,8 +155,8 @@ export default function ContentFactoryPage() {
                                                     <img src={book.imageUrl} className="w-16 h-24 object-cover rounded shadow-sm group-hover:scale-105 transition-transform" />
                                                     <div className="flex-1 min-w-0">
                                                         <div className="font-bold text-slate-900 truncate">{book.title}</div>
-                                                        <div className="text-base text-slate-500 mb-1">{book.author}</div>
-                                                        <div className="text-base text-blue-600 bg-blue-50 p-1.5 rounded inline-block line-clamp-2">{book.recommendation}</div>
+                                                        <div className="text-xs text-slate-500 mb-1">{book.author}</div>
+                                                        <div className="text-xs text-blue-600 bg-blue-50 p-1.5 rounded inline-block line-clamp-2">{book.recommendation}</div>
                                                     </div>
                                                 </div>
                                             ))}
@@ -175,7 +175,7 @@ export default function ContentFactoryPage() {
                                             />
                                         </div>
 
-                                        <div className="p-4 bg-white border border-slate-200 rounded-xl text-base whitespace-pre-line font-mono text-slate-600 shadow-sm">
+                                        <div className="p-4 bg-white border border-slate-200 rounded-xl text-xs whitespace-pre-line font-mono text-slate-600 shadow-sm">
                                             {result.instaCaption}
                                         </div>
                                     </div>
@@ -189,9 +189,9 @@ export default function ContentFactoryPage() {
                         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                             <div className="p-6 border-b border-slate-100 flex justify-between items-center">
                                 <h2 className="font-bold text-slate-900 flex items-center gap-2">
-                                    <Clock className="w-5 h-5" /> ?�레?�션 ?�스?�리
+                                    <Clock className="w-5 h-5" /> 큐레이션 히스토리
                                 </h2>
-                                <span className="text-base font-medium text-slate-400">{history.length} items</span>
+                                <span className="text-xs font-medium text-slate-400">{history.length} items</span>
                             </div>
 
                             <div className="divide-y divide-slate-50 max-h-[calc(100vh-250px)] overflow-y-auto">
@@ -200,14 +200,14 @@ export default function ContentFactoryPage() {
                                         <div className="inline-block w-6 h-6 border-2 border-slate-100 border-t-slate-400 rounded-full animate-spin"></div>
                                     </div>
                                 ) : history.length === 0 ? (
-                                    <div className="p-12 text-center text-slate-400 text-base italic">
-                                        ?�성???�역???�습?�다.
+                                    <div className="p-12 text-center text-slate-400 text-sm italic">
+                                        생성된 내역이 없습니다.
                                     </div>
                                 ) : (
                                     history.map((item) => (
                                         <div key={item.id} className="p-4 hover:bg-slate-50 transition-colors group">
                                             <div className="flex justify-between items-start mb-2">
-                                                <div className="text-base text-slate-400 font-medium">
+                                                <div className="text-xs text-slate-400 font-medium">
                                                     {new Date(item.createdAt).toLocaleDateString()}
                                                 </div>
                                                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -219,7 +219,7 @@ export default function ContentFactoryPage() {
                                                     </button>
                                                 </div>
                                             </div>
-                                            <h4 className="font-bold text-slate-900 text-base mb-3 line-clamp-1">{item.title}</h4>
+                                            <h4 className="font-bold text-slate-900 text-sm mb-3 line-clamp-1">{item.title}</h4>
                                             <div className="flex gap-2 mb-4">
                                                 {item.books?.slice(0, 3).map((book: any) => (
                                                     <img key={book.id} src={book.imageUrl} className="w-8 h-12 object-cover rounded shadow-sm" />
@@ -229,15 +229,15 @@ export default function ContentFactoryPage() {
                                                 <Button
                                                     size="sm"
                                                     variant="secondary"
-                                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-base gap-1.5 h-8"
+                                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs gap-1.5 h-8"
                                                     onClick={() => setResult(item)}
                                                 >
-                                                    <ExternalLink className="w-3 h-3" /> ?�세보기
+                                                    <ExternalLink className="w-3 h-3" /> 상세보기
                                                 </Button>
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
-                                                    className="border-slate-200 text-slate-600 hover:bg-white text-base px-2.5 h-8"
+                                                    className="border-slate-200 text-slate-600 hover:bg-white text-xs px-2.5 h-8"
                                                     onClick={() => downloadImage(item)}
                                                 >
                                                     <Download className="w-3 h-3" />

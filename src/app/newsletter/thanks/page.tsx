@@ -11,23 +11,23 @@ export default function NewsletterThanksPage() {
                 </div>
 
                 <h1 className="text-3xl md:text-4xl font-black font-serif text-white leading-tight">
-                    구독?�주?�서 감사?�니??
+                    구독해주셔서 감사합니다!
                 </h1>
 
                 <p className="text-gray-400 text-lg leading-relaxed">
-                    북핏???�스?�터 구독???�료?�었?�니??<br />
-                    매주 ?�선??책과 깊이 ?�는 ?�유??조각?�을<br />
-                    메일?�으�?보내?�릴게요.
+                    북핏의 뉴스레터 구독이 완료되었습니다.<br />
+                    매주 엄선된 책과 깊이 있는 사유의 조각들을<br />
+                    메일함으로 보내드릴게요.
                 </p>
 
                 <div className="pt-8 space-y-4">
                     <Link href="/">
                         <Button className="w-full md:w-auto px-8 py-6 rounded-full bg-accent text-[#061A14] font-bold text-lg hover:bg-accent/90 transition-all">
-                            ?�으�??�아가�?
+                            홈으로 돌아가기
                         </Button>
                     </Link>
-                    <p className="text-base text-gray-600">
-                        * 구독 ?��???받으?�는 메일 ?�단??'Unsubscribe' 링크�??�해 ?�제??가?�합?�다.
+                    <p className="text-xs text-gray-600">
+                        * 구독 해지는 받으시는 메일 하단의 'Unsubscribe' 링크를 통해 언제든 가능합니다.
                     </p>
                 </div>
             </div>

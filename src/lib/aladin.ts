@@ -73,13 +73,14 @@ export async function searchBookInAladin(title: string): Promise<AladinBook | nu
     }
 }
 
-export async function getBestsellers(): Promise<AladinBook[]> {
+export async function getBestsellers(categoryId: number = 0): Promise<AladinBook[]> {
     try {
         const response = await axios.get('http://www.aladin.co.kr/ttb/api/ItemList.aspx', {
             params: {
                 ttbkey: TTB_KEY,
                 QueryType: 'Bestseller',
-                MaxResults: 30,
+                MaxResults: 10,
+                CategoryId: categoryId,
                 start: 1,
                 SearchTarget: 'Book',
                 output: 'js',

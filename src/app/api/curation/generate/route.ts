@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
         For the Instagram caption:
         - Use line breaks for readability.
-        - Include hashtags like #북핏 #BookFit #책추�?#[ThemeKeywords].
+        - Include hashtags like #북핏 #BookFit #책추천 #[ThemeKeywords].
         - Use emojis relevant to the theme.
       `,
         });

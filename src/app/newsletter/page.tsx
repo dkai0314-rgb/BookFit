@@ -23,17 +23,17 @@ export default function NewsletterPage() {
                 <div className="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     {/* Left: Content */}
                     <div className="space-y-6 text-center md:text-left">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-base font-bold uppercase tracking-widest">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-bold uppercase tracking-widest">
                             <Mail className="w-4 h-4" /> Weekly Newsletter
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black font-serif leading-tight">
-                            ?�유??조각??br />
-                            매주 받아보세??
+                            사유의 조각을<br />
+                            매주 받아보세요
                         </h1>
                         <p className="text-lg text-gray-400 font-light leading-relaxed">
-                            바쁜 ?�상 ?? 북핏 ?�레?�터?�이<br />
-                            ?�선??책과 문장?�을 ?�치지 마세??<br />
-                            가??먼�? ?�로???�레?�션??만나�????�습?�다.
+                            바쁜 일상 속, 북핏 큐레이터들이<br />
+                            엄선한 책과 문장들을 놓치지 마세요.<br />
+                            가장 먼저 새로운 큐레이션을 만나볼 수 있습니다.
                         </p>
                     </div>
 

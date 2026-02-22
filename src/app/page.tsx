@@ -10,15 +10,15 @@ export default function Home() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/80 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]" role="banner">
         <div className="max-w-6xl mx-auto w-full flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold flex items-center gap-2 font-serif tracking-tight cursor-pointer" aria-label="BookFit ??>
+          <Link href="/" className="text-2xl font-bold flex items-center gap-2 font-serif tracking-tight cursor-pointer" aria-label="BookFit 홈">
             <span className="bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent drop-shadow-sm">BookFit</span>
           </Link>
-          <nav className="hidden md:flex gap-8 text-base font-medium text-gray-400" aria-label="메인 ?�비게이??>
-            <Link href="/curation" className="hover:text-accent transition-colors">?�달?�북??/Link>
-            <Link href="/bestsellers" className="hover:text-accent transition-colors">베스?��???/Link>
+          <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-400" aria-label="메인 네비게이션">
+            <Link href="/curation" className="hover:text-accent transition-colors">이달의북핏</Link>
+            <Link href="/bestsellers" className="hover:text-accent transition-colors">베스트셀러</Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" className="text-gray-400 hover:text-white hover:bg-white/5" aria-label="로그??>Login</Button>
+            <Button variant="ghost" className="text-gray-400 hover:text-white hover:bg-white/5" aria-label="로그인">Login</Button>
           </div>
         </div>
       </header>
@@ -38,30 +38,30 @@ export default function Home() {
           </div>
 
           <div className="relative z-10 flex flex-col items-center space-y-6 px-4 max-w-4xl mx-auto">
-            <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/20 backdrop-blur-sm px-3 py-1 text-base font-semibold text-primary-foreground transition-colors">
+            <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/20 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-primary-foreground transition-colors">
               <Sparkles className="w-3 h-3 mr-1 text-accent" />
-              근거 ?�는 맞춤 ?�서 추천
+              근거 있는 맞춤 도서 추천
             </div>
             <h1 id="hero-title" className="text-4xl md:text-7xl font-extrabold tracking-tight text-white break-keep drop-shadow-sm leading-tight">
-              지�??�신?�게 ?�요??<br className="md:hidden" />
+              지금 당신에게 필요한 <br className="md:hidden" />
               <span className="text-accent italic">
-                ????�?
+                딱 한 권
               </span>
             </h1>
             <p className="max-w-[700px] text-gray-300 md:text-xl break-keep leading-relaxed drop-shadow-sm font-light">
-              AI 분석?�로 지금의 ?�신?�게 ?�요??책을 찾습?�다.<br />
-              ?�어?????�유�?먼�? ?�인?�고, ?�신 ?�게 ?�택?�세??
+              AI 분석으로 지금의 당신에게 필요한 책을 찾습니다.<br />
+              읽어야 할 이유를 먼저 확인하고, 확신 있게 선택하세요.
             </p>
             <div className="flex gap-4 pt-6">
               <Link href="/recommend">
-                <Button size="lg" className="rounded-md bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold px-8 py-6 text-lg shadow-lg shadow-black/20 transition-all hover:scale-105 border border-transparent" aria-label="AI 맞춤 ?�서 추천 ?�작?�기">
+                <Button size="lg" className="rounded-md bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold px-8 py-6 text-lg shadow-lg shadow-black/20 transition-all hover:scale-105 border border-transparent" aria-label="AI 맞춤 도서 추천 시작하기">
                   <Sparkles className="mr-2 h-5 w-5" />
                   AI 맞춤 추천
                 </Button>
               </Link>
               <Link href="/bestsellers">
-                <Button variant="outline" size="lg" className="rounded-md border-white/20 bg-white/5 text-white hover:bg-white/10 px-8 py-6 text-lg backdrop-blur-sm transition-all hover:border-white/40" aria-label="베스?��????�인?�기">
-                  베스?��???
+                <Button variant="outline" size="lg" className="rounded-md border-white/20 bg-white/5 text-white hover:bg-white/10 px-8 py-6 text-lg backdrop-blur-sm transition-all hover:border-white/40" aria-label="베스트셀러 확인하기">
+                  베스트셀러
                 </Button>
               </Link>
             </div>
@@ -85,18 +85,18 @@ export default function Home() {
                 <div className="mb-2 p-4 rounded-full bg-transparent group-hover:bg-white/5 transition-colors" aria-hidden="true">
                   <MessageSquare className="w-8 h-8 text-accent/80 group-hover:text-accent transition-colors" />
                 </div>
-                <h3 className="text-xl font-bold text-white">?�황 분석</h3>
-                <p className="text-base text-gray-400 leading-relaxed max-w-xs mx-auto break-keep">
-                  ?�신??목표, 고�?, 관?�사�?짧�? 질문?�로 ?�리???�심 ?�워?��? 뽑아?�니??
+                <h3 className="text-xl font-bold text-white">상황 분석</h3>
+                <p className="text-sm text-gray-400 leading-relaxed max-w-xs mx-auto break-keep">
+                  당신의 목표, 고민, 관심사를 짧은 질문으로 정리해 핵심 키워드를 뽑아냅니다.
                 </p>
               </article>
               <article className="flex flex-col items-center text-center space-y-4 group">
                 <div className="mb-2 p-4 rounded-full bg-transparent group-hover:bg-white/5 transition-colors" aria-hidden="true">
                   <BookCheck className="w-8 h-8 text-accent/80 group-hover:text-accent transition-colors" />
                 </div>
-                <h3 className="text-xl font-bold text-white">??맞는 추천</h3>
-                <p className="text-base text-gray-400 leading-relaxed max-w-xs mx-auto break-keep">
-                  분석???�워?�로 지�??�신?�게 가???�요??�???권을 ?��??�게 추천?�니??
+                <h3 className="text-xl font-bold text-white">딱 맞는 추천</h3>
+                <p className="text-sm text-gray-400 leading-relaxed max-w-xs mx-auto break-keep">
+                  분석된 키워드로 지금 당신에게 가장 필요한 책 한 권을 정밀하게 추천합니다.
                 </p>
               </article>
               <article className="flex flex-col items-center text-center space-y-4 group">
@@ -104,8 +104,8 @@ export default function Home() {
                   <Lightbulb className="w-8 h-8 text-accent/80 group-hover:text-accent transition-colors" />
                 </div>
                 <h3 className="text-xl font-bold text-white">추천 근거</h3>
-                <p className="text-base text-gray-400 leading-relaxed max-w-xs mx-auto break-keep">
-                  ?�왜 ??책인지?��? ?�눈???�해?�도�? 추천 ?�유?� ?�용 ?�인?��? ?�께 ?�공?�니??
+                <p className="text-sm text-gray-400 leading-relaxed max-w-xs mx-auto break-keep">
+                  ‘왜 이 책인지’를 한눈에 이해하도록, 추천 이유와 적용 포인트를 함께 제공합니다.
                 </p>
               </article>
             </div>
@@ -121,10 +121,10 @@ export default function Home() {
             <div className="relative z-10 space-y-8">
               <div className="space-y-4">
                 <h2 id="subscription-title" className="text-2xl sm:text-3xl md:text-4xl font-bold text-white font-serif leading-tight">
-                  ?�신만의 ?�재�?<br />?�성??준비�? ?�셨?�요?
+                  당신만의 서재를 <br />완성할 준비가 되셨나요?
                 </h2>
                 <p className="text-gray-400 font-light">
-                  매주 ?�요?? 북핏???�정???�감??문장??메일?�으�?보내?�립?�다.
+                  매주 수요일, 북핏이 선정한 영감의 문장을 메일함으로 보내드립니다.
                 </p>
               </div>
 
@@ -139,7 +139,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-8 text-center text-base text-gray-600 border-t border-[rgba(255,255,255,0.05)] bg-[#04120e]" role="contentinfo">
+      <footer className="w-full py-8 text-center text-sm text-gray-600 border-t border-[rgba(255,255,255,0.05)] bg-[#04120e]" role="contentinfo">
         <p>© 2026 BookFit. All rights reserved.</p>
       </footer>
     </div>

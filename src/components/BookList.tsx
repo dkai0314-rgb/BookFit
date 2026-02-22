@@ -62,12 +62,12 @@ export default function BookList() {
                             <h3 className="font-bold text-lg text-white leading-tight group-hover:text-accent transition-colors">
                                 {book.title}
                             </h3>
-                            <p className="text-base font-semibold tracking-wider text-[#63756b] uppercase mt-1">
+                            <p className="text-xs font-semibold tracking-wider text-[#63756b] uppercase mt-1">
                                 {book.author}
                             </p>
                         </div>
                         {book.summary && (
-                            <p className="text-base text-gray-400 line-clamp-2 leading-relaxed opacity-80">
+                            <p className="text-sm text-gray-400 line-clamp-2 leading-relaxed opacity-80">
                                 {book.summary}
                             </p>
                         )}

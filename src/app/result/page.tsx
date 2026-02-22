@@ -36,16 +36,16 @@ export default function ResultPage() {
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 text-secondary-foreground text-base font-medium mb-4"
+                        className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 text-secondary-foreground text-sm font-medium mb-4"
                     >
-                        AI �?카운?�??처방???��
+                        AI 북 카운셀러 처방전 💊
                     </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className="text-3xl md:text-5xl font-bold text-primary break-keep"
                     >
-                        ?�신???�한 맞춤 ?�서?�니??
+                        당신을 위한 맞춤 도서입니다
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -53,7 +53,7 @@ export default function ResultPage() {
                         transition={{ delay: 0.2 }}
                         className="text-muted-foreground"
                     >
-                        ?�청?�신 &quot;{answers.userRequest}&quot;??맞춰 ?�선?�습?�다.
+                        요청하신 &quot;{answers.userRequest}&quot;에 맞춰 엄선했습니다.
                     </motion.p>
                 </div>
 
@@ -82,7 +82,7 @@ export default function ResultPage() {
                                         </div>
                                     )}
                                     <div className="absolute top-0 right-0 p-2">
-                                        <span className="bg-primary text-primary-foreground text-base font-bold px-2 py-1 rounded">
+                                        <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded">
                                             추천 {index + 1}
                                         </span>
                                     </div>
@@ -94,38 +94,29 @@ export default function ResultPage() {
                                         <h3 className="font-bold text-lg leading-tight line-clamp-2" title={book.title}>
                                             {book.title}
                                         </h3>
-                                        <p className="text-base text-muted-foreground line-clamp-1">
+                                        <p className="text-sm text-muted-foreground line-clamp-1">
                                             {book.authors.join(", ")}
                                         </p>
                                     </div>
 
                                     {/* AI Reason */}
                                     <div className="bg-primary/5 p-4 rounded-lg flex-1 border border-primary/10">
-                                        <p className="text-base text-foreground/90 leading-relaxed">
-                                            <span className="font-bold text-primary mr-2">?�� AI 추천 ?�유:</span>
+                                        <p className="text-sm text-foreground/90 leading-relaxed">
+                                            <span className="font-bold text-primary mr-2">🤖 AI 추천 사유:</span>
                                             {book.reason}
                                         </p>
                                     </div>
 
                                     {/* Short Description */}
                                     <div className="px-1">
-                                        <p className="text-base text-muted-foreground line-clamp-2">
+                                        <p className="text-xs text-muted-foreground line-clamp-2">
                                             {book.description}
                                         </p>
                                     </div>
 
                                     {/* Actions */}
                                     <div className="pt-2 flex flex-col gap-2">
-                                        {book.viewerUrl && (
-                                            <Button
-                                                variant="outline"
-                                                className="w-full border-primary/20 hover:bg-primary/5 text-primary font-medium"
-                                                onClick={() => window.open(book.viewerUrl, 'Aladin360', 'width=1024,height=800,resizable=yes,scrollbars=yes')}
-                                            >
-                                                <Box className="w-4 h-4 mr-2" />
-                                                3D ?�체보기 (?�라??
-                                            </Button>
-                                        )}
+
                                         <Button
                                             className="w-full bg-accent hover:bg-accent/90 text-white shadow-md font-bold"
                                             onClick={() => {
@@ -137,13 +128,22 @@ export default function ResultPage() {
                                             }}
                                         >
                                             <ShoppingCart className="w-4 h-4 mr-2" />
-                                            쿠팡 로켓배송 ?�인
+                                            쿠팡 로켓배송 확인
                                         </Button>
                                     </div>
                                 </div>
                             </Card>
                         </motion.div>
                     ))}
+                </div>
+
+                {/* Coupang Widget Section */}
+                <div className="w-full flex flex-col items-center bg-secondary/5 p-6 rounded-2xl border border-secondary/10 shadow-sm mt-8 mb-8">
+                    <p className="text-foreground/80 mb-4 font-medium text-center text-lg">💡 추천받은 책, 쿠팡에서 바로 찾아보세요!</p>
+                    <div className="w-full overflow-hidden rounded-lg bg-white/80 p-1">
+                        <iframe src="https://coupa.ng/clGXS1" width="100%" height="44" frameBorder="0" scrolling="no" referrerPolicy="unsafe-url"></iframe>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-4 text-center">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
                 </div>
 
                 {/* Footer Actions */}
@@ -155,11 +155,11 @@ export default function ResultPage() {
                 >
                     <Button variant="outline" size="lg" onClick={() => router.push("/")}>
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        메인?�로
+                        메인으로
                     </Button>
                     <Button variant="ghost" size="lg" onClick={handleRetest}>
                         <RefreshCw className="w-4 h-4 mr-2" />
-                        ?�시 추천받기
+                        다시 추천받기
                     </Button>
                 </motion.div>
             </div>

@@ -12,36 +12,36 @@ import { ChevronRight, ChevronLeft, Search } from "lucide-react";
 const TOTAL_STEPS = 4;
 
 const EMOTIONS = [
-    { label: "?�복??, value: "happy", icon: "?��" },
-    { label: "차분??, value: "calm", icon: "?��" },
-    { label: "?�울??, value: "depressed", icon: "?�️" },
-    { label: "지�?, value: "tired", icon: "?��" },
-    { label: "불안??, value: "anxious", icon: "?���? },
-    { label: "?�렘", value: "excited", icon: "?? },
+    { label: "행복함", value: "happy", icon: "😊" },
+    { label: "차분함", value: "calm", icon: "🌿" },
+    { label: "우울함", value: "depressed", icon: "☁️" },
+    { label: "지침", value: "tired", icon: "🔋" },
+    { label: "불안함", value: "anxious", icon: "🌪️" },
+    { label: "설렘", value: "excited", icon: "✨" },
 ];
 
 const SITUATIONS = [
-    { label: "?�간관�?고�?", value: "relationship" },
+    { label: "인간관계 고민", value: "relationship" },
     { label: "진로/취업", value: "career" },
-    { label: "번아???�식", value: "burnout" },
-    { label: "?�기계발/?�장", value: "growth" },
-    { label: "경제/?�테??, value: "money" },
-    { label: "?�순 ?�심?�??, value: "killing_time" },
+    { label: "번아웃/휴식", value: "burnout" },
+    { label: "자기계발/성장", value: "growth" },
+    { label: "경제/재테크", value: "money" },
+    { label: "단순 심심풀이", value: "killing_time" },
 ];
 
 const STYLES = [
-    { label: "?�뜻???�로", value: "warm" },
-    { label: "?�철??직언", value: "cold" },
-    { label: "?�리??분석", value: "logic" },
-    { label: "가벼운 ?�루�?, value: "light" },
+    { label: "따뜻한 위로", value: "warm" },
+    { label: "냉철한 직언", value: "cold" },
+    { label: "논리적 분석", value: "logic" },
+    { label: "가벼운 후루룩", value: "light" },
 ];
 
 // Guide Chips for Step 4
 const GUIDE_CHIPS = [
-    "?�고 ???�히???�과???�문??,
-    "지�?마음???�래�??�링 ?�세??,
-    "주식 ?�자 초보�??�한 ?�독??,
-    "몰입�??�치??추리 ?�설",
+    "쉽고 잘 읽히는 뇌과학 입문서",
+    "지친 마음을 달래줄 힐링 에세이",
+    "주식 투자 초보를 위한 필독서",
+    "몰입감 넘치는 추리 소설",
 ];
 
 export default function SurveyPage() {
@@ -120,7 +120,7 @@ export default function SurveyPage() {
                 {/* Header */}
                 <div className="space-y-4 text-center">
                     <ProgressBar currentStep={step} totalSteps={TOTAL_STEPS} />
-                    <p className="text-base font-medium text-muted-foreground">
+                    <p className="text-sm font-medium text-muted-foreground">
                         {step} / {TOTAL_STEPS}
                     </p>
                 </div>
@@ -136,10 +136,10 @@ export default function SurveyPage() {
                         className="space-y-6"
                     >
                         <h2 className="text-2xl md:text-3xl font-bold text-center text-primary break-keep">
-                            {step === 1 && "?�늘 ?�루, 기분???�떠?�나??"}
-                            {step === 2 && "?�즘 가????고�?거리??무엇?��???"}
-                            {step === 3 && "?�떤 ?��??�의 조언???�하?�나??"}
-                            {step === 4 && "?�떤 책을 찾고 계신가??"}
+                            {step === 1 && "오늘 하루, 기분이 어떠셨나요?"}
+                            {step === 2 && "요즘 가장 큰 고민거리는 무엇인가요?"}
+                            {step === 3 && "어떤 스타일의 조언을 원하시나요?"}
+                            {step === 4 && "어떤 책을 찾고 계신가요?"}
                         </h2>
 
                         {/* Step 1: Emotion */}
@@ -191,25 +191,25 @@ export default function SurveyPage() {
                                 <div className="relative">
                                     <textarea
                                         className="w-full h-32 p-4 rounded-xl border border-input bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none shadow-sm"
-                                        placeholder="?? ?�과?�에 ?�???�고 ?�어?? ?�고 ???�히???�문?�으�?추천?�주?�요."
+                                        placeholder="예) 뇌과학에 대해 알고 싶어요. 쉽고 잘 읽히는 입문용으로 추천해주세요."
                                         value={answers.userRequest}
                                         onChange={(e) => setAnswer("userRequest", e.target.value)}
                                     />
-                                    <div className="absolute bottom-4 right-4 text-base text-muted-foreground">
+                                    <div className="absolute bottom-4 right-4 text-xs text-muted-foreground">
                                         {answers.userRequest.length} / 200
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <p className="text-base text-muted-foreground text-center">
-                                        ?�떻�??�야 ?��? 모르겠다�? ?��
+                                    <p className="text-sm text-muted-foreground text-center">
+                                        어떻게 써야 할지 모르겠다면? 👇
                                     </p>
                                     <div className="flex flex-wrap gap-2 justify-center">
                                         {GUIDE_CHIPS.map((chip) => (
                                             <button
                                                 key={chip}
                                                 onClick={() => setAnswer("userRequest", chip)}
-                                                className="px-3 py-1.5 text-base rounded-full bg-secondary/10 text-secondary-foreground hover:bg-secondary/20 transition-colors"
+                                                className="px-3 py-1.5 text-xs rounded-full bg-secondary/10 text-secondary-foreground hover:bg-secondary/20 transition-colors"
                                             >
                                                 {chip}
                                             </button>
@@ -230,7 +230,7 @@ export default function SurveyPage() {
                         className="text-muted-foreground hover:text-primary"
                     >
                         <ChevronLeft className="w-4 h-4 mr-2" />
-                        ?�전
+                        이전
                     </Button>
                     <Button
                         onClick={handleNext}
@@ -238,10 +238,10 @@ export default function SurveyPage() {
                         className="bg-primary hover:bg-primary/90 text-white px-8 rounded-full shadow-lg transition-all"
                     >
                         {isSubmitting ? (
-                            <span>분석 �?.. ?��</span>
+                            <span>분석 중... 🧠</span>
                         ) : (
                             <>
-                                {step === TOTAL_STEPS ? "AI 추천 받기" : "?�음"}
+                                {step === TOTAL_STEPS ? "AI 추천 받기" : "다음"}
                                 {step !== TOTAL_STEPS && <ChevronRight className="w-4 h-4 ml-2" />}
                                 {step === TOTAL_STEPS && <Search className="w-4 h-4 ml-2" />}
                             </>

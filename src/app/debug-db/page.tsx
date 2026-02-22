@@ -19,8 +19,8 @@ export default function DebugPage() {
     }, []);
 
     return (
-        <div className="p-8 bg-black text-green-400 min-h-screen font-mono text-base overflow-auto">
-            <h1 className="text-2xl font-bold mb-4 text-white">?š§ BookFit Debugger ?š§</h1>
+        <div className="p-8 bg-black text-green-400 min-h-screen font-mono text-sm overflow-auto">
+            <h1 className="text-2xl font-bold mb-4 text-white">ðŸš§ BookFit Debugger ðŸš§</h1>
 
             <div className="mb-8 border border-white/20 p-4 rounded bg-white/5">
                 <h2 className="text-xl text-white mb-2">Client Error</h2>

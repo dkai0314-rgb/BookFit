@@ -77,7 +77,7 @@ export async function fetchCurationFromSheet(): Promise<SheetCuration | null> {
         // 2. Fetch Books (Row 6+)
         // Load a range from Row 6 to 200 (Indices 5 to 199)
         // Columns A, B, C, D, E (Indices 0, 1, 2, 3, 4)
-        // A: Category (e.g. "?�설", "마�???) - Used for grouping if needed
+        // A: Category (e.g. "소설", "마케팅") - Used for grouping if needed
         // B: Title
         // C: Author
         // D: One-line Summary

@@ -64,7 +64,7 @@ export default function CurationSection({ id }: CurationProps = {}) {
             <section id={id} className="w-full py-24 px-6 max-w-6xl mx-auto text-center border-y border-white/5 bg-white/2">
                 <div className="space-y-6">
                     <h2 className="text-3xl font-serif text-white opacity-50">BookFit Choice</h2>
-                    <p className="text-gray-500 font-light">�??�로???�레?�션??공개?�니?? ?�시�?기다??주세??</p>
+                    <p className="text-gray-500 font-light">곧 새로운 큐레이션이 공개됩니다. 잠시만 기다려 주세요!</p>
                     <div className="flex justify-center gap-8 opacity-20 grayscale pointer-events-none">
                         {[1, 2, 3].map(i => (
                             <div key={i} className="aspect-[1/1.5] w-32 bg-slate-800 rounded shadow-2xl" />
@@ -80,18 +80,18 @@ export default function CurationSection({ id }: CurationProps = {}) {
             <div className="flex flex-col gap-10">
                 {/* Header: Title & Description */}
                 <div className="text-center max-w-3xl mx-auto space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-base font-bold uppercase tracking-widest mb-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest mb-2">
                         <Sparkles className="w-3 h-3" /> Monthly Selection
                     </div>
                     <h2 className="text-3xl md:text-5xl font-black text-white font-serif leading-tight">
                         BookFit Choice
                     </h2>
                     <p className="text-lg text-gray-400 font-light leading-relaxed whitespace-pre-line">
-                        ?�번 ?? 북핏???�레?�터?�이 ?�정??깊이 ?�는 ?�유??조각?�입?�다.
+                        이번 달, 북핏의 큐레이터들이 선정한 깊이 있는 사유의 조각들입니다.
                     </p>
                 </div>
 
-                {/* Books Grid ??4?��???*/}
+                {/* Books Grid — 4열×3행 */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                     {curation.books.slice(0, 12).map((book, i) => (
                         <Link key={book.id} href={book.coupangLink || "#"} target="_blank" rel="noopener noreferrer" className="group space-y-4 block">
@@ -115,12 +115,12 @@ export default function CurationSection({ id }: CurationProps = {}) {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90" />
                                 <div className="absolute bottom-4 left-4 right-4 text-left">
                                     <div className="text-[10px] text-accent font-bold uppercase tracking-tighter mb-1">Pick {i + 1}</div>
-                                    <div className="text-white font-bold text-base leading-tight drop-shadow-md">{book.title}</div>
+                                    <div className="text-white font-bold text-sm leading-tight drop-shadow-md">{book.title}</div>
                                 </div>
                             </div>
                             <div className="space-y-1">
                                 <div className="bg-white/5 border border-white/10 rounded-md p-3 hover:bg-white/10 transition-colors">
-                                    <p className="text-base text-gray-300 font-light leading-relaxed">
+                                    <p className="text-xs text-gray-300 font-light leading-relaxed">
                                         {book.recommendation}
                                     </p>
                                 </div>

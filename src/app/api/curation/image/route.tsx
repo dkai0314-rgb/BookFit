@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
                         marginBottom: 10,
                         fontFamily: '"Noto Serif KR"',
                     }}>
-                        ?�늘??�?처방
+                        오늘의 책 처방
                     </div>
                     <div style={{
                         fontSize: 64,
