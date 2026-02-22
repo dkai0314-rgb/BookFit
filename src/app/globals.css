@@ -29,6 +29,12 @@
   --radius-lg: 0.5rem;
   --radius-md: 0.375rem;
   --radius-sm: 0.25rem;
+
+  /* Font Size Overrides to ensure minimum 16px (1rem) */
+  --text-xs: 1rem;
+  --text-xs--line-height: 1.5rem;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.5rem;
 }
 
 
