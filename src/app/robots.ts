@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/api/'],
         },
-        sitemap: 'https://bookfit.club/sitemap.xml',
+        sitemap: 'https://bookfit.kr/sitemap.xml',
     };
 }

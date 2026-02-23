@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://bookfit.club';
+    const baseUrl = 'https://bookfit.kr';
 
     return [
         {
@@ -9,6 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: new Date(),
             changeFrequency: 'daily',
             priority: 1,
+        },
+        {
+            url: `${baseUrl}/curation`,
+            lastModified: new Date(),
+            changeFrequency: 'daily',
+            priority: 0.9,
         },
         {
             url: `${baseUrl}/recommend`,

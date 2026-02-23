@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "BookFit - 당신을 위한 AI 북 카운셀러",
   description: "현재 상황과 감정에 딱 맞는 책을 처방해드립니다. AI 분석으로 지금 당신에게 필요한 단 한 권의 책을 찾아보세요.",
-  keywords: ["도서 추천", "AI 북 카운셀러", "독서 큐레이션", "심리 기반 도서 추천", "북핏", "BookFit"],
+  keywords: ["도서 추천", "AI 북 카운셀러", "독서 큐레이션", "심리 기반 도서 추천", "북핏", "BookFit", "책추천", "ai책추천", "취향책추천", "베스트셀러추천"],
   authors: [{ name: "BookFit Team" }],
   alternates: {
     canonical: SITE_URL,
