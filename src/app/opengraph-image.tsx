@@ -30,10 +30,10 @@ export default async function Image() {
         new URL('./fonts/NotoSansKR-Bold.ttf', import.meta.url)
     ).then((res) => res.arrayBuffer());
 
-    // Read the local logo-square.png image directly and encode as Base64.
-    // This prevents DNS loops or SSL issues inside the Vercel Edge runtime when trying to fetch from the main domain.
+    // Read the local logo-square.png image directly from the app folder and encode as Base64.
+    // This ensures Vercel's Edge runtime correctly bundles and resolves the file, unlike the public folder.
     const logoDataPromise = fetch(
-        new URL('../../public/logo-square.png', import.meta.url)
+        new URL('./logo-square.png', import.meta.url)
     ).then((res) => res.arrayBuffer());
 
     const [fontDataMedium, fontDataBold, logoDataBuffer] = await Promise.all([
