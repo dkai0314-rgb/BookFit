@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 
-interface CurationBook {
+export interface CurationBook {
     id: string;
     title: string;
     imageUrl?: string;
@@ -16,7 +16,7 @@ interface CurationBook {
     [key: string]: unknown;
 }
 
-function CategoryCarousel({ category, books }: { category: string, books: CurationBook[] }) {
+export function CategoryCarousel({ category, books }: { category: string, books: CurationBook[] }) {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const scroll = (direction: 'left' | 'right') => {
@@ -30,7 +30,9 @@ function CategoryCarousel({ category, books }: { category: string, books: Curati
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between px-2">
-                <h3 className="text-xl md:text-2xl font-bold text-white font-serif">{category}</h3>
+                <h3 className="text-lg md:text-xl font-bold text-accent font-serif tracking-tight bg-accent/10 border border-accent/20 px-4 py-2 rounded-md inline-block">
+                    {category}
+                </h3>
                 <div className="flex gap-2">
                     <button onClick={() => scroll('left')} className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors" aria-label="이전">
                         <ChevronLeft className="w-4 h-4" />

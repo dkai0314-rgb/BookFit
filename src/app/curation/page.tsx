@@ -1,9 +1,9 @@
 
 import { fetchCurationFromSheet } from "@/lib/google-sheets";
-import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CategoryCarousel, CurationBook } from "@/components/CurationSection";
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs'; // Ensure Node.js runtime for Google libraries
@@ -40,14 +40,14 @@ export default async function CurationPage() {
     }
 
     // Group books by category
-    const booksByCategory = curation.books.reduce((acc: Record<string, any[]>, book: any) => {
+    const booksByCategory = curation.books.reduce((acc: Record<string, CurationBook[]>, book: any) => {
         const category = (book.category as string) || "Uncategorized";
         if (!acc[category]) {
             acc[category] = [];
         }
-        acc[category].push(book);
+        acc[category].push(book as CurationBook);
         return acc;
-    }, {} as Record<string, any[]>);
+    }, {} as Record<string, CurationBook[]>);
 
 
     // Order categories? For now, just Object.keys or specific order if needed.
@@ -100,47 +100,8 @@ export default async function CurationPage() {
 
                     {/* Books grouped by Category */}
                     {categories.map((category) => (
-                        <div key={category} id={`category-${category}`} className="space-y-8 scroll-mt-28">
-                            <h2 className="text-2xl md:text-3xl font-serif font-bold text-accent border-b border-white/10 pb-4 inline-block pr-12">
-                                {category}
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                                {booksByCategory[category].map((book: any, i: number) => (
-                                    <Link key={book.id} href={book.coupangLink || "#"} target="_blank" rel="noopener noreferrer" className="group space-y-4 block">
-                                        <div className="aspect-[1/1.5] relative rounded-md overflow-hidden shadow-2xl border border-white/5 group-hover:shadow-accent/20 transition-all duration-500 group-hover:-translate-y-2">
-                                            {book.imageUrl ? (
-                                                <Image
-                                                    src={book.imageUrl.replace("coversum", "cover500")}
-                                                    alt={book.title}
-                                                    fill
-                                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                                    referrerPolicy="no-referrer"
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full bg-slate-800 flex items-center justify-center text-gray-500">No Image</div>
-                                            )}
-                                            {/* Category Badge removed from image as it is now a section header */}
-                                            {/* but user might still want it? Plan said "Group books by category", likely section header is better than badge everywhere if grouped. 
-                                                Actually user "이미지아래 설명란이 중요한데 잘리면 안돼. 그래서 /curation 이 페이지는 책을 4개씩 배치하면 어때? 그리고 카테고리별로 섹션 구분이 있으면 좋겠어~"
-                                                So Section grouping is key. I will keep the badge OFF the image in this view since it's grouped by section to avoid redundancy? 
-                                                Or keep it? Let's keep it clean since it's under a category header. */}
-
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90" />
-                                            <div className="absolute bottom-4 left-4 right-4">
-                                                <div className="text-white font-bold text-lg leading-tight line-clamp-2 drop-shadow-md mb-1">{book.title}</div>
-                                                <div className="text-gray-400 text-sm line-clamp-1">{book.author}</div>
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2 pl-1">
-                                            <div className="bg-white/5 border border-white/10 rounded-md p-4 hover:bg-white/10 transition-colors">
-                                                <p className="text-sm text-gray-300 font-light leading-relaxed whitespace-pre-line">
-                                                    {book.recommendation}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                ))}
-                            </div>
+                        <div key={category} id={`category-${category}`} className="scroll-mt-28">
+                            <CategoryCarousel category={category} books={booksByCategory[category]} />
                         </div>
                     ))}
                 </div>
