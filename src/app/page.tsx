@@ -3,10 +3,43 @@ import Link from "next/link";
 import { Sparkles, MessageSquare, BookCheck, Lightbulb } from "lucide-react";
 import CurationSection from "@/components/CurationSection";
 import BeehiivEmbed from "@/components/BeehiivEmbed";
+import JsonLd from "@/components/JsonLd";
 
 export default function Home() {
+  const faqData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "북핏(BookFit)은 어떤 서비스인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "북핏은 사용자의 취향과 현재 감정, 상황을 AI가 분석하여 가장 완벽한 '책 추천'을 제공하는 AI 북 카운셀링 서비스입니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "어떤 책을 추천받을 수 있나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "심리 기반 책 추천, 개인의 취향 맞춤 도서, 그리고 최근 인기 있는 베스트셀러 추천까지 나에게 꼭 맞는 단 한 권의 책을 찾아드립니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "AI 책 추천은 어떻게 이루어지나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "간단한 질문을 통해 당신의 목표, 고민, 관심사를 파악하여 핵심 키워드를 추출하고, 이를 기반으로 가장 적합한 취향책추천과 추천 근거를 함께 제공합니다."
+        }
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col items-center overflow-x-hidden">
+      <JsonLd data={faqData} />
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/80 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]" role="banner">
         <div className="max-w-6xl mx-auto w-full flex justify-between items-center">
@@ -42,7 +75,8 @@ export default function Home() {
               <Sparkles className="w-3 h-3 mr-1 text-accent" />
               근거 있는 맞춤 도서 추천
             </div>
-            <h1 id="hero-title" className="text-4xl md:text-7xl font-extrabold tracking-tight text-white break-keep drop-shadow-sm leading-tight">
+            <h1 id="hero-title" className="text-4xl md:text-7xl font-extrabold tracking-tight text-white break-keep drop-shadow-sm leading-tight relative">
+              <span className="sr-only">BookFit(북핏) - AI 책 추천, 취향 맞춤 도서 및 베스트셀러 큐레이션</span>
               지금 당신에게 필요한 <br className="md:hidden" />
               <span className="text-accent italic">
                 딱 한 권
