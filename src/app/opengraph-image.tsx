@@ -9,15 +9,40 @@ export const size = {
 };
 export const contentType = 'image/png';
 
+// Edge-compatible array buffer to base64 converter
+function arrayBufferToBase64(buffer: ArrayBuffer) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+}
+
 export default async function Image() {
     // Read local Korean fonts using fetch for Edge compatibility
-    const fontDataMedium = await fetch(
+    const fontDataMediumPromise = fetch(
         new URL('./fonts/NotoSansKR-Medium.ttf', import.meta.url)
     ).then((res) => res.arrayBuffer());
 
-    const fontDataBold = await fetch(
+    const fontDataBoldPromise = fetch(
         new URL('./fonts/NotoSansKR-Bold.ttf', import.meta.url)
     ).then((res) => res.arrayBuffer());
+
+    // Read the local logo-square.png image directly and encode as Base64.
+    // This prevents DNS loops or SSL issues inside the Vercel Edge runtime when trying to fetch from the main domain.
+    const logoDataPromise = fetch(
+        new URL('../../public/logo-square.png', import.meta.url)
+    ).then((res) => res.arrayBuffer());
+
+    const [fontDataMedium, fontDataBold, logoDataBuffer] = await Promise.all([
+        fontDataMediumPromise,
+        fontDataBoldPromise,
+        logoDataPromise
+    ]);
+
+    const logoBase64 = `data:image/png;base64,${arrayBufferToBase64(logoDataBuffer)}`;
 
     return new ImageResponse(
         (
@@ -35,47 +60,33 @@ export default async function Image() {
                     padding: '60px',
                 }}
             >
+                {/* Logo Image */}
+                <img src={logoBase64} width="160" height="160" style={{ marginBottom: '50px', borderRadius: '32px', border: '2px solid rgba(191, 149, 63, 0.4)', boxShadow: '0 20px 40px rgba(0,0,0,0.6)' }} />
+
+                {/* Sub Copy */}
                 <div style={{
                     display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '2px solid rgba(191, 149, 63, 0.2)',
-                    borderRadius: '40px',
-                    padding: '60px',
-                    width: '100%',
-                    height: '100%',
-                    boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
+                    fontSize: 48,
+                    color: '#BF953F',
+                    marginBottom: '30px',
+                    fontWeight: 700,
+                    fontFamily: '"NotoSansKRMedium"',
+                    letterSpacing: '0.05em'
                 }}>
-                    {/* Logo Image */}
-                    <img src="https://bookfit.kr/logo-square.png" width="120" height="120" style={{ marginBottom: '40px', borderRadius: '24px', border: '1px solid rgba(191, 149, 63, 0.3)' }} />
+                    취향 추천 · 마음 추천
+                </div>
 
-                    {/* Sub Copy */}
-                    <div style={{
-                        display: 'flex',
-                        fontSize: 36,
-                        color: '#BF953F',
-                        marginBottom: '20px',
-                        fontWeight: 700,
-                        fontFamily: '"NotoSansKRMedium"',
-                        letterSpacing: '0.05em'
-                    }}>
-                        취향 추천 · 마음 추천
-                    </div>
-
-                    {/* Main Copy */}
-                    <div style={{
-                        display: 'flex',
-                        fontSize: 72,
-                        fontWeight: 700,
-                        textAlign: 'center',
-                        lineHeight: 1.2,
-                        fontFamily: '"NotoSansKRBold"',
-                        color: '#ffffff',
-                    }}>
-                        지금 당신에게 필요한 딱 한 권
-                    </div>
+                {/* Main Copy */}
+                <div style={{
+                    display: 'flex',
+                    fontSize: 76,
+                    fontWeight: 700,
+                    textAlign: 'center',
+                    lineHeight: 1.2,
+                    fontFamily: '"NotoSansKRBold"',
+                    color: '#ffffff',
+                }}>
+                    지금 당신에게 필요한 딱 한 권
                 </div>
             </div>
         ),
