@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
+import fs from 'fs';
+import path from 'path';
 
 // Image metadata
 export const alt = 'BookFit - 지금 당신에게 필요한 딱 한 권';
@@ -11,12 +12,9 @@ export const size = {
 export const contentType = 'image/png';
 
 export default async function Image() {
-    // Fetch a reliable Korean font for OG Image generation (Pretendard Bold)
-    const fontUrl = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/packages/pretendard/dist/public/static/Pretendard-Bold.ttf';
-    const fontData = await fetch(fontUrl).then((res) => res.arrayBuffer());
-
-    const fontUrlMedium = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/packages/pretendard/dist/public/static/Pretendard-Medium.ttf';
-    const fontDataMedium = await fetch(fontUrlMedium).then((res) => res.arrayBuffer());
+    // Read local Korean fonts for reliable OG Image generation
+    const fontData = fs.readFileSync(path.join(process.cwd(), 'src/app/fonts/NotoSansKR-Bold.ttf'));
+    const fontDataMedium = fs.readFileSync(path.join(process.cwd(), 'src/app/fonts/NotoSansKR-Medium.ttf'));
 
     return new ImageResponse(
         (
@@ -54,7 +52,7 @@ export default async function Image() {
                         letterSpacing: '0.1em',
                         textTransform: 'uppercase',
                         marginBottom: '30px',
-                        fontFamily: '"PretendardBold"'
+                        fontFamily: '"NotoSansKRBold"'
                     }}>
                         BookFit
                     </div>
@@ -68,7 +66,7 @@ export default async function Image() {
                         fontWeight: 700,
                         textAlign: 'center',
                         lineHeight: 1.3,
-                        fontFamily: '"PretendardBold"',
+                        fontFamily: '"NotoSansKRBold"',
                         color: '#ffffff'
                     }}>
                         <div>지금 당신에게 필요한</div>
@@ -81,7 +79,7 @@ export default async function Image() {
                         color: '#A0AEC0',
                         marginTop: '40px',
                         fontWeight: 500,
-                        fontFamily: '"PretendardMedium"'
+                        fontFamily: '"NotoSansKRMedium"'
                     }}>
                         북핏 큐레이터가 엄선한 베스트셀러 추천
                     </div>
@@ -92,13 +90,13 @@ export default async function Image() {
             ...size,
             fonts: [
                 {
-                    name: 'PretendardBold',
+                    name: 'NotoSansKRBold',
                     data: fontData,
                     style: 'normal',
                     weight: 700,
                 },
                 {
-                    name: 'PretendardMedium',
+                    name: 'NotoSansKRMedium',
                     data: fontDataMedium,
                     style: 'normal',
                     weight: 500,

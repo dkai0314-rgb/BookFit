@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
 
-const SITE_URL = "https://bookfit.club";
+const SITE_URL = "https://bookfit.kr";
 
 export const viewport: Viewport = {
   width: "device-width",
