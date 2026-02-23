@@ -1,17 +1,93 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+
+interface CurationBook {
+    id: string;
+    title: string;
+    imageUrl?: string;
+    category?: string;
+    recommendation?: string;
+    coupangLink?: string;
+    [key: string]: unknown;
+}
+
+function CategoryCarousel({ category, books }: { category: string, books: CurationBook[] }) {
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    const scroll = (direction: 'left' | 'right') => {
+        if (scrollRef.current) {
+            const { current } = scrollRef;
+            const scrollAmount = current.clientWidth * 0.8;
+            current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+        }
+    };
+
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center justify-between px-2">
+                <h3 className="text-xl md:text-2xl font-bold text-white font-serif">{category}</h3>
+                <div className="flex gap-2">
+                    <button onClick={() => scroll('left')} className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors" aria-label="이전">
+                        <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => scroll('right')} className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors" aria-label="다음">
+                        <ChevronRight className="w-4 h-4" />
+                    </button>
+                </div>
+            </div>
+
+            <div
+                ref={scrollRef}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 [&::-webkit-scrollbar]:hidden"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+                {books.map((book, i) => (
+                    <div key={book.id} className="w-[calc(50%-0.5rem)] md:w-[calc(25%-0.75rem)] shrink-0 snap-start">
+                        <Link href={book.coupangLink || "#"} target="_blank" rel="noopener noreferrer" className="group space-y-4 block">
+                            <div className="aspect-[1/1.5] relative rounded-sm overflow-hidden shadow-2xl border border-white/5 group-hover:shadow-accent/20 transition-all duration-500 group-hover:-translate-y-2">
+                                {book.imageUrl ? (
+                                    <Image
+                                        src={book.imageUrl.replace("coversum", "cover500")}
+                                        alt={book.title}
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                        referrerPolicy="no-referrer"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-slate-800 flex items-center justify-center text-gray-500">No Image</div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90" />
+                                <div className="absolute bottom-4 left-4 right-4 text-left">
+                                    <div className="text-[10px] text-accent font-bold uppercase tracking-tighter mb-1">Pick {i + 1}</div>
+                                    <div className="text-white font-bold text-sm leading-tight drop-shadow-md">{book.title}</div>
+                                </div>
+                            </div>
+                            <div className="space-y-1">
+                                <div className="bg-white/5 border border-white/10 rounded-md p-3 hover:bg-white/10 transition-colors">
+                                    <p className="text-xs text-gray-300 font-light leading-relaxed">
+                                        {book.recommendation}
+                                    </p>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
 
 interface Curation {
     id: string;
     theme: string;
     title: string;
     description: string;
-    books: any[];
+    books: CurationBook[];
 }
 
 interface CurationProps {
@@ -91,41 +167,17 @@ export default function CurationSection({ id }: CurationProps = {}) {
                     </p>
                 </div>
 
-                {/* Books Grid — 4열×3행 */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                    {curation.books.slice(0, 12).map((book, i) => (
-                        <Link key={book.id} href={book.coupangLink || "#"} target="_blank" rel="noopener noreferrer" className="group space-y-4 block">
-                            <div className="aspect-[1/1.5] relative rounded-sm overflow-hidden shadow-2xl border border-white/5 group-hover:shadow-accent/20 transition-all duration-500 group-hover:-translate-y-2">
-                                {book.imageUrl ? (
-                                    <Image
-                                        src={book.imageUrl.replace("coversum", "cover500")}
-                                        alt={book.title}
-                                        fill
-                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                        referrerPolicy="no-referrer"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-slate-800 flex items-center justify-center text-gray-500">No Image</div>
-                                )}
-                                {book.category && (
-                                    <div className="absolute top-0 left-0 bg-accent text-[#061A14] text-[10px] font-bold px-3 py-1 rounded-br-lg rounded-tl-sm z-10 shadow-md">
-                                        {book.category}
-                                    </div>
-                                )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90" />
-                                <div className="absolute bottom-4 left-4 right-4 text-left">
-                                    <div className="text-[10px] text-accent font-bold uppercase tracking-tighter mb-1">Pick {i + 1}</div>
-                                    <div className="text-white font-bold text-sm leading-tight drop-shadow-md">{book.title}</div>
-                                </div>
-                            </div>
-                            <div className="space-y-1">
-                                <div className="bg-white/5 border border-white/10 rounded-md p-3 hover:bg-white/10 transition-colors">
-                                    <p className="text-xs text-gray-300 font-light leading-relaxed">
-                                        {book.recommendation}
-                                    </p>
-                                </div>
-                            </div>
-                        </Link>
+                {/* Books Grouped by Category (Swiper) */}
+                <div className="space-y-12">
+                    {Object.entries(
+                        curation.books.reduce((acc, book) => {
+                            const category = book.category || '기타';
+                            if (!acc[category]) acc[category] = [];
+                            acc[category].push(book);
+                            return acc;
+                        }, {} as Record<string, CurationBook[]>)
+                    ).map(([category, books]) => (
+                        <CategoryCarousel key={category} category={category} books={books as CurationBook[]} />
                     ))}
                 </div>
             </div>

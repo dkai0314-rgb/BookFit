@@ -53,6 +53,20 @@ export default function BestsellersPage() {
         }
     };
 
+    const scrollToWidget = (index: number) => {
+        const element = document.getElementById(`coupang-widget-${index}`);
+        if (element) {
+            const headerOffset = 180; // keep header offset
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#061A14] text-white flex flex-col items-center py-10 px-4">
             <header role="banner" className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
@@ -106,7 +120,7 @@ export default function BestsellersPage() {
 
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-10 mb-12">
                                         {categoryItem.books.map((book, i) => (
-                                            <article key={i} className="flex flex-col h-full bg-[#0B2A1F]/20 rounded-xl overflow-hidden border border-white/5 hover:border-accent/30 transition-all duration-300 hover:-translate-y-2 group">
+                                            <article key={i} onClick={() => scrollToWidget(sectionIdx)} className="flex flex-col h-full bg-[#0B2A1F]/20 rounded-xl overflow-hidden border border-white/5 hover:border-accent/30 transition-all duration-300 hover:-translate-y-2 group cursor-pointer">
                                                 <div className="flex flex-col h-full">
                                                     <div className="aspect-[1/1.5] w-full relative overflow-hidden bg-black/50">
                                                         {book.cover ? (
@@ -145,7 +159,7 @@ export default function BestsellersPage() {
                                         ))}
                                     </div>
 
-                                    <div className="w-full max-w-3xl mx-auto flex flex-col items-center bg-white/5 p-6 rounded-2xl border border-white/10 mt-8 shadow-sm">
+                                    <div className="w-full max-w-3xl mx-auto flex flex-col items-center bg-white/5 p-6 rounded-2xl border border-white/10 mt-8 shadow-sm" id={`coupang-widget-${sectionIdx}`}>
                                         <p className="text-gray-300 mb-4 font-medium text-center text-lg">💡 지금 읽기 딱 좋은 {categoryItem.category} 책, 쿠팡에서 바로 찾아보세요!</p>
                                         <div className="w-full overflow-hidden rounded-lg bg-white/80 p-1">
                                             <iframe src="https://coupa.ng/clGXS1" width="100%" height="44" frameBorder="0" scrolling="no" referrerPolicy="unsafe-url"></iframe>
