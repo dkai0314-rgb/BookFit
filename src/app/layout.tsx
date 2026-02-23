@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
+  verification: {
+    other: {
+      "naver-site-verification": "a5b78d876ec1482634394e62e269a06eea8b7a8d",
+    },
+  },
   openGraph: {
     title: "BookFit - AI 기반 개인 맞춤형 도서 추천 서비스",
     description: "지금 당신의 감정과 상황에 완벽하게 어울리는 책을 AI가 추천해드립니다.",
