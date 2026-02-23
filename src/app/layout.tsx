@@ -10,6 +10,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "BookFit - 당신을 위한 AI 북 카운셀러",
   description: "현재 상황과 감정에 딱 맞는 책을 처방해드립니다. AI 분석으로 지금 당신에게 필요한 단 한 권의 책을 찾아보세요.",
   keywords: ["도서 추천", "AI 북 카운셀러", "독서 큐레이션", "심리 기반 도서 추천", "북핏", "BookFit"],
@@ -22,14 +23,6 @@ export const metadata: Metadata = {
     description: "지금 당신의 감정과 상황에 완벽하게 어울리는 책을 AI가 추천해드립니다.",
     url: SITE_URL,
     siteName: "BookFit",
-    images: [
-      {
-        url: `${SITE_URL}/logo-square.png`,
-        width: 1200,
-        height: 630,
-        alt: "BookFit - AI Book Counselor",
-      },
-    ],
     locale: "ko_KR",
     type: "website",
   },
@@ -37,7 +30,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BookFit - AI 북 카운셀러",
     description: "지금 당신에게 필요한 단 한 권의 책을 AI가 처방해드립니다.",
-    images: [`${SITE_URL}/logo-square.png`],
   },
   robots: {
     index: true,
