@@ -1,9 +1,7 @@
 import { ImageResponse } from 'next/og';
 
-import fs from 'fs';
-import path from 'path';
+export const runtime = 'edge';
 
-// Image metadata
 export const alt = 'BookFit - 지금 당신에게 필요한 딱 한 권';
 export const size = {
     width: 1200,
@@ -12,9 +10,14 @@ export const size = {
 export const contentType = 'image/png';
 
 export default async function Image() {
-    // Read local Korean fonts for reliable OG Image generation
-    const fontData = fs.readFileSync(path.join(process.cwd(), 'src/app/fonts/NotoSansKR-Bold.ttf'));
-    const fontDataMedium = fs.readFileSync(path.join(process.cwd(), 'src/app/fonts/NotoSansKR-Medium.ttf'));
+    // Read local Korean fonts using fetch for Edge compatibility
+    const fontDataMedium = await fetch(
+        new URL('./fonts/NotoSansKR-Medium.ttf', import.meta.url)
+    ).then((res) => res.arrayBuffer());
+
+    const fontDataBold = await fetch(
+        new URL('./fonts/NotoSansKR-Bold.ttf', import.meta.url)
+    ).then((res) => res.arrayBuffer());
 
     return new ImageResponse(
         (
@@ -27,9 +30,9 @@ export default async function Image() {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontFamily: '"Pretendard"',
+                    fontFamily: '"NotoSansKRBold"',
                     color: 'white',
-                    padding: '80px',
+                    padding: '60px',
                 }}
             >
                 <div style={{
@@ -40,48 +43,38 @@ export default async function Image() {
                     background: 'rgba(255, 255, 255, 0.03)',
                     border: '2px solid rgba(191, 149, 63, 0.2)',
                     borderRadius: '40px',
-                    padding: '60px 80px',
+                    padding: '60px',
+                    width: '100%',
+                    height: '100%',
                     boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
                 }}>
-                    {/* Logo / Brand Name */}
+                    {/* Logo Image */}
+                    <img src="https://bookfit.kr/logo-square.png" width="120" height="120" style={{ marginBottom: '40px', borderRadius: '24px', border: '1px solid rgba(191, 149, 63, 0.3)' }} />
+
+                    {/* Sub Copy */}
                     <div style={{
                         display: 'flex',
+                        fontSize: 36,
                         color: '#BF953F',
-                        fontSize: 48,
+                        marginBottom: '20px',
                         fontWeight: 700,
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
-                        marginBottom: '30px',
-                        fontFamily: '"NotoSansKRBold"'
+                        fontFamily: '"NotoSansKRMedium"',
+                        letterSpacing: '0.05em'
                     }}>
-                        BookFit
+                        취향 추천 · 마음 추천
                     </div>
 
                     {/* Main Copy */}
                     <div style={{
                         display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        fontSize: 68,
+                        fontSize: 72,
                         fontWeight: 700,
                         textAlign: 'center',
-                        lineHeight: 1.3,
+                        lineHeight: 1.2,
                         fontFamily: '"NotoSansKRBold"',
-                        color: '#ffffff'
+                        color: '#ffffff',
                     }}>
-                        <div>지금 당신에게 필요한</div>
-                        <div style={{ color: '#FCF6BA' }}>딱 한 권</div>
-                    </div>
-
-                    <div style={{
-                        display: 'flex',
-                        fontSize: 32,
-                        color: '#A0AEC0',
-                        marginTop: '40px',
-                        fontWeight: 500,
-                        fontFamily: '"NotoSansKRMedium"'
-                    }}>
-                        북핏 큐레이터가 엄선한 베스트셀러 추천
+                        지금 당신에게 필요한 딱 한 권
                     </div>
                 </div>
             </div>
@@ -91,7 +84,7 @@ export default async function Image() {
             fonts: [
                 {
                     name: 'NotoSansKRBold',
-                    data: fontData,
+                    data: fontDataBold,
                     style: 'normal',
                     weight: 700,
                 },
