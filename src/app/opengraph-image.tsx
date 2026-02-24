@@ -30,19 +30,10 @@ export default async function Image() {
         new URL('./fonts/NotoSansKR-Bold.ttf', import.meta.url)
     ).then((res) => res.arrayBuffer());
 
-    // Read the local logo-square.png image directly from the app folder and encode as Base64.
-    // This ensures Vercel's Edge runtime correctly bundles and resolves the file, unlike the public folder.
-    const logoDataPromise = fetch(
-        new URL('./logo-square.png', import.meta.url)
-    ).then((res) => res.arrayBuffer());
-
-    const [fontDataMedium, fontDataBold, logoDataBuffer] = await Promise.all([
+    const [fontDataMedium, fontDataBold] = await Promise.all([
         fontDataMediumPromise,
-        fontDataBoldPromise,
-        logoDataPromise
+        fontDataBoldPromise
     ]);
-
-    const logoBase64 = `data:image/png;base64,${arrayBufferToBase64(logoDataBuffer)}`;
 
     return new ImageResponse(
         (
@@ -60,31 +51,31 @@ export default async function Image() {
                     padding: '60px',
                 }}
             >
-                {/* Logo Image */}
-                <img src={logoBase64} width="160" height="160" style={{ marginBottom: '50px', borderRadius: '32px', border: '2px solid rgba(191, 149, 63, 0.4)', boxShadow: '0 20px 40px rgba(0,0,0,0.6)' }} />
+                {/* Logo Image Removed for simplicity */}
 
-                {/* Sub Copy */}
+                {/* Brand Name */}
                 <div style={{
                     display: 'flex',
-                    fontSize: 48,
-                    color: '#BF953F',
-                    marginBottom: '30px',
+                    fontSize: 96,
+                    color: '#1E8E5A',
+                    marginBottom: '20px',
                     fontWeight: 700,
-                    fontFamily: '"NotoSansKRMedium"',
-                    letterSpacing: '0.05em'
+                    fontFamily: '"NotoSansKRBold"',
+                    letterSpacing: '-0.02em',
+                    textShadow: '0 4px 20px rgba(0,0,0,0.5)'
                 }}>
-                    취향 추천 · 마음 추천
+                    BookFit
                 </div>
 
                 {/* Main Copy */}
                 <div style={{
                     display: 'flex',
-                    fontSize: 76,
+                    fontSize: 64,
                     fontWeight: 700,
                     textAlign: 'center',
-                    lineHeight: 1.2,
+                    lineHeight: 1.3,
                     fontFamily: '"NotoSansKRBold"',
-                    color: '#ffffff',
+                    color: '#F5F7F6',
                 }}>
                     지금 당신에게 필요한 딱 한 권
                 </div>
