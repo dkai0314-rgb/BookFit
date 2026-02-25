@@ -13,6 +13,7 @@ export default async function BookFitLetterListPage() {
             id: true,
             slug: true,
             title: true,
+            metaTitle: true,
             headlineTitle: true,
             coverImageUrl: true,
             createdAt: true,
@@ -56,7 +57,7 @@ export default async function BookFitLetterListPage() {
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img
                                                     src={letter.coverImageUrl}
-                                                    alt={letter.title}
+                                                    alt={letter.metaTitle || letter.title}
                                                     className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500 relative z-10 drop-shadow-xl"
                                                 />
                                             </>
@@ -66,7 +67,7 @@ export default async function BookFitLetterListPage() {
                                     </div>
                                     <div className="p-6">
                                         <h2 className="text-xl font-bold mb-2 text-slate-900 group-hover:text-[#FF5C39] transition-colors line-clamp-2 leading-tight">
-                                            {letter.title}
+                                            {letter.metaTitle || letter.title}
                                         </h2>
                                         {letter.headlineTitle && (
                                             <p className="text-sm text-gray-600 mb-3 line-clamp-2 leading-snug">
