@@ -96,7 +96,7 @@ export default function BestsellersPage() {
                     </div>
                 ) : (
                     <>
-                        <div className="sticky top-[64px] z-40 bg-[#061A14]/95 backdrop-blur-md py-4 border-b border-white/5 flex flex-wrap justify-center gap-3 shadow-sm">
+                        <div className="sticky top-[64px] z-40 bg-[#061A14]/95 backdrop-blur-md py-3 md:py-4 border-b border-white/5 flex flex-wrap justify-center gap-2 md:gap-3 shadow-sm px-2 mt-[-1px]">
                             {categoryBestsellers.map((item, idx) => (
                                 <button
                                     key={`nav-${idx}`}
