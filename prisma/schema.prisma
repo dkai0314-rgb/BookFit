@@ -60,3 +60,30 @@ model Curation {
   isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
 }
+
+model Letter {
+  id              String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  publishedAt     DateTime?
+  status          String   @default("draft") // draft, published
+  source          String   @default("google_books")
+  googleVolumeId  String?
+  isbn13          String?
+  authors         String?
+  publisher       String?
+  publishedDate   String?
+  categories      String?
+  coverImageUrl   String?
+  headlineTitle   String?
+  metaTitle       String?
+  metaDescription String?
+  contentMarkdown String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tags            String?
+  readingTime     Int?
+  ogImageUrl      String?
+  seoKeywords     String?
+}

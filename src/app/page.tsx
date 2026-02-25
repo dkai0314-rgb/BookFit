@@ -49,6 +49,7 @@ export default function Home() {
           <nav className="flex gap-4 md:gap-8 text-xs sm:text-sm font-medium text-gray-400" aria-label="메인 네비게이션">
             <Link href="/curation" className="hover:text-accent transition-colors">이달의북핏</Link>
             <Link href="/bestsellers" className="hover:text-accent transition-colors">베스트셀러</Link>
+            <Link href="/bookfit-letter" className="hover:text-accent transition-colors">북핏레터</Link>
           </nav>
           <div className="flex items-center gap-4">
             <Button variant="ghost" className="text-gray-400 hover:text-white hover:bg-white/5" aria-label="로그인">Login</Button>
