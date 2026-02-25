@@ -40,34 +40,24 @@ export default async function BookFitLetterListPage() {
                                 key={letter.id}
                                 className="group border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all block bg-white"
                             >
-                                <div className="aspect-[2/1] bg-gray-50 overflow-hidden relative">
+                                <div className="aspect-[4/3] bg-gray-50 overflow-hidden relative">
                                     {letter.coverImageUrl ? (
                                         // eslint-disable-next-line @next/next/no-img-element
                                         <img
                                             src={letter.coverImageUrl}
                                             alt={letter.title}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 blur-sm opacity-50 relative z-0"
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-0"
                                         />
                                     ) : (
                                         <div className="w-full h-full bg-[#FF5C39] opacity-10" />
                                     )}
-                                    {letter.coverImageUrl && (
-                                        <div className="absolute inset-0 z-10 flex items-center justify-center p-4">
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img
-                                                src={letter.coverImageUrl}
-                                                alt="cover clear"
-                                                className="h-full object-contain drop-shadow-lg"
-                                            />
-                                        </div>
-                                    )}
                                 </div>
                                 <div className="p-6">
-                                    <h2 className="text-lg font-bold mb-2 text-slate-900 group-hover:text-[#FF5C39] transition-colors line-clamp-2 leading-snug">
+                                    <h2 className="text-base font-bold mb-3 text-slate-900 group-hover:text-[#FF5C39] transition-colors line-clamp-2 leading-snug">
                                         {letter.headlineTitle || letter.title}
                                     </h2>
-                                    <p className="text-sm text-gray-500">
-                                        {new Date(letter.publishedAt || letter.createdAt).toLocaleDateString('ko-KR')}
+                                    <p className="text-xs text-gray-500 font-medium">
+                                        발행일: {new Date(letter.publishedAt || letter.createdAt).toLocaleDateString('ko-KR')}
                                     </p>
                                 </div>
                             </Link>
