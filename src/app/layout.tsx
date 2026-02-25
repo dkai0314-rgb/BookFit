@@ -11,8 +11,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "BookFit - 당신을 위한 AI 북 카운셀러",
-  description: "현재 상황과 감정에 딱 맞는 책을 처방해드립니다. AI 분석으로 지금 당신에게 필요한 단 한 권의 책을 찾아보세요.",
+  title: "북핏 - 취향과 마음을 읽는 AI 북 카운셀러",
+  description: "북핏은 자연어 기반의 '취향 추천'과 현재의 감정, 상황, 심리 상태를 분석하는 '마음 추천'으로 지금 당신에게 필요한 책을 추천하는 북 큐레이션 서비스입니다.",
   keywords: ["도서 추천", "AI 북 카운셀러", "독서 큐레이션", "심리 기반 도서 추천", "북핏", "BookFit", "책추천", "ai책추천", "취향책추천", "베스트셀러추천"],
   authors: [{ name: "BookFit Team" }],
   alternates: {
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "BookFit - AI 기반 개인 맞춤형 도서 추천 서비스",
-    description: "지금 당신의 감정과 상황에 완벽하게 어울리는 책을 AI가 추천해드립니다.",
+    title: "북핏 - 취향과 마음을 읽는 AI 북 카운셀러",
+    description: "북핏은 자연어 기반의 '취향 추천'과 현재의 감정, 상황, 심리 상태를 분석하는 '마음 추천'으로 지금 당신에게 필요한 책을 추천하는 북 큐레이션 서비스입니다.",
     url: SITE_URL,
     siteName: "BookFit",
     locale: "ko_KR",
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BookFit - AI 북 카운셀러",
-    description: "지금 당신에게 필요한 단 한 권의 책을 AI가 처방해드립니다.",
+    title: "북핏 - 취향과 마음을 읽는 AI 북 카운셀러",
+    description: "북핏은 자연어 기반의 '취향 추천'과 현재의 감정, 상황, 심리 상태를 분석하는 '마음 추천'으로 지금 당신에게 필요한 책을 추천하는 북 큐레이션 서비스입니다.",
   },
   robots: {
     index: true,
