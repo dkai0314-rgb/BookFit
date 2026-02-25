@@ -57,7 +57,7 @@ export default async function CurationPage() {
     return (
         <div className="min-h-screen bg-[#061A14] text-white">
             {/* Header */}
-            <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
+            <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 h-[64px] flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
                 <div className="max-w-6xl mx-auto w-full flex items-center justify-between">
                     <Link href="/#curation" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
                         <ArrowLeft className="w-5 h-5" />
@@ -70,10 +70,10 @@ export default async function CurationPage() {
                 </div>
             </header>
 
-            <main className="pt-32 pb-24 px-6">
+            <main className="pt-24 pb-24 px-6 md:px-0">
                 <div className="max-w-6xl mx-auto space-y-24">
                     {/* Hero Section of Curation */}
-                    <div className="text-center space-y-6 max-w-3xl mx-auto">
+                    <div className="text-center space-y-6 max-w-3xl mx-auto px-6">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-bold uppercase tracking-widest">
                             <Sparkles className="w-4 h-4" /> Monthly Curation
                         </div>
@@ -83,19 +83,19 @@ export default async function CurationPage() {
                         <p className="text-xl text-gray-300 font-light leading-relaxed whitespace-pre-line">
                             북핏 큐레이터들이 선정한 베스트셀러
                         </p>
+                    </div>
 
-                        {/* Category Navigation Buttons */}
-                        <div className="flex flex-wrap justify-center gap-3 pt-4">
-                            {categories.map((category) => (
-                                <Link
-                                    key={category}
-                                    href={`#category-${category}`}
-                                    className="px-4 py-2 rounded-full border border-white/10 hover:border-accent hover:text-accent hover:bg-accent/5 bg-white/5 text-sm text-gray-300 transition-all duration-300"
-                                >
-                                    {category}
-                                </Link>
-                            ))}
-                        </div>
+                    {/* Category Navigation Buttons (Sticky) */}
+                    <div className="sticky top-[64px] z-40 bg-[#061A14]/95 backdrop-blur-md py-4 border-b border-white/5 flex flex-wrap justify-center gap-3 shadow-sm px-4">
+                        {categories.map((category) => (
+                            <Link
+                                key={category}
+                                href={`#category-${category}`}
+                                className="px-4 py-2 rounded-full border border-white/10 hover:border-accent hover:text-accent hover:bg-accent/5 bg-white/5 text-sm text-gray-300 transition-all duration-300"
+                            >
+                                {category}
+                            </Link>
+                        ))}
                     </div>
 
                     {/* Books grouped by Category */}

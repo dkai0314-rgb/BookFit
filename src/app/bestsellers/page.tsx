@@ -69,7 +69,7 @@ export default function BestsellersPage() {
 
     return (
         <div className="min-h-screen bg-[#061A14] text-white flex flex-col items-center py-10 px-4">
-            <header role="banner" className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
+            <header role="banner" className="fixed top-0 left-0 right-0 z-50 w-full px-6 h-[64px] flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
                 <Link href="/" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2" aria-label="메인 페이지로 돌아가기">
                     <ArrowLeft size={20} aria-hidden="true" /> 홈으로
                 </Link>
@@ -96,7 +96,7 @@ export default function BestsellersPage() {
                     </div>
                 ) : (
                     <>
-                        <div className="sticky top-[72px] z-40 bg-[#061A14]/95 backdrop-blur-md py-4 border-b border-white/5 flex flex-wrap justify-center gap-3 shadow-sm">
+                        <div className="sticky top-[64px] z-40 bg-[#061A14]/95 backdrop-blur-md py-4 border-b border-white/5 flex flex-wrap justify-center gap-3 shadow-sm">
                             {categoryBestsellers.map((item, idx) => (
                                 <button
                                     key={`nav-${idx}`}

@@ -18,6 +18,22 @@ export interface CurationBook {
 
 export function CategoryCarousel({ category, books }: { category: string, books: CurationBook[] }) {
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+
+    const checkScroll = () => {
+        if (scrollRef.current) {
+            const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+            setCanScrollLeft(scrollLeft > 0);
+            setCanScrollRight(Math.ceil(scrollLeft + clientWidth) < scrollWidth);
+        }
+    };
+
+    useEffect(() => {
+        checkScroll();
+        window.addEventListener('resize', checkScroll);
+        return () => window.removeEventListener('resize', checkScroll);
+    }, [books]);
 
     const scroll = (direction: 'left' | 'right') => {
         if (scrollRef.current) {
@@ -34,10 +50,20 @@ export function CategoryCarousel({ category, books }: { category: string, books:
                     {category}
                 </h3>
                 <div className="flex gap-2">
-                    <button onClick={() => scroll('left')} className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors" aria-label="이전">
+                    <button
+                        onClick={() => scroll('left')}
+                        disabled={!canScrollLeft}
+                        className={`p-2 rounded-full transition-colors ${canScrollLeft ? 'bg-white/5 hover:bg-white/10 text-white' : 'bg-white/5 text-white/30 cursor-not-allowed'}`}
+                        aria-label="이전"
+                    >
                         <ChevronLeft className="w-4 h-4" />
                     </button>
-                    <button onClick={() => scroll('right')} className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors" aria-label="다음">
+                    <button
+                        onClick={() => scroll('right')}
+                        disabled={!canScrollRight}
+                        className={`p-2 rounded-full transition-colors ${canScrollRight ? 'bg-white/5 hover:bg-white/10 text-white' : 'bg-white/5 text-white/30 cursor-not-allowed'}`}
+                        aria-label="다음"
+                    >
                         <ChevronRight className="w-4 h-4" />
                     </button>
                 </div>
@@ -45,6 +71,7 @@ export function CategoryCarousel({ category, books }: { category: string, books:
 
             <div
                 ref={scrollRef}
+                onScroll={checkScroll}
                 className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 [&::-webkit-scrollbar]:hidden"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
