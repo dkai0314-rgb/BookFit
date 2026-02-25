@@ -4,6 +4,7 @@ import { Sparkles, MessageSquare, BookCheck, Lightbulb } from "lucide-react";
 import CurationSection from "@/components/CurationSection";
 import BeehiivEmbed from "@/components/BeehiivEmbed";
 import JsonLd from "@/components/JsonLd";
+import Header from "@/components/Header";
 
 export default function Home() {
   const faqData = {
@@ -41,21 +42,7 @@ export default function Home() {
     <div className="min-h-screen bg-background flex flex-col items-center overflow-x-hidden">
       <JsonLd data={faqData} />
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/80 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]" role="banner">
-        <div className="max-w-6xl mx-auto w-full flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold flex items-center gap-2 font-serif tracking-tight cursor-pointer" aria-label="BookFit 홈">
-            <span className="bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent drop-shadow-sm">BookFit</span>
-          </Link>
-          <nav className="flex gap-4 md:gap-8 text-xs sm:text-sm font-medium text-gray-400" aria-label="메인 네비게이션">
-            <Link href="/curation" className="hover:text-accent transition-colors">이달의북핏</Link>
-            <Link href="/bestsellers" className="hover:text-accent transition-colors">베스트셀러</Link>
-            <Link href="/bookfit-letter" className="hover:text-accent transition-colors">북핏레터</Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" className="text-gray-400 hover:text-white hover:bg-white/5" aria-label="로그인">Login</Button>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="flex-1 w-full flex flex-col items-center" id="main-content">
         {/* Hero Section */}
