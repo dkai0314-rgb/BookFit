@@ -36,6 +36,11 @@ export const metadata: Metadata = {
     title: "북핏 - 취향과 마음을 읽는 AI 북 카운셀러",
     description: "북핏은 자연어 기반의 '취향 추천'과 현재의 감정, 상황, 심리 상태를 분석하는 '마음 추천'으로 지금 당신에게 필요한 책을 추천하는 북 큐레이션 서비스입니다.",
   },
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
   robots: {
     index: true,
     follow: true,
