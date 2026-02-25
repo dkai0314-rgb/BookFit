@@ -44,7 +44,14 @@ export async function POST(request: Request) {
             });
         }
 
-        generatedHeadline = metaTitleFM || `${title} 요약`;
+        // H1 태그 추출 (# 제목)
+        const h1Match = cleanContent.match(/^#\s+(.*)$/m);
+        if (h1Match) {
+            generatedHeadline = h1Match[1].trim();
+        } else {
+            generatedHeadline = metaTitleFM || `${title} 요약`;
+        }
+
         generatedMetaDesc = metaDescFM || '';
 
         if (!generatedMetaDesc) {
