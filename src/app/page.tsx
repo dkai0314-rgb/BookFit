@@ -160,11 +160,6 @@ export default function Home() {
         </section>
 
       </main>
-
-      {/* Footer */}
-      <footer className="w-full py-8 text-center text-sm text-gray-600 border-t border-[rgba(255,255,255,0.05)] bg-[#04120e]" role="contentinfo">
-        <p>© 2026 BookFit. All rights reserved.</p>
-      </footer>
     </div>
   );
 }

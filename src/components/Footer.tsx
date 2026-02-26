@@ -10,12 +10,12 @@ export default function Footer() {
                         <h3 className="text-white text-lg font-bold mb-4">BookFit</h3>
                         <div className="space-y-1 text-sm">
                             <p><strong>상호</strong>: 욜드몰(YOLDMORE)</p>
-                            <p><strong>대표자명</strong>: [대표자명 입력]</p>
+                            <p><strong>대표자명</strong>: 김동권</p>
                             <p><strong>사업자등록번호</strong>: 561-52-00765</p>
                             <p><strong>통신판매업신고번호</strong>: 2023-서울영등포-1733</p>
                             <p><strong>주소</strong>: 서울특별시 영등포구 국회대로36길 6-1, 2층 N259호</p>
                             <p><strong>이메일</strong>: <a href="mailto:yoldmore@gmail.com" className="hover:text-white transition-colors">yoldmore@gmail.com</a></p>
-                            <p><strong>고객문의채널</strong>: [나중에 전달]</p>
+                            <p><strong>고객문의채널</strong>: </p>
                         </div>
                     </div>
 
