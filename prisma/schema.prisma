@@ -96,3 +96,9 @@ model TemplateRequest {
   status    String   @default("pending") // pending, sent
   createdAt DateTime @default(now())
 }
+
+model PageContent {
+  id        String   @id // ex: "template-intro"
+  content   String   // Storing HTML from WYSIWYG
+  updatedAt DateTime @updatedAt
+}
