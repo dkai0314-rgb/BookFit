@@ -36,7 +36,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                     <div className="w-full aspect-[1/1.5] relative rounded-md overflow-hidden shadow-2xl border border-white/10 mb-6">
                         {book.imageUrl && (
                             <Image
-                                src={book.imageUrl.replace("coversum", "cover500")}
+                                src={book.imageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
                                 alt={book.title}
                                 fill
                                 className="object-cover"

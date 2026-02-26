@@ -88,3 +88,11 @@ model Letter {
   ogImageUrl      String?
   seoKeywords     String?
 }
+
+model TemplateRequest {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  status    String   @default("pending") // pending, sent
+  createdAt DateTime @default(now())
+}

@@ -74,16 +74,17 @@ export default function Home() {
               AI 분석으로 지금의 당신에게 필요한 책을 찾습니다.<br />
               읽어야 할 이유를 먼저 확인하고, 확신 있게 선택하세요.
             </p>
-            <div className="flex gap-4 pt-6">
-              <Link href="/recommend">
-                <Button size="lg" className="rounded-md bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold px-8 py-6 text-lg shadow-lg shadow-black/20 transition-all hover:scale-105 border border-transparent" aria-label="AI 맞춤 도서 추천 시작하기">
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  AI 맞춤 추천
+            <div className="flex flex-col gap-4 pt-6 w-full max-w-sm mx-auto">
+              <Link href="/recommend" className="w-full">
+                <Button size="lg" className="w-full rounded-md bg-accent text-[#061A14] hover:bg-white hover:text-accent font-extrabold px-8 py-8 text-xl shadow-lg shadow-black/20 transition-all hover:scale-105 border border-transparent" aria-label="취향or마음 맞춤 추천 시작하기">
+                  <Sparkles className="mr-2 h-6 w-6" />
+                  취향or마음 추천
                 </Button>
               </Link>
-              <Link href="/bestsellers">
-                <Button variant="outline" size="lg" className="rounded-md border-white/20 bg-white/5 text-white hover:bg-white/10 px-8 py-6 text-lg backdrop-blur-sm transition-all hover:border-white/40" aria-label="베스트셀러 확인하기">
-                  베스트셀러
+              <Link href="/template" className="w-full">
+                <Button variant="outline" size="lg" className="w-full rounded-md border-white/20 bg-white/5 text-white hover:bg-white/10 px-8 py-6 text-lg backdrop-blur-sm transition-all hover:border-white/40" aria-label="독서관 노션 템플릿 확인하기">
+                  <BookCheck className="mr-2 h-5 w-5" />
+                  독서관 노션 템플릿
                 </Button>
               </Link>
             </div>

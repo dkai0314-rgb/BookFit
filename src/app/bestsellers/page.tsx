@@ -125,7 +125,7 @@ export default function BestsellersPage() {
                                                     <div className="aspect-[1/1.5] w-full relative overflow-hidden bg-black/50">
                                                         {book.cover ? (
                                                             <Image
-                                                                src={book.cover.replace("coversum", "cover500")}
+                                                                src={book.cover.replace("coversum", "cover500").replace(/^http:/i, "https:")}
                                                                 alt={`${book.title} 표지`}
                                                                 fill
                                                                 className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"

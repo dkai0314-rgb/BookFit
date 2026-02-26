@@ -42,7 +42,7 @@ export default function BookList() {
                     <div className="aspect-[1/1.5] w-full overflow-hidden rounded-sm bg-[#0B2A1F] shadow-2xl border border-[rgba(255,255,255,0.05)] group-hover:shadow-[0_20px_50px_-12px_rgba(30,142,90,0.25)] transition-all duration-500 group-hover:-translate-y-2 relative">
                         {book.imageUrl ? (
                             <Image
-                                src={book.imageUrl.replace("coversum", "cover500")}
+                                src={book.imageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
                                 alt={book.title}
                                 fill
                                 className="object-cover transition-transform duration-700 group-hover:scale-105"

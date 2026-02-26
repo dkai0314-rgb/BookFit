@@ -52,7 +52,7 @@ export async function searchBookInAladin(title: string): Promise<AladinBook | nu
         // Upgrade cover image to high resolution (cover500)
         // Original: https://image.aladin.co.kr/product/3446/54/coversum/8968480699_1.jpg
         // Target: https://image.aladin.co.kr/product/3446/54/cover500/8968480699_1.jpg
-        const coverUrl = bookData.cover ? bookData.cover.replace('coversum', 'cover500') : "";
+        const coverUrl = bookData.cover ? bookData.cover.replace('coversum', 'cover500').replace(/^http:/i, 'https:') : "";
 
         // Construct 360 Viewer URL
         const viewerUrl = itemId ? `https://www.aladin.co.kr/shop/book/wletslookViewer.aspx?ItemId=${itemId}` : undefined;

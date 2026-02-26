@@ -81,7 +81,7 @@ export function CategoryCarousel({ category, books }: { category: string, books:
                             <div className="aspect-[1/1.5] relative rounded-sm overflow-hidden shadow-2xl border border-white/5 group-hover:shadow-accent/20 transition-all duration-500 group-hover:-translate-y-2">
                                 {book.imageUrl ? (
                                     <Image
-                                        src={book.imageUrl.replace("coversum", "cover500")}
+                                        src={book.imageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
                                         alt={book.title}
                                         fill
                                         className="object-cover transition-transform duration-700 group-hover:scale-110"
