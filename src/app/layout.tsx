@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
+import Footer from "@/components/Footer";
 
 const SITE_URL = "https://bookfit.kr";
 
@@ -79,8 +80,11 @@ export default function RootLayout({
         <JsonLd data={organizationData} />
         <JsonLd data={websiteData} />
       </head>
-      <body className="antialiased">
-        {children}
+      <body className="antialiased flex flex-col min-h-screen">
+        <div className="flex-grow">
+          {children}
+        </div>
+        <Footer />
       </body>
     </html>
   );
