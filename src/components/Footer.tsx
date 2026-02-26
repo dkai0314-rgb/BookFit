@@ -15,7 +15,9 @@ export default function Footer() {
                             <p><strong>통신판매업신고번호</strong>: 2023-서울영등포-1733</p>
                             <p><strong>주소</strong>: 서울특별시 영등포구 국회대로36길 6-1, 2층 N259호</p>
                             <p><strong>이메일</strong>: <a href="mailto:yoldmore@gmail.com" className="hover:text-white transition-colors">yoldmore@gmail.com</a></p>
-                            <p><strong>고객문의채널</strong>: </p>
+                            <p>
+                                <strong>고객문의채널</strong>: <a href="http://pf.kakao.com/_huuqX" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">카카오톡 채널</a>
+                            </p>
                         </div>
                     </div>
 
