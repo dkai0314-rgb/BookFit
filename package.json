@@ -33,7 +33,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
-    "react-quill": "^2.0.0",
+    "react-quill-new": "^3.8.3",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "satori": "^0.19.2",
@@ -54,11 +54,5 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
-  },
-  "overrides": {
-    "react-quill": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    }
   }
 }
