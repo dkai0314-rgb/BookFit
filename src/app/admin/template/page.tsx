@@ -7,6 +7,17 @@ import 'react-quill/dist/quill.snow.css';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
+const modules = {
+    toolbar: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ color: [] }, { background: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['link', 'image'],
+        ['clean'],
+    ],
+};
+
 export default function TemplateAdminPage() {
     const [content, setContent] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -58,16 +69,7 @@ export default function TemplateAdminPage() {
         }
     };
 
-    const modules = {
-        toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ color: [] }, { background: [] }],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image'],
-            ['clean'],
-        ],
-    };
+    // modules moved outside component
 
     if (isLoading) {
         return <div className="p-8 text-center text-gray-500">불러오는 중...</div>;
