@@ -40,7 +40,7 @@ export default function BookList() {
             {books.map((book, i) => (
                 <Link key={i} href={`/books/${book.id}`} className="group relative space-y-4 cursor-pointer block">
                     <div className="aspect-[1/1.5] w-full overflow-hidden rounded-sm bg-[#0B2A1F] shadow-2xl border border-[rgba(255,255,255,0.05)] group-hover:shadow-[0_20px_50px_-12px_rgba(30,142,90,0.25)] transition-all duration-500 group-hover:-translate-y-2 relative">
-                        {book.imageUrl ? (
+                        {typeof book.imageUrl === 'string' && book.imageUrl ? (
                             <Image
                                 src={book.imageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
                                 alt={book.title}

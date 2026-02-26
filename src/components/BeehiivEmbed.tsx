@@ -10,7 +10,9 @@ export default function BeehiivEmbed() {
         document.body.appendChild(script);
 
         return () => {
-            document.body.removeChild(script);
+            if (script.parentNode) {
+                document.body.removeChild(script);
+            }
         };
     }, []);
 

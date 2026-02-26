@@ -79,7 +79,7 @@ export function CategoryCarousel({ category, books }: { category: string, books:
                     <div key={book.id} className="w-[calc(50%-0.5rem)] md:w-[calc(25%-0.75rem)] shrink-0 snap-start">
                         <Link href={book.coupangLink || "#"} target="_blank" rel="noopener noreferrer" className="group space-y-4 block">
                             <div className="aspect-[1/1.5] relative rounded-sm overflow-hidden shadow-2xl border border-white/5 group-hover:shadow-accent/20 transition-all duration-500 group-hover:-translate-y-2">
-                                {book.imageUrl ? (
+                                {typeof book.imageUrl === 'string' && book.imageUrl ? (
                                     <Image
                                         src={book.imageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
                                         alt={book.title}

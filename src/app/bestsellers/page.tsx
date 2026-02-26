@@ -123,7 +123,7 @@ export default function BestsellersPage() {
                                             <article key={i} onClick={() => scrollToWidget(sectionIdx)} className="flex flex-col h-full bg-[#0B2A1F]/20 rounded-xl overflow-hidden border border-white/5 hover:border-accent/30 transition-all duration-300 hover:-translate-y-2 group cursor-pointer">
                                                 <div className="flex flex-col h-full">
                                                     <div className="aspect-[1/1.5] w-full relative overflow-hidden bg-black/50">
-                                                        {book.cover ? (
+                                                        {typeof book.cover === 'string' && book.cover ? (
                                                             <Image
                                                                 src={book.cover.replace("coversum", "cover500").replace(/^http:/i, "https:")}
                                                                 alt={`${book.title} 표지`}

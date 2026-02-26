@@ -327,7 +327,7 @@ export default function RecommendPage() {
                                     {/* Cover */}
                                     <div className="w-full md:w-32 flex-shrink-0">
                                         <div className="aspect-[1/1.5] w-28 mx-auto md:w-full rounded-md overflow-hidden bg-black/50 relative shadow-lg">
-                                            {book.imageUrl ? (
+                                            {typeof book.imageUrl === 'string' && book.imageUrl ? (
                                                 <Image
                                                     src={book.imageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
                                                     alt={`${book.displayTitle} 도서 커버`}
