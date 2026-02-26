@@ -99,7 +99,9 @@ export default function TemplateAdminPage() {
             <div className="bg-white rounded-lg shadow-sm border p-4">
                 <style dangerouslySetInnerHTML={{
                     __html: `
-          .ql-editor { min-height: 500px; font-size: 16px; }
+          /* Quill Editor Default text color override */
+          .ql-editor { min-height: 500px; font-size: 16px; color: #000; }
+          .ql-editor p, .ql-editor h1, .ql-editor h2, .ql-editor h3, .ql-editor h4, .ql-editor h5, .ql-editor h6 { color: #000; }
         `}} />
                 <ReactQuill
                     theme="snow"
