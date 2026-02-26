@@ -107,6 +107,9 @@ export async function fetchCurationFromSheet(): Promise<SheetCuration | null> {
             // Enrich with Aladin (Search using Title from Col B)
             const aladinData = await searchBookInAladin(rowTitle);
 
+            // Add delay to prevent Aladin API rate limit (which causes missing images)
+            await new Promise(resolve => setTimeout(resolve, 500));
+
             books.push({
                 id: `sheet-${r}`,
                 title: aladinData?.title || rowTitle,
