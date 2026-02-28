@@ -22,25 +22,21 @@ export default function TemplateForm() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
     const [alreadyApplied, setAlreadyApplied] = useState(false);
-    const [checkingStatus, setCheckingStatus] = useState(true);
     const router = useRouter();
 
-    // 1. 인증 상태 추적 + Firestore에서 기존 신청 여부 확인
+    // 인증 상태 추적 — UI 즉시 렌더, Firestore 확인은 백그라운드
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
+
+            // Firestore 확인은 비동기로 — UI 차단 없음
             if (currentUser && isFirebaseConfigValid) {
-                try {
-                    const docRef = doc(db, "users", currentUser.uid, "templates", "bookfit");
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) {
-                        setAlreadyApplied(true);
-                    }
-                } catch (error) {
-                    console.error("Error checking template status:", error);
-                }
+                getDoc(doc(db, "users", currentUser.uid, "templates", "bookfit"))
+                    .then((snap) => {
+                        if (snap.exists()) setAlreadyApplied(true);
+                    })
+                    .catch((err) => console.error("Template check error:", err));
             }
-            setCheckingStatus(false);
         });
         return () => unsubscribe();
     }, []);
@@ -51,7 +47,7 @@ export default function TemplateForm() {
             router.push("/login?redirect=/template");
             return;
         }
-        if (alreadyApplied) return; // 이미 신청했으면 다이얼로그 열지 않음
+        if (alreadyApplied) return;
         setIsDialogOpen(true);
     };
 
@@ -83,7 +79,7 @@ export default function TemplateForm() {
                 }).catch((err) => console.error("Firestore save error:", err));
             }
 
-            // 3. 다이얼로그 닫고 성공 팝업 띄우기 (Firestore 실패해도 진행)
+            // 3. 다이얼로그 닫고 성공 팝업 띄우기
             setAlreadyApplied(true);
             setIsDialogOpen(false);
             setIsSuccessPopupOpen(true);
@@ -145,9 +141,9 @@ export default function TemplateForm() {
                             ? "bg-white/10 text-gray-400 cursor-default hover:bg-white/10"
                             : "bg-accent text-[#061A14] hover:bg-white hover:text-accent"
                             }`}
-                        disabled={loading || alreadyApplied || checkingStatus}
+                        disabled={loading || alreadyApplied}
                     >
-                        {checkingStatus ? "확인 중..." : alreadyApplied ? (
+                        {alreadyApplied ? (
                             <span className="flex items-center gap-2"><Check className="w-5 h-5" /> 신청완료</span>
                         ) : "무료 신청하기"}
                     </Button>

@@ -21,25 +21,22 @@ export default function MyPage() {
     const router = useRouter();
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             if (!currentUser) {
                 router.push('/login');
-            } else {
-                setUser(currentUser);
-                if (isFirebaseConfigValid) {
-                    try {
-                        // Fetch Template
-                        const docRef = doc(db, "users", currentUser.uid, "templates", "bookfit");
-                        const docSnap = await getDoc(docRef);
-                        if (docSnap.exists()) {
-                            setHasTemplate(true);
-                        }
-                    } catch (error) {
-                        console.error("Error fetching user data:", error);
-                    }
-                }
+                return;
             }
+            setUser(currentUser);
             setLoading(false);
+
+            // Firestore 확인은 백그라운드에서 — UI 차단 없음
+            if (isFirebaseConfigValid) {
+                getDoc(doc(db, "users", currentUser.uid, "templates", "bookfit"))
+                    .then((snap) => {
+                        if (snap.exists()) setHasTemplate(true);
+                    })
+                    .catch((err) => console.error("Template check error:", err));
+            }
         });
         return () => unsubscribe();
     }, [router]);
