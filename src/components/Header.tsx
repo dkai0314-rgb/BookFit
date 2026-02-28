@@ -47,12 +47,12 @@ export default function Header() {
                     {user ? (
                         <div className="flex items-center gap-4 ml-4 border-l border-white/10 pl-4">
                             <span className="text-gray-300">{user.displayName || user.email?.split('@')[0]}님</span>
-                            <button onClick={handleLogout} className="hover:text-white transition-colors">로그아웃</button>
+                            <button onClick={handleLogout} className="hover:text-white transition-colors">Logout</button>
                         </div>
                     ) : (
                         <div className="flex items-center gap-4 ml-4 border-l border-white/10 pl-4">
-                            <Link href="/login" className="hover:text-white transition-colors">로그인</Link>
-                            <Link href="/signup" className="px-4 py-2 bg-accent text-[#061A14] rounded-full hover:bg-accent/90 transition-colors font-semibold">회원가입</Link>
+                            <Link href="/login" className="hover:text-white transition-colors">Login</Link>
+                            <Link href="/signup" className="px-4 py-2 bg-accent text-[#061A14] rounded-full hover:bg-accent/90 transition-colors font-semibold">Sign up</Link>
                         </div>
                     )}
                 </nav>
@@ -79,12 +79,12 @@ export default function Header() {
                         {user ? (
                             <>
                                 <div className="block w-full py-2 text-gray-400 text-sm">{user.displayName || user.email?.split('@')[0]}님 환영합니다</div>
-                                <button onClick={handleLogout} className="block w-full py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all font-medium">로그아웃</button>
+                                <button onClick={handleLogout} className="block w-full py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all font-medium">Logout</button>
                             </>
                         ) : (
                             <>
-                                <Link href="/login" onClick={toggleMenu} className="block w-full py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all font-medium">로그인</Link>
-                                <Link href="/signup" onClick={toggleMenu} className="block w-full py-3 bg-accent text-[#061A14] hover:bg-accent/90 rounded-xl transition-all font-semibold">회원가입</Link>
+                                <Link href="/login" onClick={toggleMenu} className="block w-full py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all font-medium">Login</Link>
+                                <Link href="/signup" onClick={toggleMenu} className="block w-full py-3 bg-accent text-[#061A14] hover:bg-accent/90 rounded-xl transition-all font-semibold">Sign up</Link>
                             </>
                         )}
                     </div>
