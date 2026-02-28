@@ -27,13 +27,22 @@ export default function MyPage() {
                 return;
             }
             setUser(currentUser);
+
+            // localStorage에서 즉시 확인 → CTA 즉시 표시 (0ms)
+            if (localStorage.getItem(`bookfit_template_${currentUser.uid}`) === "true") {
+                setHasTemplate(true);
+            }
+
             setLoading(false);
 
-            // Firestore 확인은 백그라운드에서 — UI 차단 없음
+            // Firestore 백그라운드 검증
             if (isFirebaseConfigValid) {
                 getDoc(doc(db, "users", currentUser.uid, "templates", "bookfit"))
                     .then((snap) => {
-                        if (snap.exists()) setHasTemplate(true);
+                        if (snap.exists()) {
+                            setHasTemplate(true);
+                            localStorage.setItem(`bookfit_template_${currentUser.uid}`, "true");
+                        }
                     })
                     .catch((err) => console.error("Template check error:", err));
             }

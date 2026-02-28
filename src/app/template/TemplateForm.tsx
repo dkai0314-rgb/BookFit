@@ -24,16 +24,23 @@ export default function TemplateForm() {
     const [alreadyApplied, setAlreadyApplied] = useState(false);
     const router = useRouter();
 
-    // 인증 상태 추적 — UI 즉시 렌더, Firestore 확인은 백그라운드
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
 
-            // Firestore 확인은 비동기로 — UI 차단 없음
+            // localStorage에서 즉시 확인 (0ms)
+            if (currentUser && localStorage.getItem(`bookfit_template_${currentUser.uid}`) === "true") {
+                setAlreadyApplied(true);
+            }
+
+            // Firestore 백그라운드 검증
             if (currentUser && isFirebaseConfigValid) {
                 getDoc(doc(db, "users", currentUser.uid, "templates", "bookfit"))
                     .then((snap) => {
-                        if (snap.exists()) setAlreadyApplied(true);
+                        if (snap.exists()) {
+                            setAlreadyApplied(true);
+                            localStorage.setItem(`bookfit_template_${currentUser.uid}`, "true");
+                        }
                     })
                     .catch((err) => console.error("Template check error:", err));
             }
@@ -52,10 +59,15 @@ export default function TemplateForm() {
     };
 
     const handleApply = () => {
-        // 1. UI 즉시 반영 (Optimistic Update) — 서버 응답 기다리지 않음
+        // 1. UI 즉시 반영 (Optimistic Update)
         setAlreadyApplied(true);
         setIsDialogOpen(false);
         setIsSuccessPopupOpen(true);
+
+        // 2. localStorage에 즉시 기록 (새로고침/마이페이지에서 즉시 참조)
+        if (user) {
+            localStorage.setItem(`bookfit_template_${user.uid}`, "true");
+        }
 
         // 2. Firebase 저장 (fire-and-forget, 백그라운드)
         if (isFirebaseConfigValid) {
