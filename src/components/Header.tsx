@@ -1,14 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+        return () => unsubscribe();
+    }, []);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            setIsMenuOpen(false);
+        } catch (error) {
+            console.error("Error signing out", error);
+        }
     };
 
     return (
@@ -19,10 +38,23 @@ export default function Header() {
                 </Link>
 
                 {/* Desktop Navigation */}
-                <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-400" aria-label="메인 네비게이션">
+                <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400" aria-label="메인 네비게이션">
                     <Link href="/curation" className="hover:text-accent transition-colors">이달의북핏</Link>
                     <Link href="/bestsellers" className="hover:text-accent transition-colors">베스트셀러</Link>
                     <Link href="/bookfit-letter" className="hover:text-accent transition-colors">북핏레터</Link>
+
+                    {/* Auth Nav */}
+                    {user ? (
+                        <div className="flex items-center gap-4 ml-4 border-l border-white/10 pl-4">
+                            <span className="text-gray-300">{user.displayName || user.email?.split('@')[0]}님</span>
+                            <button onClick={handleLogout} className="hover:text-white transition-colors">로그아웃</button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-4 ml-4 border-l border-white/10 pl-4">
+                            <Link href="/login" className="hover:text-white transition-colors">로그인</Link>
+                            <Link href="/signup" className="px-4 py-2 bg-accent text-[#061A14] rounded-full hover:bg-accent/90 transition-colors font-semibold">회원가입</Link>
+                        </div>
+                    )}
                 </nav>
 
                 {/* Mobile Menu Toggle Button */}
@@ -41,6 +73,20 @@ export default function Header() {
                         <Link href="/curation" onClick={toggleMenu} className="block w-full py-3 text-gray-300 hover:text-accent hover:bg-white/5 rounded-xl transition-all font-medium">이달의북핏</Link>
                         <Link href="/bestsellers" onClick={toggleMenu} className="block w-full py-3 text-gray-300 hover:text-accent hover:bg-white/5 rounded-xl transition-all font-medium">베스트셀러</Link>
                         <Link href="/bookfit-letter" onClick={toggleMenu} className="block w-full py-3 text-gray-300 hover:text-accent hover:bg-white/5 rounded-xl transition-all font-medium">북핏레터</Link>
+
+                        <div className="h-px bg-white/10 w-full my-1"></div>
+
+                        {user ? (
+                            <>
+                                <div className="block w-full py-2 text-gray-400 text-sm">{user.displayName || user.email?.split('@')[0]}님 환영합니다</div>
+                                <button onClick={handleLogout} className="block w-full py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all font-medium">로그아웃</button>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login" onClick={toggleMenu} className="block w-full py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all font-medium">로그인</Link>
+                                <Link href="/signup" onClick={toggleMenu} className="block w-full py-3 bg-accent text-[#061A14] hover:bg-accent/90 rounded-xl transition-all font-semibold">회원가입</Link>
+                            </>
+                        )}
                     </div>
                 )}
             </div>
