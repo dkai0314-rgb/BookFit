@@ -33,34 +33,21 @@ export function SignupForm() {
 
             console.log("Signup Step 2: Saving user to Firestore...");
             if (isFirebaseConfigValid) {
-                try {
-                    // Set a timeout for the Firestore write so it doesn't hang forever
-                    const savePromise = setDoc(doc(db, "users", user.uid), {
-                        uid: user.uid,
-                        email: user.email,
-                        name: name,
-                        newsletterConsent: newsletter,
-                        createdAt: new Date().toISOString(),
-                    });
-
-                    // Wait at most 8 seconds for Firestore
-                    await Promise.race([
-                        savePromise,
-                        new Promise((_, reject) => setTimeout(() => reject(new Error("Firestore timeout")), 8000))
-                    ]);
+                // Fire-and-forget: Firestore 저장을 기다리지 않고 즉시 홈으로 이동
+                setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    email: user.email,
+                    name: name,
+                    newsletterConsent: newsletter,
+                    createdAt: new Date().toISOString(),
+                }).then(() => {
                     console.log("Signup Step 2 Success: User saved to Firestore");
-                } catch (firestoreErr) {
-                    console.error("Firestore Save Error/Timeout:", firestoreErr);
-                    // We proceed anyway because the Auth user was created successfully.
-                }
-            } else {
-                console.warn("Firestore config not valid, skipping user data save.");
+                }).catch((err) => {
+                    console.error("Firestore Save Error:", err);
+                });
             }
 
-            // 가입 성공 모달 띄우기 삭제
             setIsLoading(false);
-
-            // 로그인 페이지(또는 메인)로 바로 이동
             router.push("/");
         } catch (err: unknown) {
             console.error("Auth Error:", err);

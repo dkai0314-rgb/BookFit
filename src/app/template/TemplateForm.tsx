@@ -73,20 +73,14 @@ export default function TemplateForm() {
                 console.error("Failed to call Brevo API", apiErr);
             }
 
-            // 2. 신청 정보 Firestore에 저장 (타임아웃 방어)
-            try {
-                const savePromise = setDoc(doc(db, "users", user!.uid, "templates", "bookfit"), {
+            // 2. 신청 정보 Firestore에 저장 (비동기 fire-and-forget, UI 차단 없음)
+            if (isFirebaseConfigValid) {
+                setDoc(doc(db, "users", user!.uid, "templates", "bookfit"), {
                     templateId: "bookfit",
                     title: "독서관 노션 템플릿",
                     purchasedAt: new Date().toISOString(),
                     price: 0,
-                });
-                await Promise.race([
-                    savePromise,
-                    new Promise((_, reject) => setTimeout(() => reject(new Error("Firestore timeout")), 8000))
-                ]);
-            } catch (firestoreErr) {
-                console.error("Firestore save error/timeout (proceeding anyway):", firestoreErr);
+                }).catch((err) => console.error("Firestore save error:", err));
             }
 
             // 3. 다이얼로그 닫고 성공 팝업 띄우기 (Firestore 실패해도 진행)
