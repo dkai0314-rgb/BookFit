@@ -35,13 +35,17 @@ export default function MyPage() {
 
             setLoading(false);
 
-            // Firestore 백그라운드 검증
+            // Firestore 백그라운드 검증 (불일치 시 localStorage 정리)
             if (isFirebaseConfigValid) {
                 getDoc(doc(db, "users", currentUser.uid, "templates", "bookfit"))
                     .then((snap) => {
                         if (snap.exists()) {
                             setHasTemplate(true);
                             localStorage.setItem(`bookfit_template_${currentUser.uid}`, "true");
+                        } else {
+                            // Firestore에 없으면 잘못된 캐시 정리
+                            localStorage.removeItem(`bookfit_template_${currentUser.uid}`);
+                            setHasTemplate(false);
                         }
                     })
                     .catch((err) => console.error("Template check error:", err));

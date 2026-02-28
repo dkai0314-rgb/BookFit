@@ -29,6 +29,11 @@ export default function Header() {
 
     const handleLogout = async () => {
         try {
+            // 로그아웃 전 현재 사용자의 캐시 정리
+            const currentUser = auth.currentUser;
+            if (currentUser) {
+                localStorage.removeItem(`bookfit_template_${currentUser.uid}`);
+            }
             await signOut(auth);
             setIsMenuOpen(false);
         } catch (error) {
