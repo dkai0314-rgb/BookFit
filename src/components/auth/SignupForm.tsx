@@ -40,13 +40,13 @@ export function SignupForm() {
             router.push("/");
         } catch (err: unknown) {
             console.error(err);
-            const error = err as { code?: string };
+            const error = err as { code?: string; message?: string };
             if (error.code === "auth/email-already-in-use") {
                 setError("이미 사용 중인 이메일입니다.");
             } else if (error.code === "auth/weak-password") {
                 setError("비밀번호는 6자리 이상이어야 합니다.");
             } else {
-                setError("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
+                setError(`회원가입 오류: ${error.code || error.message || "알 수 없는 오류"}`);
             }
         } finally {
             setIsLoading(false);
@@ -57,7 +57,7 @@ export function SignupForm() {
         <form onSubmit={handleSignup} className="space-y-6">
             <div className="space-y-4">
                 <div className="space-y-2">
-                    <Label htmlFor="name">이름</Label>
+                    <Label htmlFor="name" className="text-gray-900 font-semibold">이름</Label>
                     <Input
                         id="name"
                         placeholder="홍길동"
@@ -67,7 +67,7 @@ export function SignupForm() {
                     />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="email">이메일</Label>
+                    <Label htmlFor="email" className="text-gray-900 font-semibold">이메일</Label>
                     <Input
                         id="email"
                         type="email"
@@ -78,7 +78,7 @@ export function SignupForm() {
                     />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="password">비밀번호</Label>
+                    <Label htmlFor="password" className="text-gray-900 font-semibold">비밀번호</Label>
                     <Input
                         id="password"
                         type="password"

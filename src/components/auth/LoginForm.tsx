@@ -27,11 +27,11 @@ export function LoginForm() {
             router.push("/");
         } catch (err: unknown) {
             console.error(err);
-            const error = err as { code?: string };
+            const error = err as { code?: string; message?: string };
             if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
                 setError("이메일이나 비밀번호가 올바르지 않습니다.");
             } else {
-                setError("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+                setError(`로그인 오류: ${error.code || error.message || "알 수 없는 오류"}`);
             }
         } finally {
             setIsLoading(false);
@@ -42,7 +42,7 @@ export function LoginForm() {
         <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-4">
                 <div className="space-y-2">
-                    <Label htmlFor="email">이메일</Label>
+                    <Label htmlFor="email" className="text-gray-900 font-semibold">이메일</Label>
                     <Input
                         id="email"
                         type="email"
@@ -53,7 +53,7 @@ export function LoginForm() {
                     />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="password">비밀번호</Label>
+                    <Label htmlFor="password" className="text-gray-900 font-semibold">비밀번호</Label>
                     <Input
                         id="password"
                         type="password"
