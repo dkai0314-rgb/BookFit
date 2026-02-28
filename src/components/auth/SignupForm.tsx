@@ -82,6 +82,7 @@ export function SignupForm() {
                     <Input
                         id="password"
                         type="password"
+                        placeholder="비밀번호(6자리 이상)를 입력하세요"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
