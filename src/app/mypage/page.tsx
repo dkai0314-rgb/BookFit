@@ -91,7 +91,7 @@ export default function MyPage() {
 
                                         <div className="mt-auto pt-4 border-t border-border">
                                             <a
-                                                href="https://notion.so/"
+                                                href="/독서관 가이드.pdf"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="flex justify-center items-center w-full bg-primary hover:bg-primary-hover text-primary-foreground font-semibold py-3 rounded-lg transition-colors cursor-pointer"
