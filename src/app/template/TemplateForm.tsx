@@ -51,45 +51,31 @@ export default function TemplateForm() {
         setIsDialogOpen(true);
     };
 
-    const handleApply = async () => {
-        setLoading(true);
+    const handleApply = () => {
+        // 1. UI 즉시 반영 (Optimistic Update) — 서버 응답 기다리지 않음
+        setAlreadyApplied(true);
+        setIsDialogOpen(false);
+        setIsSuccessPopupOpen(true);
 
-        try {
-            // 1. Brevo 메일 구독 신청 연동 (실패해도 계속 진행)
-            try {
-                await fetch("/api/newsletter/subscribe", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        email: user!.email,
-                        name: user!.displayName || "",
-                    }),
-                });
-            } catch (apiErr) {
-                console.error("Failed to call Brevo API", apiErr);
-            }
-
-            // 2. 신청 정보 Firestore에 저장 (비동기 fire-and-forget, UI 차단 없음)
-            if (isFirebaseConfigValid) {
-                setDoc(doc(db, "users", user!.uid, "templates", "bookfit"), {
-                    templateId: "bookfit",
-                    title: "독서관 노션 템플릿",
-                    purchasedAt: new Date().toISOString(),
-                    price: 0,
-                }).catch((err) => console.error("Firestore save error:", err));
-            }
-
-            // 3. 다이얼로그 닫고 성공 팝업 띄우기
-            setAlreadyApplied(true);
-            setIsDialogOpen(false);
-            setIsSuccessPopupOpen(true);
-        } catch (error) {
-            console.error("Error during application:", error);
-            const err = error as Error;
-            alert(`오류가 발생했습니다: ${err.message}`);
-        } finally {
-            setLoading(false);
+        // 2. Firebase 저장 (fire-and-forget, 백그라운드)
+        if (isFirebaseConfigValid) {
+            setDoc(doc(db, "users", user!.uid, "templates", "bookfit"), {
+                templateId: "bookfit",
+                title: "독서관 노션 템플릿",
+                purchasedAt: new Date().toISOString(),
+                price: 0,
+            }).catch((err) => console.error("Firestore save error:", err));
         }
+
+        // 3. Brevo 구독 등록 (fire-and-forget, 백그라운드)
+        fetch("/api/newsletter/subscribe", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: user!.email,
+                name: user!.displayName || "",
+            }),
+        }).catch((err) => console.error("Brevo API error:", err));
     };
 
     return (
