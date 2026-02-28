@@ -47,6 +47,7 @@ export default function BookList() {
                                 fill
                                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                                 referrerPolicy="no-referrer"
+                                unoptimized
                             />
                         ) : (
                             <div className="w-full h-full bg-[#e8e8e5] flex items-center justify-center text-gray-500">

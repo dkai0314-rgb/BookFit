@@ -129,6 +129,7 @@ export default function BestsellersPage() {
                                                                 alt={`${book.title} 표지`}
                                                                 fill
                                                                 className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                                                                unoptimized
                                                             />
                                                         ) : (
                                                             <div className="w-full h-full flex items-center justify-center text-gray-600 text-base" aria-hidden="true">No Image</div>

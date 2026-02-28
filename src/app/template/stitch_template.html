@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>독서관_v3 | 프리미엄 노션 독서 템플릿</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2e483a",
+                        "sage": "#717a75",
+                        "background-light": "#f7f7f7",
+                        "background-dark": "#171b19",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "Noto Sans KR", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Lexend', 'Noto Sans KR', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+<!-- Navigation Header -->
+<nav class="sticky top-0 z-50 flex items-center bg-white/80 backdrop-blur-md dark:bg-background-dark/80 p-4 border-b border-primary/10 justify-between">
+<div class="flex size-10 shrink-0 items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">menu_book</span>
+</div>
+<h2 class="text-primary text-lg font-bold leading-tight tracking-tight flex-1 text-center font-display">독서관_v3</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">account_circle</span>
+</button>
+</div>
+</nav>
+<main class="max-w-screen-sm mx-auto overflow-x-hidden">
+<!-- Hero Section -->
+<section class="px-4 py-12 flex flex-col gap-8">
+<div class="w-full bg-primary/5 aspect-[4/3] rounded-xl overflow-hidden relative border border-primary/10" data-alt="Minimalist desk with books and a laptop showing Notion template" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDUZsi1bpzRgpi0SWDE7dwR4i74f2tZAk9kJMxriR3zFP89XCelWO_zQaTqzmqPtg7HGyPzTZgHtjfuV3Uy0kqaZOTQM-2f8JZ1A4tSLJkOa0-hv8z4bZ3lpWfycT8B94j9PHLlME3-eCzuksbS3emiXOP9OTgYggfGTQ_TSx1ZolgkZ7AkQCHz0KgMHpVyloPzEiPpHR0ERNk6w9q_CTBiwbdrxtIhoMXShiD48MO3_OZFucMy4y0lXpXaFfnqsDgucS1fAH-3a2t4"); background-size: cover; background-position: center;'>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold w-fit">
+<span class="material-symbols-outlined text-sm">verified</span>
+                    v3.0 Major Update
+                </div>
+<h1 class="text-primary text-4xl font-black leading-[1.15] tracking-tight">
+                    독서관_v3
+                </h1>
+<p class="text-slate-800 dark:text-slate-200 text-lg font-medium leading-snug">
+                    읽은 책을 정리하는 것을 넘어,<br/>나에게 남은 문장과 생각을 쌓는 독서 시스템
+                </p>
+<p class="text-sage text-sm font-normal leading-relaxed">
+                    책 추가, 하이라이트 기록, 챌린지 관리까지 한 곳에서 가능한 노션 독서 템플릿
+                </p>
+<div class="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-2 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-sage text-xs font-medium line-through">정가 39,000원</span>
+<div class="flex items-center gap-2">
+<span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">51% OFF</span>
+<span class="text-primary text-xl font-black">런칭 특가: 19,000원</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">local_offer</span>
+</div><div class="flex flex-col gap-3 mt-4">
+<button class="flex w-full items-center justify-center rounded-xl h-14 bg-primary text-white text-base font-bold shadow-lg shadow-primary/20">
+<span>지금 시작하기</span>
+</button>
+<button class="flex w-full items-center justify-center rounded-xl h-14 bg-white border-2 border-primary/10 text-primary text-base font-bold">
+<span>템플릿 자세히 보기</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Core Values -->
+<section class="bg-white dark:bg-slate-900/50 py-16 px-4">
+<h2 class="text-primary text-2xl font-bold mb-8 px-2">주요 특징</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-4 p-5 rounded-2xl bg-background-light dark:bg-slate-800 border border-primary/5">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<p class="text-primary text-base font-bold mb-1">빠른 실행</p>
+<p class="text-sage text-xs leading-relaxed">책 추가, 하이라이트를 대시보드에서 즉시 생성</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 p-5 rounded-2xl bg-background-light dark:bg-slate-800 border border-primary/5">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">account_tree</span>
+</div>
+<div>
+<p class="text-primary text-base font-bold mb-1">체계적 관리</p>
+<p class="text-sage text-xs leading-relaxed">서재와 하이라이트를 상세 페이지로 자동 정리</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 p-5 rounded-2xl bg-background-light dark:bg-slate-800 border border-primary/5">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">auto_stories</span>
+</div>
+<div>
+<p class="text-primary text-base font-bold mb-1">기록의 질</p>
+<p class="text-sage text-xs leading-relaxed">양보다 질에 집중하는 하이라이트 중심 구조</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 p-5 rounded-2xl bg-background-light dark:bg-slate-800 border border-primary/5">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">workspace_premium</span>
+</div>
+<div>
+<p class="text-primary text-base font-bold mb-1">독서 습관</p>
+<p class="text-sage text-xs leading-relaxed">챌린지 기능으로 꾸준한 독서 루틴 형성</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Screen Preview -->
+<section class="py-16 px-4 flex flex-col gap-8">
+<h2 class="text-primary text-2xl font-bold px-2">화면 미리보기</h2>
+<div class="flex flex-col gap-6">
+<!-- Preview Card 1 -->
+<div class="rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-primary/10 shadow-sm">
+<div class="aspect-video bg-primary/5 overflow-hidden" data-alt="Notion dashboard layout with book cards and progress bars" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC2WQcncSF__GgrsPW2Gzkee3xUOfE2OgYPSCcMZSvMeLz4T2NpsYP1cNT6X7_Lv4_H9l2KiARAcHp_S1jzM0vOwYoTliFcN7Ejk7WQjd5DqxWhCDqPlk2DYx98sftB-HAn6OPh2XYjTQTi52rhUFGy5nUZMVMc_z0eMb3u-RftYHOtZis5kCuglbe0prSalfqDwPCFHREqACfOtGinDNa8fT_M6o2xOrVEdHHoxKm0lPeCpBDuiaupdFoy_pYldhW7ftQHj9cyxLtR"); background-size: cover; background-position: center;'></div>
+<div class="p-5">
+<h3 class="text-primary text-lg font-bold mb-2 font-display">메인 홈 대시보드</h3>
+<p class="text-sage text-sm">대부분의 작업을 빠르게 처리하고 한눈에 진행 상황을 파악하는 메인 대시보드</p>
+</div>
+</div>
+<!-- Preview Card 2 -->
+<div class="rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-primary/10 shadow-sm">
+<div class="aspect-video bg-primary/5 overflow-hidden" data-alt="Collection of highlights organized by tags in Notion" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCDMhGKY4c3leW3CVizhPcOOpesbPZOMCLjLI--1_kiHQXSaRC3lcxYfbd4gjGvdUhXH7ZM0jBi44sDsSGR-Haeuyny36ojIG71jBaSSKVG7cI7CN0TN5pm6G4dtzVwdvseRrfs94L2QcanzR6AT194EOTMZwDg4QxTdAGGlOw2cCJyWmIxW-l6i4x8JZyzNMH2oAgbi4vK6CT-5m4AT41SAIAVTObxxRBxjSYw4X6KiAi8qR9L8XDeiiWdpe3ZG5UHWVPMF4cQjg5K"); background-size: cover; background-position: center;'></div>
+<div class="p-5">
+<h3 class="text-primary text-lg font-bold mb-2 font-display">하이라이트 관리 화면</h3>
+<p class="text-sage text-sm">기록한 모든 문장과 생각을 책별, 태그별, 카테고리별로 깔끔하게 자동 분류</p>
+</div>
+</div>
+<!-- Preview Card 3 -->
+<div class="rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-primary/10 shadow-sm">
+<div class="aspect-video bg-primary/5 overflow-hidden" data-alt="Reading challenge goals and tracking bars in Notion" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCAiIkJLRzAYrPlMJ8TI1ouyfBwJ1aYX3BUlris6m0yUNDurIViJLefh7VcmOaRotAcQwNYM3jUCJs_EG0YQGYbO9hz_7aLbmDWp5M3Sj5TXnWcPWVw_u-df17Xx4KHuZ-vSWsqiGLe5_jExtseYB8Egud-1Fm7LsrkoIWtuJoWY_HWFp5S36xMe7Gur0WKniHkWqmPcOdTCNXlPQB3XCpfmKsKPzxrJWQ0Exzy3JaQ5-iEqjUNVR3onU7jSk2FdCL3eIEXNi9iAuwf"); background-size: cover; background-position: center;'></div>
+<div class="p-5">
+<h3 class="text-primary text-lg font-bold mb-2 font-display">챌린지 관리 화면</h3>
+<p class="text-sage text-sm">월간/연간 독서 목표를 설정하고 직관적인 게이지바를 통해 진행 상태 확인</p>
+</div>
+</div>
+</div>
+</section><section class="bg-white dark:bg-slate-900 py-16 px-4">
+<div class="max-w-md mx-auto">
+<h2 class="text-primary text-2xl font-bold mb-8 px-2">신뢰와 혜택</h2>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-5 bg-background-light dark:bg-slate-800 rounded-2xl border border-primary/5">
+<div class="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">menu_book</span>
+</div>
+<div>
+<p class="text-primary font-bold">상세 사용 가이드</p>
+<p class="text-sage text-sm">VOD 및 PDF 매뉴얼 제공</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-5 bg-background-light dark:bg-slate-800 rounded-2xl border border-primary/5">
+<div class="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">chat</span>
+</div>
+<div>
+<p class="text-primary font-bold">1:1 Q&amp;A 지원</p>
+<p class="text-sage text-sm">궁금한 점은 언제든 판매자에게 직접 문의</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-5 bg-background-light dark:bg-slate-800 rounded-2xl border border-primary/5">
+<div class="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">update</span>
+</div>
+<div>
+<p class="text-primary font-bold">평생 업데이트</p>
+<p class="text-sage text-sm">템플릿 개선 시 무상 업데이트 지원</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Usage Flow -->
+<section class="bg-primary py-16 px-6 text-white overflow-hidden relative">
+<h2 class="text-2xl font-bold mb-10 text-center">사용 프로세스</h2>
+<div class="relative">
+<!-- Vertical Line -->
+<div class="absolute left-4 top-0 bottom-0 w-0.5 bg-white/20"></div>
+<div class="flex flex-col gap-8">
+<div class="flex gap-6 items-start relative">
+<div class="size-8 rounded-full bg-white text-primary flex items-center justify-center font-bold z-10 shrink-0">1</div>
+<div class="flex flex-col pt-1">
+<h4 class="font-bold text-lg">책 추가하기</h4>
+<p class="text-white/70 text-sm">서재에 읽고 싶은 책을 등록합니다.</p>
+</div>
+</div>
+<div class="flex gap-6 items-start relative">
+<div class="size-8 rounded-full bg-white text-primary flex items-center justify-center font-bold z-10 shrink-0">2</div>
+<div class="flex flex-col pt-1">
+<h4 class="font-bold text-lg">읽기 시작하기</h4>
+<p class="text-white/70 text-sm">독서 상태를 '읽는 중'으로 변경합니다.</p>
+</div>
+</div>
+<div class="flex gap-6 items-start relative">
+<div class="size-8 rounded-full bg-white text-primary flex items-center justify-center font-bold z-10 shrink-0">3</div>
+<div class="flex flex-col pt-1">
+<h4 class="font-bold text-lg">하이라이트 남기기</h4>
+<p class="text-white/70 text-sm">인상 깊은 문장과 내 생각을 기록합니다.</p>
+</div>
+</div>
+<div class="flex gap-6 items-start relative">
+<div class="size-8 rounded-full bg-white text-primary flex items-center justify-center font-bold z-10 shrink-0">4</div>
+<div class="flex flex-col pt-1">
+<h4 class="font-bold text-lg">완독 기록하기</h4>
+<p class="text-white/70 text-sm">읽은 날짜와 평점을 기록하며 마무리합니다.</p>
+</div>
+</div>
+<div class="flex gap-6 items-start relative">
+<div class="size-8 rounded-full bg-white text-primary flex items-center justify-center font-bold z-10 shrink-0">5</div>
+<div class="flex flex-col pt-1">
+<h4 class="font-bold text-lg">챌린지로 습관 만들기</h4>
+<p class="text-white/70 text-sm">성취감을 느끼며 다음 책으로 이어갑니다.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recommended For -->
+<section class="py-16 px-4">
+<h2 class="text-primary text-2xl font-bold mb-8 text-center font-display">이런 분들께 추천해요</h2>
+<div class="space-y-3">
+<div class="flex items-center gap-4 p-5 bg-white dark:bg-slate-900 rounded-2xl border border-primary/5 shadow-sm">
+<span class="material-symbols-outlined text-primary">edit_note</span>
+<p class="text-slate-800 dark:text-slate-200 font-medium">책을 읽고도 기록이 남지 않는 사람</p>
+</div>
+<div class="flex items-center gap-4 p-5 bg-white dark:bg-slate-900 rounded-2xl border border-primary/5 shadow-sm">
+<span class="material-symbols-outlined text-primary">favorite</span>
+<p class="text-slate-800 dark:text-slate-200 font-medium">인상 깊은 문장을 모아두고 싶은 사람</p>
+</div>
+<div class="flex items-center gap-4 p-5 bg-white dark:bg-slate-900 rounded-2xl border border-primary/5 shadow-sm">
+<span class="material-symbols-outlined text-primary">trending_up</span>
+<p class="text-slate-800 dark:text-slate-200 font-medium">독서 습관을 만들고 싶은 사람</p>
+</div>
+<div class="flex items-center gap-4 p-5 bg-white dark:bg-slate-900 rounded-2xl border border-primary/5 shadow-sm">
+<span class="material-symbols-outlined text-primary">design_services</span>
+<p class="text-slate-800 dark:text-slate-200 font-medium">깔끔한 노션 독서 템플릿을 찾는 사람</p>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-16 px-6 bg-white dark:bg-slate-900 border-t border-primary/5">
+<h2 class="text-primary text-2xl font-bold mb-8 text-center font-display">자주 묻는 질문</h2>
+<div class="space-y-6 max-w-md mx-auto">
+<div>
+<p class="text-primary font-bold mb-2 flex items-center gap-2"><span class="text-primary/40 font-black text-xl">Q.</span> 노션은 무료인가요?</p>
+<p class="text-sage text-sm pl-7">네, 개인 사용자는 무료로 모든 기기에서 동기화하여 사용할 수 있습니다.</p>
+</div>
+<div>
+<p class="text-primary font-bold mb-2 flex items-center gap-2"><span class="text-primary/40 font-black text-xl">Q.</span> 노션이 처음인데 괜찮을까요?</p>
+<p class="text-sage text-sm pl-7">직관적인 인터페이스와 친절한 영상 가이드가 있어 금방 적응하실 수 있습니다.</p>
+</div>
+<div>
+<p class="text-primary font-bold mb-2 flex items-center gap-2"><span class="text-primary/40 font-black text-xl">Q.</span> 커스터마이징이 가능한가요?</p>
+<p class="text-sage text-sm pl-7">네, 본인의 스타일에 맞게 자유롭게 수정하여 사용할 수 있습니다.</p>
+</div>
+</div>
+</section><section class="py-20 px-6 bg-primary/5 flex flex-col items-center text-center gap-6">
+<span class="material-symbols-outlined text-primary text-5xl">auto_stories</span>
+<div class="flex flex-col gap-3">
+<h2 class="text-primary text-2xl font-bold leading-tight">
+                    독서를 기록으로 끝내지 말고,<br/>나만의 문장과 생각으로 쌓아보세요.
+                </h2>
+<p class="text-sage text-sm leading-relaxed">
+                    독서관_v3와 함께 읽고, 남기고, 이어가는<br/>진정한 독서 루틴을 지금 바로 시작해보세요.
+                </p>
+</div>
+<div class="flex flex-col w-full gap-3 mt-4">
+<button class="flex w-full items-center justify-center rounded-xl h-14 bg-primary text-white text-base font-bold">
+                    지금 사용하기
+                </button>
+<button class="flex w-full items-center justify-center rounded-xl h-14 bg-white border border-primary/20 text-primary text-base font-bold">
+                    템플릿 구매하기
+                </button>
+</div>
+</section>
+<!-- Bottom Footer Navigation Style -->
+<section class="py-12 px-6 bg-slate-50 dark:bg-slate-800/50 border-t border-primary/5">
+<div class="max-w-md mx-auto space-y-8">
+<div>
+<h3 class="text-primary text-sm font-bold mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">download</span>다운로드 안내
+            </h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                결제 후 마이페이지에서 PDF(복제 링크 포함) 즉시 다운로드 가능합니다.
+            </p>
+</div>
+<div>
+<h3 class="text-primary text-sm font-bold mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">assignment_return</span>환불 정책
+            </h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                디지털 제품 특성상 다운로드 후에는 환불이 불가합니다.
+            </p>
+</div>
+<div>
+<h3 class="text-primary text-sm font-bold mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">copyright</span>저작권 안내
+            </h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                구매자 본인만 사용 가능하며, 무단 공유 및 재판매 시 법적 조치가 취해질 수 있습니다.
+            </p>
+</div>
+</div>
+</section><div class="flex gap-2 border-t border-slate-200 bg-white px-4 pb-8 pt-4 dark:bg-background-dark dark:border-slate-800">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-primary" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-xs font-medium font-display">홈</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-sage" href="#">
+<span class="material-symbols-outlined">book</span>
+<p class="text-xs font-medium font-display">서재</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-sage" href="#">
+<span class="material-symbols-outlined">format_quote</span>
+<p class="text-xs font-medium font-display">하이라이트</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-sage" href="#">
+<span class="material-symbols-outlined">trophy</span>
+<p class="text-xs font-medium font-display">챌린지</p>
+</a>
+</div>
+</main>
+</body></html>

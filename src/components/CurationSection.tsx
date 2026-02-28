@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 
+
 export interface CurationBook {
     id: string;
     title: string;
@@ -86,12 +87,13 @@ export function CategoryCarousel({ category, books }: { category: string, books:
                                         fill
                                         className="object-cover transition-transform duration-700 group-hover:scale-110"
                                         referrerPolicy="no-referrer"
+                                        unoptimized
                                     />
                                 ) : (
                                     <div className="w-full h-full bg-slate-800 flex items-center justify-center text-gray-500">No Image</div>
                                 )}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90" />
-                                <div className="absolute bottom-4 left-4 right-4 text-left">
+                                <div className="absolute bottom-4 left-4 right-4 text-left pr-10">
                                     <div className="text-[10px] text-accent font-bold uppercase tracking-tighter mb-1">Pick {i + 1}</div>
                                     <div className="text-white font-bold text-sm leading-tight drop-shadow-md">{book.title}</div>
                                 </div>

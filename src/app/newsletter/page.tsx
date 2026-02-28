@@ -1,4 +1,4 @@
-import BeehiivEmbed from "@/components/BeehiivEmbed";
+import BookfitLetterForm from "@/components/BookfitLetterForm";
 import Link from "next/link";
 import { ArrowLeft, Mail } from "lucide-react";
 
@@ -38,8 +38,8 @@ export default function NewsletterPage() {
                     </div>
 
                     {/* Right: Form */}
-                    <div>
-                        <BeehiivEmbed />
+                    <div className="flex justify-center md:justify-end">
+                        <BookfitLetterForm />
                     </div>
                 </div>
             </main>

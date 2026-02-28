@@ -333,6 +333,7 @@ export default function RecommendPage() {
                                                     alt={`${book.displayTitle} 도서 커버`}
                                                     fill
                                                     className="object-cover"
+                                                    unoptimized
                                                 />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">No Image</div>

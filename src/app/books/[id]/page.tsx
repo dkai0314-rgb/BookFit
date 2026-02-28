@@ -41,6 +41,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                                 fill
                                 className="object-cover"
                                 referrerPolicy="no-referrer"
+                                unoptimized
                             />
                         )}
                     </div>
