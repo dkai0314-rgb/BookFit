@@ -53,19 +53,22 @@ export function LoginForm() {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
 
-            // Firestore에 사용자 정보 저장 (첫 로그인 시에만)
+            // Firestore 사용자 저장 — 백그라운드 (로그인 차단 없음)
             if (isFirebaseConfigValid) {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (!userDoc.exists()) {
-                    setDoc(doc(db, "users", user.uid), {
-                        uid: user.uid,
-                        email: user.email,
-                        name: user.displayName || "",
-                        provider: "google",
-                        newsletterConsent: false,
-                        createdAt: new Date().toISOString(),
-                    }).catch((err) => console.error("Firestore save error:", err));
-                }
+                getDoc(doc(db, "users", user.uid))
+                    .then((userDoc) => {
+                        if (!userDoc.exists()) {
+                            setDoc(doc(db, "users", user.uid), {
+                                uid: user.uid,
+                                email: user.email,
+                                name: user.displayName || "",
+                                provider: "google",
+                                newsletterConsent: false,
+                                createdAt: new Date().toISOString(),
+                            }).catch((err) => console.error("Firestore save error:", err));
+                        }
+                    })
+                    .catch((err) => console.error("Firestore check error:", err));
             }
 
             router.push(getRedirectPath());
