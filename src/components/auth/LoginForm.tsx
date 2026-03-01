@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, signInWithRedirect, getRedirectResult } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db, googleProvider, isFirebaseConfigValid } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
@@ -23,37 +23,6 @@ export function LoginForm() {
         const params = new URLSearchParams(window.location.search);
         return params.get("redirect") || "/";
     };
-
-    // Google 리다이렉트 로그인 결과 처리
-    useEffect(() => {
-        getRedirectResult(auth)
-            .then((result) => {
-                if (result?.user) {
-                    const user = result.user;
-                    // Firestore 사용자 저장 (첫 로그인 시, 백그라운드)
-                    if (isFirebaseConfigValid) {
-                        getDoc(doc(db, "users", user.uid))
-                            .then((userDoc) => {
-                                if (!userDoc.exists()) {
-                                    setDoc(doc(db, "users", user.uid), {
-                                        uid: user.uid,
-                                        email: user.email,
-                                        name: user.displayName || "",
-                                        provider: "google",
-                                        newsletterConsent: false,
-                                        createdAt: new Date().toISOString(),
-                                    }).catch((err) => console.error("Firestore save error:", err));
-                                }
-                            })
-                            .catch((err) => console.error("Firestore check error:", err));
-                    }
-                    router.push(getRedirectPath());
-                }
-            })
-            .catch((err) => {
-                console.error("Google redirect error:", err);
-            });
-    }, [router]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -76,9 +45,50 @@ export function LoginForm() {
         }
     };
 
-    const handleGoogleLogin = () => {
+    const handleGoogleLogin = async () => {
         setIsLoading(true);
-        signInWithRedirect(auth, googleProvider);
+        setError(null);
+
+        const userAgent = navigator.userAgent.toLowerCase();
+
+        // 인앱 브라우저 감지 (카카오톡, 네이버, 인스타그램 등)
+        if (userAgent.match(/kakaotalk/i) || userAgent.match(/naver/i) || userAgent.match(/instagram/i)) {
+            setIsLoading(false);
+            if (userAgent.match(/iphone|ipad|ipod/i)) {
+                alert("보안 정책상 인앱 브라우저에서는 구글 로그인이 불가능합니다. 우측 하단 🧭 아이콘이나 우측 상단 ⋯ 버튼을 눌러 'Safari로 열기' 또는 '다른 브라우저로 열기'를 선택해주세요.");
+                return;
+            } else {
+                // 안드로이드는 크롬 외부 브라우저로 인텐트 실행
+                location.href = `intent://${location.href.replace(/https?:\/\//i, "")}#Intent;scheme=https;package=com.android.chrome;end`;
+                return;
+            }
+        }
+
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            if (result?.user) {
+                const user = result.user;
+                if (isFirebaseConfigValid) {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (!userDoc.exists()) {
+                        await setDoc(doc(db, "users", user.uid), {
+                            uid: user.uid,
+                            email: user.email,
+                            name: user.displayName || "",
+                            provider: "google",
+                            newsletterConsent: false,
+                            createdAt: new Date().toISOString(),
+                        });
+                    }
+                }
+                router.push(getRedirectPath());
+            }
+        } catch (err: unknown) {
+            console.error("Google login error:", err);
+            const error = err as { code?: string; message?: string };
+            setError(`Google 로그인 오류: ${error.message || "알 수 없는 오류"}`);
+            setIsLoading(false);
+        }
     };
 
     return (
