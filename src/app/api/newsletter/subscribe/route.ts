@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BREVO_API_KEY = process.env.BREVO_API_KEY!;
-const BREVO_BASE_URL = process.env.BREVO_BASE_URL!;
-const BREVO_LIST_ID = process.env.BREVO_LIST_ID!;
+const BREVO_API_KEY = process.env.BREVO_API_KEY || "";
+const BREVO_BASE_URL = process.env.BREVO_BASE_URL || "https://api.brevo.com/v3";
+const BREVO_LIST_ID = process.env.BREVO_LIST_ID || "7";
 
 export async function POST(req: NextRequest) {
     try {
+        if (!BREVO_API_KEY) {
+            console.error("Missing BREVO_API_KEY environment variable");
+            return NextResponse.json(
+                { error: "뉴스레터 설정 오류 (서버 관리자에게 문의하세요).", missingKey: true },
+                { status: 500 }
+            );
+        }
+
         const { email, name, listIds } = await req.json();
 
         if (!email) {
@@ -50,7 +58,10 @@ export async function POST(req: NextRequest) {
     } catch (error) {
         console.error("Newsletter check subscription error:", error);
         return NextResponse.json(
-            { error: "서버 연결에 실패했습니다." },
+            {
+                error: "서버 연결에 실패했습니다.",
+                details: error instanceof Error ? error.message : String(error)
+            },
             { status: 500 }
         );
     }
