@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db, googleProvider, isFirebaseConfigValid } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,37 @@ export function LoginForm() {
         const params = new URLSearchParams(window.location.search);
         return params.get("redirect") || "/";
     };
+
+    // Google 리다이렉트 로그인 결과 처리
+    useEffect(() => {
+        getRedirectResult(auth)
+            .then((result) => {
+                if (result?.user) {
+                    const user = result.user;
+                    // Firestore 사용자 저장 (첫 로그인 시, 백그라운드)
+                    if (isFirebaseConfigValid) {
+                        getDoc(doc(db, "users", user.uid))
+                            .then((userDoc) => {
+                                if (!userDoc.exists()) {
+                                    setDoc(doc(db, "users", user.uid), {
+                                        uid: user.uid,
+                                        email: user.email,
+                                        name: user.displayName || "",
+                                        provider: "google",
+                                        newsletterConsent: false,
+                                        createdAt: new Date().toISOString(),
+                                    }).catch((err) => console.error("Firestore save error:", err));
+                                }
+                            })
+                            .catch((err) => console.error("Firestore check error:", err));
+                    }
+                    router.push(getRedirectPath());
+                }
+            })
+            .catch((err) => {
+                console.error("Google redirect error:", err);
+            });
+    }, [router]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -45,44 +76,9 @@ export function LoginForm() {
         }
     };
 
-    const handleGoogleLogin = async () => {
+    const handleGoogleLogin = () => {
         setIsLoading(true);
-        setError(null);
-
-        try {
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
-
-            // Firestore 사용자 저장 — 백그라운드 (로그인 차단 없음)
-            if (isFirebaseConfigValid) {
-                getDoc(doc(db, "users", user.uid))
-                    .then((userDoc) => {
-                        if (!userDoc.exists()) {
-                            setDoc(doc(db, "users", user.uid), {
-                                uid: user.uid,
-                                email: user.email,
-                                name: user.displayName || "",
-                                provider: "google",
-                                newsletterConsent: false,
-                                createdAt: new Date().toISOString(),
-                            }).catch((err) => console.error("Firestore save error:", err));
-                        }
-                    })
-                    .catch((err) => console.error("Firestore check error:", err));
-            }
-
-            router.push(getRedirectPath());
-        } catch (err: unknown) {
-            console.error(err);
-            const error = err as { code?: string; message?: string };
-            if (error.code === "auth/popup-closed-by-user") {
-                // 팝업 닫기 — 에러 아님
-            } else {
-                setError(`Google 로그인 오류: ${error.code || error.message || "알 수 없는 오류"}`);
-            }
-        } finally {
-            setIsLoading(false);
-        }
+        signInWithRedirect(auth, googleProvider);
     };
 
     return (
