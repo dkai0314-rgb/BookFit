@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db, googleProvider, isFirebaseConfigValid } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,38 @@ export function SignupForm() {
     const [error, setError] = useState<string | null>(null);
     const [showSuccess] = useState(false); // 가입 완료 모달 상태
     const router = useRouter();
+
+    useEffect(() => {
+        const handleRedirectResult = async () => {
+            try {
+                const result = await getRedirectResult(auth);
+                if (result?.user) {
+                    setIsLoading(true);
+                    const user = result.user;
+                    if (isFirebaseConfigValid) {
+                        const userDoc = await getDoc(doc(db, "users", user.uid));
+                        if (!userDoc.exists()) {
+                            await setDoc(doc(db, "users", user.uid), {
+                                uid: user.uid,
+                                email: user.email,
+                                name: user.displayName || "",
+                                provider: "google",
+                                newsletterConsent: newsletter,
+                                createdAt: new Date().toISOString(),
+                            });
+                        }
+                    }
+                    router.push("/");
+                }
+            } catch (err: unknown) {
+                console.error("Redirect signup error:", err);
+                const error = err as { code?: string; message?: string };
+                setError(`Google 회원가입 오류: ${error.message || "알 수 없는 오류"}`);
+                setIsLoading(false);
+            }
+        };
+        handleRedirectResult();
+    }, [router, newsletter]);
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -70,38 +102,48 @@ export function SignupForm() {
         setError(null);
 
         const userAgent = navigator.userAgent.toLowerCase();
+        const isMobile = /iphone|ipad|ipod|android/i.test(userAgent);
 
-        // 인앱 브라우저 감지 (카카오톡, 네이버, 인스타그램 등)
+        // 인앱 브라우저 감지 및 처리
         if (userAgent.match(/kakaotalk/i) || userAgent.match(/naver/i) || userAgent.match(/instagram/i)) {
-            setIsLoading(false);
             if (userAgent.match(/iphone|ipad|ipod/i)) {
-                alert("보안 정책상 인앱 브라우저에서는 구글 로그인이 불가능합니다. 우측 하단 🧭 아이콘이나 우측 상단 ⋯ 버튼을 눌러 'Safari로 열기' 또는 '다른 브라우저로 열기'를 선택해주세요.");
-                return;
+                try {
+                    await signInWithRedirect(auth, googleProvider);
+                    return;
+                } catch (e) {
+                    setIsLoading(false);
+                    alert("보안 정책상 인앱 브라우저에서는 구글 연결이 작동하지 않을 수 있습니다. 🧭 아이콘이나 ⋯ 버튼을 눌러 'Safari로 열기'를 선택해주세요.");
+                    return;
+                }
             } else {
-                // 안드로이드는 크롬 외부 브라우저로 인텐트 실행
+                setIsLoading(false);
                 location.href = `intent://${location.href.replace(/https?:\/\//i, "")}#Intent;scheme=https;package=com.android.chrome;end`;
                 return;
             }
         }
 
         try {
-            const result = await signInWithPopup(auth, googleProvider);
-            if (result?.user) {
-                const user = result.user;
-                if (isFirebaseConfigValid) {
-                    const userDoc = await getDoc(doc(db, "users", user.uid));
-                    if (!userDoc.exists()) {
-                        await setDoc(doc(db, "users", user.uid), {
-                            uid: user.uid,
-                            email: user.email,
-                            name: user.displayName || "",
-                            provider: "google",
-                            newsletterConsent: newsletter,
-                            createdAt: new Date().toISOString(),
-                        });
+            if (isMobile) {
+                await signInWithRedirect(auth, googleProvider);
+            } else {
+                const result = await signInWithPopup(auth, googleProvider);
+                if (result?.user) {
+                    const user = result.user;
+                    if (isFirebaseConfigValid) {
+                        const userDoc = await getDoc(doc(db, "users", user.uid));
+                        if (!userDoc.exists()) {
+                            await setDoc(doc(db, "users", user.uid), {
+                                uid: user.uid,
+                                email: user.email,
+                                name: user.displayName || "",
+                                provider: "google",
+                                newsletterConsent: newsletter,
+                                createdAt: new Date().toISOString(),
+                            });
+                        }
                     }
+                    router.push("/");
                 }
-                router.push("/");
             }
         } catch (err: unknown) {
             console.error("Google signup error:", err);

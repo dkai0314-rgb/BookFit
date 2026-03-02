@@ -31,9 +31,15 @@ export default function BookfitLetterForm() {
                 setStatus("success");
                 setEmail("");
             } else {
-                const data = await response.json();
+                let errorMsg = "구독 신청 중 오류가 발생했습니다.";
+                try {
+                    const data = await response.json();
+                    if (data.error) errorMsg = data.error;
+                } catch (e) {
+                    console.error("Failed to parse server error response", e);
+                }
                 setStatus("error");
-                setErrorMessage(data.error || "구독 신청 중 오류가 발생했습니다.");
+                setErrorMessage(errorMsg);
             }
         } catch (error) {
             setStatus("error");
