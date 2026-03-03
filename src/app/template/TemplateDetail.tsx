@@ -47,7 +47,10 @@ export default function TemplateDetail() {
                         책 추가, 하이라이트 기록, 챌린지 관리까지 한 곳에서 가능한 노션 독서 템플릿
                     </p>
                     <div className="flex flex-col gap-3 mt-4 md:hidden">
-                        <Button className="w-full bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold py-6 text-lg transition-all rounded-xl h-14" onClick={scrollToTop}>
+                        <Button className="w-full bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold py-6 text-lg transition-all rounded-xl h-14" onClick={() => {
+                            const formElement = document.getElementById('template-form-section');
+                            if (formElement) formElement.scrollIntoView({ behavior: 'smooth' });
+                        }}>
                             지금 시작하기
                         </Button>
                     </div>
@@ -258,8 +261,11 @@ export default function TemplateDetail() {
                     </h2>
                 </div>
                 <div className="flex flex-col w-full max-w-sm gap-3 mt-4">
-                    <Button className="w-full bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold py-6 text-lg transition-all rounded-xl h-14" onClick={scrollToTop}>
-                        위로 올라가 템플릿 구매하기
+                    <Button className="w-full bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold py-6 text-lg transition-all rounded-xl h-14" onClick={() => {
+                        const formElement = document.getElementById('template-form-section');
+                        if (formElement) formElement.scrollIntoView({ behavior: 'smooth' });
+                    }}>
+                        템플릿 무료로 받기
                     </Button>
                 </div>
             </section>

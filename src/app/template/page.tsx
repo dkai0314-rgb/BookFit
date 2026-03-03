@@ -13,7 +13,7 @@ export default function TemplatePage() {
                     <TemplateDetail />
                 </div>
 
-                <div className="w-full md:w-[400px] flex-shrink-0 z-10">
+                <div className="w-full md:w-[400px] flex-shrink-0 z-10" id="template-form-section">
                     <div className="sticky top-24">
                         <TemplateForm />
                     </div>
