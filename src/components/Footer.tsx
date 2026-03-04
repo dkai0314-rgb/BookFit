@@ -15,7 +15,7 @@ export default function Footer() {
                     <div className="mb-6 md:mb-0 max-w-md">
                         <h3 className="text-white text-lg font-bold mb-4">BookFit</h3>
                         <div className="space-y-1 text-sm">
-                            <p><strong>상호</strong>: 욜드몰(YOLDMORE)</p>
+                            <p><strong>상호</strong>: 욜드컴퍼니(YOLDCOMPANY)</p>
                             <p><strong>대표자명</strong>: 김동권</p>
                             <p><strong>사업자등록번호</strong>: 561-52-00765</p>
                             <p><strong>통신판매업신고번호</strong>: 2023-서울영등포-1733</p>

@@ -11,7 +11,7 @@ export default function RefundPolicy() {
             <div className="prose prose-invert max-w-none prose-headings:text-white prose-p:text-gray-300 prose-li:text-gray-300">
                 <h1 className="text-3xl font-bold mb-6">환불 규정</h1>
                 <p className="mb-4">
-                    본 환불 규정은 욜드몰(YOLDMORE)(이하 “회사”)가 운영하는 북핏(BookFit)에서 제공하는 디지털 콘텐츠 및 관련 서비스의 환불에 관한 사항을 규정함을 목적으로 합니다.
+                    본 환불 규정은 욜드컴퍼니(YOLDCOMPANY)(이하 “회사”)가 운영하는 북핏(BookFit)에서 제공하는 디지털 콘텐츠 및 관련 서비스의 환불에 관한 사항을 규정함을 목적으로 합니다.
                 </p>
 
                 <h2 className="text-xl font-semibold mt-8 mb-4">제1조 (결제 취소 및 환불 기준)</h2>

@@ -7,7 +7,7 @@ export default function PrivacyPage() {
                 <h1 className="text-3xl font-bold mb-8">개인정보처리방침</h1>
 
                 <p>
-                    욜드몰(YOLDMORE)(이하 “회사”)는 북핏(BookFit) 이용자의 개인정보를 중요하게 생각하며, 관련 법령에 따라 개인정보를 안전하게 처리하고 보호하기 위해 다음과 같이 개인정보처리방침을 수립합니다.
+                    욜드컴퍼니(YOLDCOMPANY)(이하 “회사”)는 북핏(BookFit) 이용자의 개인정보를 중요하게 생각하며, 관련 법령에 따라 개인정보를 안전하게 처리하고 보호하기 위해 다음과 같이 개인정보처리방침을 수립합니다.
                 </p>
 
                 <h2 className="text-xl font-semibold mt-8 mb-4 text-emerald-400">1. 수집하는 개인정보 항목</h2>

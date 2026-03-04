@@ -7,7 +7,7 @@ export default function TermsPage() {
                 <h1 className="text-3xl font-bold mb-8">이용약관</h1>
 
                 <p>
-                    본 이용약관은 욜드몰(YOLDMORE)(이하 “회사”)가 운영하는 북핏(BookFit)에서 제공하는 디지털 콘텐츠 및 관련 서비스의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
+                    본 이용약관은 욜드컴퍼니(YOLDCOMPANY)(이하 “회사”)가 운영하는 북핏(BookFit)에서 제공하는 디지털 콘텐츠 및 관련 서비스의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
                 </p>
 
                 <h2 className="text-xl font-semibold mt-8 mb-4 text-emerald-400">제1조 목적</h2>
