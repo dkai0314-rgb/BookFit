@@ -59,7 +59,12 @@ export function LoginForm() {
                     />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="password" className="text-gray-900 font-semibold">비밀번호</Label>
+                    <div className="flex items-center justify-between">
+                        <Label htmlFor="password" className="text-gray-900 font-semibold">비밀번호</Label>
+                        <Link href="/forgot-password" title="비밀번호 재설정" className="text-sm text-gray-500 hover:text-accent transition-colors">
+                            비밀번호를 잊으셨나요?
+                        </Link>
+                    </div>
                     <Input
                         id="password"
                         type="password"

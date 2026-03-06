@@ -35,7 +35,7 @@ export default function TemplateDetail() {
                 <div className="flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 text-accent text-xs font-bold w-fit shadow-sm">
                         <span className="text-base drop-shadow-md">💎</span>
-                        v3.0 Major Update
+                        6,900원 평생 소장
                     </div>
                     <h1 className="text-white text-4xl font-black leading-[1.15] tracking-tight">
                         독서관
@@ -51,7 +51,7 @@ export default function TemplateDetail() {
                             const formElement = document.getElementById('template-form-section');
                             if (formElement) formElement.scrollIntoView({ behavior: 'smooth' });
                         }}>
-                            지금 시작하기
+                            지금 소장하기
                         </Button>
                     </div>
                 </div>
@@ -185,7 +185,7 @@ export default function TemplateDetail() {
                             <div className="w-8 h-8 rounded-full bg-accent text-[#061A14] flex items-center justify-center font-bold z-10 shrink-0">2</div>
                             <div className="flex flex-col pt-1">
                                 <h4 className="font-bold text-white text-lg">읽기 시작하기</h4>
-                                <p className="text-gray-300 text-sm">독서 상태를 '읽는 중'으로 변경합니다.</p>
+                                <p className="text-gray-300 text-sm">독서 상태를 &apos;읽는 중&apos;으로 변경합니다.</p>
                             </div>
                         </div>
                         <div className="flex gap-6 items-start relative">

@@ -2,38 +2,30 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, CheckCircle2, Check } from "lucide-react";
+import { ShoppingCart, Check, CreditCard } from "lucide-react";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { auth, db, isFirebaseConfigValid } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from "@/components/ui/dialog";
+import { loadTossPayments } from "@tosspayments/payment-sdk";
 
 export default function TemplateForm() {
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
     const [alreadyApplied, setAlreadyApplied] = useState(false);
     const router = useRouter();
+
+    const PRICE = 6900;
+    const CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "test_ck_vZnjEJeQVxPYbPB4oQR9VPmOoBN0";
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
 
-            // localStorage에서 즉시 확인 (0ms)
             if (currentUser && localStorage.getItem(`bookfit_template_${currentUser.uid}`) === "true") {
                 setAlreadyApplied(true);
             }
 
-            // Firestore 백그라운드 검증 (불일치 시 localStorage 정리)
             if (currentUser && isFirebaseConfigValid) {
                 getDoc(doc(db, "users", currentUser.uid, "templates", "bookfit"))
                     .then((snap) => {
@@ -41,7 +33,6 @@ export default function TemplateForm() {
                             setAlreadyApplied(true);
                             localStorage.setItem(`bookfit_template_${currentUser.uid}`, "true");
                         } else {
-                            // Firestore에 없으면 잘못된 캐시 정리
                             localStorage.removeItem(`bookfit_template_${currentUser.uid}`);
                             setAlreadyApplied(false);
                         }
@@ -52,46 +43,38 @@ export default function TemplateForm() {
         return () => unsubscribe();
     }, []);
 
-    const handleOpenDialog = () => {
+    const handlePayment = async () => {
         if (!user) {
-            alert("무료 신청을 위해 먼저 로그인해 주세요.");
+            alert("결제를 위해 먼저 로그인해 주세요.");
             router.push("/login?redirect=/template");
             return;
         }
+
         if (alreadyApplied) return;
-        setIsDialogOpen(true);
-    };
 
-    const handleApply = () => {
-        // 1. UI 즉시 반영 (Optimistic Update)
-        setAlreadyApplied(true);
-        setIsDialogOpen(false);
-        setIsSuccessPopupOpen(true);
+        setLoading(true);
+        try {
+            const tossPayments = await loadTossPayments(CLIENT_KEY);
+            const orderId = `bookfit-${user.uid.slice(0, 8)}-${Date.now()}`;
 
-        // 2. localStorage에 즉시 기록 (새로고침/마이페이지에서 즉시 참조)
-        if (user) {
-            localStorage.setItem(`bookfit_template_${user.uid}`, "true");
+            await tossPayments.requestPayment("카드", {
+                amount: PRICE,
+                orderId: orderId,
+                orderName: "독서관 노션 템플릿",
+                successUrl: `${window.location.origin}/payment/success?userId=${user.uid}&userEmail=${encodeURIComponent(user.email || "")}&userName=${encodeURIComponent(user.displayName || "")}`,
+                failUrl: `${window.location.origin}/payment/fail`,
+                customerEmail: user.email || undefined,
+                customerName: user.displayName || undefined,
+            });
+        } catch (err: unknown) {
+            console.error("Payment error:", err);
+            const error = err as { code?: string };
+            if (error.code !== "USER_CANCEL") {
+                alert("결제 준비 중 오류가 발생했습니다.");
+            }
+        } finally {
+            setLoading(false);
         }
-
-        // 2. Firebase 저장 (fire-and-forget, 백그라운드)
-        if (isFirebaseConfigValid) {
-            setDoc(doc(db, "users", user!.uid, "templates", "bookfit"), {
-                templateId: "bookfit",
-                title: "독서관 노션 템플릿",
-                purchasedAt: new Date().toISOString(),
-                price: 0,
-            }).catch((err) => console.error("Firestore save error:", err));
-        }
-
-        // 3. Brevo 구독 등록 (fire-and-forget, 백그라운드)
-        fetch("/api/newsletter/subscribe", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: user!.email,
-                name: user!.displayName || "",
-            }),
-        }).catch((err) => console.error("Brevo API error:", err));
     };
 
     return (
@@ -104,111 +87,56 @@ export default function TemplateForm() {
                         <ShoppingCart className="w-6 h-6" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">독서관 노션 템플릿</h3>
-                    <p className="text-gray-400 text-sm">신청 후 즉시 복제하여 사용할 수 있습니다.</p>
+                    <p className="text-gray-400 text-sm">결제 후 즉시 복제하여 사용할 수 있습니다.</p>
                 </div>
 
                 <div className="bg-white/5 border border-white/10 rounded-xl p-5 space-y-4">
                     <div className="flex justify-between items-center text-sm text-gray-300">
                         <span>정가</span>
-                        <span className="line-through">$10.00</span>
+                        <span className="line-through">₩19,000</span>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span className="font-semibold text-white">특별 배포가</span>
+                        <span className="font-semibold text-white">한정 혜택가</span>
                         <div className="flex items-center gap-2">
-                            <span className="bg-accent/20 text-accent text-xs font-bold px-2 py-1 rounded">100% FREE</span>
-                            <span className="text-2xl font-bold text-accent">0원</span>
+                            <span className="bg-accent/20 text-accent text-xs font-bold px-2 py-1 rounded">63% OFF</span>
+                            <span className="text-2xl font-bold text-accent">6,900원</span>
                         </div>
                     </div>
                 </div>
 
                 <ul className="space-y-3 text-sm text-gray-300">
                     <li className="flex items-start gap-2 mt-2">
-                        <CheckCircle2 className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-                        <span>신청 즉시 마이페이지에서 노션 템플릿 링크 제공</span>
+                        <CreditCard className="w-4 h-4 text-accent mt-0.5 shrink-0" />
+                        <span>결제 즉시 마이페이지에서 템플릿 링크 제공</span>
                     </li>
                     <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-                        <span>평생 무상 업데이트 지원</span>
+                        <Check className="w-4 h-4 text-accent mt-0.5 shrink-0" />
+                        <span>평생 무상 업데이트 및 가이드 지원</span>
                     </li>
                     <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-                        <span>상세 사용 가이드 포함</span>
+                        <Check className="w-4 h-4 text-accent mt-0.5 shrink-0" />
+                        <span>기록과 성장을 위한 노션 시스템</span>
                     </li>
                 </ul>
 
                 <div className="pt-4">
                     <Button
-                        onClick={handleOpenDialog}
+                        onClick={handlePayment}
                         className={`w-full font-bold py-6 text-lg transition-all ${alreadyApplied
                             ? "bg-white/10 text-gray-400 cursor-default hover:bg-white/10"
-                            : "bg-accent text-[#061A14] hover:bg-white hover:text-accent"
+                            : "bg-accent text-[#061A14] hover:bg-white hover:text-accent shadow-[0_0_20px_rgba(255,221,120,0.2)]"
                             }`}
                         disabled={loading || alreadyApplied}
                     >
-                        {alreadyApplied ? (
-                            <span className="flex items-center gap-2"><Check className="w-5 h-5" /> 신청완료</span>
-                        ) : "무료 신청하기"}
+                        {loading ? "결제 준비 중..." : alreadyApplied ? (
+                            <span className="flex items-center gap-2"><Check className="w-5 h-5" /> 이미 소장 중</span>
+                        ) : "지금 소장하기 (6,900원)"}
                     </Button>
+                    <p className="text-center text-[10px] text-gray-500 mt-4 leading-relaxed">
+                        디지털 콘텐츠 특성상 템플릿 복제 후 열람 시<br />환불이 제한될 수 있습니다.
+                    </p>
                 </div>
             </div>
-
-            {/* 뉴스레터 동의 다이얼로그 */}
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="bg-[#0a2018] border border-accent/20 text-white sm:max-w-md">
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-bold pt-2">
-                            무료 신청과 함께 북핏레터를 받아보세요.
-                        </DialogTitle>
-                        <DialogDescription className="text-gray-400 pt-3 text-sm leading-relaxed">
-                            템플릿 업데이트 소식, 새로운 추천 콘텐츠, 유용한 읽을거리까지 가장 먼저 전해드립니다.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className="mt-4 sm:justify-center flex-col sm:flex-row gap-3">
-                        <Button
-                            variant="outline"
-                            className="bg-transparent border-white/20 text-white hover:bg-white/10"
-                            onClick={() => setIsDialogOpen(false)}
-                            disabled={loading}
-                        >
-                            취소
-                        </Button>
-                        <Button
-                            onClick={handleApply}
-                            className="bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold"
-                            disabled={loading}
-                        >
-                            {loading ? "신청 처리 중..." : "무료 신청하고 받기"}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* 성공 팝업 */}
-            <Dialog open={isSuccessPopupOpen} onOpenChange={setIsSuccessPopupOpen}>
-                <DialogContent className="bg-[#0a2018] border border-accent/20 text-white sm:max-w-sm">
-                    <DialogHeader>
-                        <div className="flex justify-center mb-4">
-                            <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center">
-                                <Check className="w-8 h-8 text-accent" />
-                            </div>
-                        </div>
-                        <DialogTitle className="text-xl font-bold text-center">
-                            신청이 완료되었습니다!
-                        </DialogTitle>
-                        <DialogDescription className="text-gray-400 pt-3 text-sm leading-relaxed text-center">
-                            마이페이지에서 확인하세요.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className="mt-4 sm:justify-center">
-                        <Button
-                            onClick={() => setIsSuccessPopupOpen(false)}
-                            className="bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold w-full"
-                        >
-                            닫기
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }
