@@ -10,9 +10,9 @@ import { useRouter } from "next/navigation";
 import { loadTossPayments } from "@tosspayments/payment-sdk";
 
 export default function TemplateForm() {
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
-    const [alreadyApplied, setAlreadyApplied] = useState(false);
+    const [hasTemplate, setHasTemplate] = useState(false);
     const router = useRouter();
 
     const PRICE = 6900;
@@ -22,22 +22,28 @@ export default function TemplateForm() {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
 
-            if (currentUser && localStorage.getItem(`bookfit_template_${currentUser.uid}`) === "true") {
-                setAlreadyApplied(true);
-            }
+            if (currentUser) {
+                // localStorage 즉시 확인
+                if (localStorage.getItem(`bookfit_template_${currentUser.uid}`) === "true") {
+                    setHasTemplate(true);
+                }
 
-            if (currentUser && isFirebaseConfigValid) {
-                getDoc(doc(db, "users", currentUser.uid, "templates", "bookfit"))
-                    .then((snap) => {
-                        if (snap.exists()) {
-                            setAlreadyApplied(true);
-                            localStorage.setItem(`bookfit_template_${currentUser.uid}`, "true");
-                        } else {
-                            localStorage.removeItem(`bookfit_template_${currentUser.uid}`);
-                            setAlreadyApplied(false);
-                        }
-                    })
-                    .catch((err) => console.error("Template check error:", err));
+                // Firestore 실시간 검증
+                if (isFirebaseConfigValid) {
+                    getDoc(doc(db, "users", currentUser.uid, "templates", "bookfit"))
+                        .then((snap) => {
+                            if (snap.exists()) {
+                                setHasTemplate(true);
+                                localStorage.setItem(`bookfit_template_${currentUser.uid}`, "true");
+                            } else {
+                                setHasTemplate(false);
+                                localStorage.removeItem(`bookfit_template_${currentUser.uid}`);
+                            }
+                        })
+                        .catch((err) => console.error("Template check error:", err));
+                }
+            } else {
+                setHasTemplate(false);
             }
         });
         return () => unsubscribe();
@@ -46,13 +52,17 @@ export default function TemplateForm() {
     const handlePayment = async () => {
         if (!user) {
             alert("결제를 위해 먼저 로그인해 주세요.");
-            router.push("/login?redirect=/template");
+            router.push(`/login?redirect=${window.location.pathname}`);
             return;
         }
 
-        if (alreadyApplied) return;
+        if (hasTemplate) {
+            alert("이미 보유 중인 템플릿입니다. 마이페이지에서 확인해주세요!");
+            router.push('/mypage');
+            return;
+        }
 
-        setLoading(true);
+        setIsLoading(true);
         try {
             const tossPayments = await loadTossPayments(CLIENT_KEY);
             const orderId = `bookfit-${user.uid.slice(0, 8)}-${Date.now()}`;
@@ -73,7 +83,7 @@ export default function TemplateForm() {
                 alert("결제 준비 중 오류가 발생했습니다.");
             }
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
@@ -122,15 +132,19 @@ export default function TemplateForm() {
                 <div className="pt-4">
                     <Button
                         onClick={handlePayment}
-                        className={`w-full font-bold py-6 text-lg transition-all ${alreadyApplied
-                            ? "bg-white/10 text-gray-400 cursor-default hover:bg-white/10"
-                            : "bg-accent text-[#061A14] hover:bg-white hover:text-accent shadow-[0_0_20px_rgba(255,221,120,0.2)]"
-                            }`}
-                        disabled={loading || alreadyApplied}
+                        className="w-full bg-accent hover:bg-white text-[#061A14] font-bold py-4 rounded-xl text-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2"
+                        disabled={isLoading || hasTemplate}
                     >
-                        {loading ? "결제 준비 중..." : alreadyApplied ? (
+                        {isLoading ? (
+                            <div className="w-6 h-6 border-2 border-[#061A14] border-t-transparent rounded-full animate-spin" />
+                        ) : hasTemplate ? (
                             <span className="flex items-center gap-2"><Check className="w-5 h-5" /> 이미 소장 중</span>
-                        ) : "지금 소장하기 (6,900원)"}
+                        ) : (
+                            <>
+                                <CreditCard className="w-5 h-5" />
+                                6,900원 결제하고 평생 소장하기
+                            </>
+                        )}
                     </Button>
                     <p className="text-center text-[10px] text-gray-500 mt-4 leading-relaxed">
                         디지털 콘텐츠 특성상 템플릿 복제 후 열람 시<br />환불이 제한될 수 있습니다.

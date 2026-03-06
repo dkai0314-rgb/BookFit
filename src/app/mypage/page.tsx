@@ -121,13 +121,13 @@ export default function MyPage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-2">보유 중인 템플릿이 없습니다</h3>
                                 <p className="text-gray-400 mb-6 max-w-md mx-auto">
-                                    독서 관리를 위한 완벽한 노션 템플릿을 무료로 제공하고 있습니다. 지금 바로 신청하고 평생 소장하세요!
+                                    독서 관리를 위한 완벽한 노션 템플릿을 이제 결제 후 평생 소장하실 수 있습니다. 지금 바로 확인해보세요!
                                 </p>
                                 <a
                                     href="/template"
                                     className="inline-flex justify-center items-center bg-accent hover:bg-white text-[#061A14] hover:text-accent font-bold py-3 px-8 rounded-lg transition-colors"
                                 >
-                                    무료 템플릿 신청하러 가기
+                                    템플릿 상세 보러 가기
                                 </a>
                             </div>
                         )}

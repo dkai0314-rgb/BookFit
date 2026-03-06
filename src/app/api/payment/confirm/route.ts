@@ -37,39 +37,47 @@ export async function POST(req: Request) {
         }
 
         // 3. DB 업데이트 (권한 부여) 및 결제 이력 저장
-        if (adminDb && userId) {
-            const batch = adminDb.batch();
-
-            // 구매한 템플릿 정보 저장
-            const templateRef = adminDb.collection('users').doc(userId).collection('templates').doc('bookfit');
-            batch.set(templateRef, {
-                templateId: 'bookfit',
-                title: '독서관 노션 템플릿',
-                purchasedAt: FieldValue.serverTimestamp(),
-                price: amount,
-                orderId: orderId,
-                paymentKey: paymentKey,
-                status: 'paid'
-            });
-
-            // 전체 결제 이력 저장
-            const paymentRef = adminDb.collection('payments').doc(orderId);
-            batch.set(paymentRef, {
-                userId,
-                userEmail,
-                userName,
-                amount,
-                orderId,
-                paymentKey,
-                productName: '독서관 노션 템플릿',
-                status: tossData.status,
-                createdAt: FieldValue.serverTimestamp(),
-                tossData: tossData
-            });
-
-            await batch.commit();
-            console.log('[confirm] DB 업데이트 완료:', userId);
+        if (!adminDb) {
+            console.error('[confirm] Firebase Admin이 초기화되지 않았습니다. 환경변수를 확인해주세요.');
+            return NextResponse.json({ success: false, error: '서버 DB 연결 오류' }, { status: 500 });
         }
+
+        if (!userId) {
+            console.error('[confirm] userId가 누락되었습니다.');
+            return NextResponse.json({ success: false, error: '사용자 정보 누락' }, { status: 400 });
+        }
+
+        const batch = adminDb.batch();
+
+        // 구매한 템플릿 정보 저장
+        const templateRef = adminDb.collection('users').doc(userId).collection('templates').doc('bookfit');
+        batch.set(templateRef, {
+            templateId: 'bookfit',
+            title: '독서관 노션 템플릿',
+            purchasedAt: FieldValue.serverTimestamp(),
+            price: amount,
+            orderId: orderId,
+            paymentKey: paymentKey,
+            status: 'paid'
+        });
+
+        // 전체 결제 이력 저장
+        const paymentRef = adminDb.collection('payments').doc(orderId);
+        batch.set(paymentRef, {
+            userId,
+            userEmail: userEmail || '',
+            userName: userName || '',
+            amount,
+            orderId,
+            paymentKey,
+            productName: '독서관 노션 템플릿',
+            status: tossData.status || 'DONE',
+            createdAt: FieldValue.serverTimestamp(),
+            tossData: tossData
+        });
+
+        await batch.commit();
+        console.log('[confirm] DB 업데이트 완료:', userId);
 
         // 4. 이메일 발송 등 후속 처리 (필요 시 여기서 호출하거나 클라이언트에서 처리)
         // 일단은 saju-hanjan 패턴을 따라 결제 승인까지만 확실히 처리
