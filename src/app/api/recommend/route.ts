@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import { getRecommendations, RecommendationRequest } from '@/lib/gemini';
 import { searchBookInAladin } from '@/lib/aladin';
+import { getCoupangLink } from '@/lib/coupang';
 
 export async function POST(request: Request) {
     try {
@@ -25,6 +26,9 @@ export async function POST(request: Request) {
                 return null;
             }
 
+            // 3. Get Coupang Link (Parallel) - Search by title + author for accuracy
+            const coupangLink = await getCoupangLink(`${rec.title} ${rec.author}`);
+
             return {
                 ...rec,
                 thumbnail: aladinData.cover || null,
@@ -33,7 +37,8 @@ export async function POST(request: Request) {
                 viewerUrl: aladinData.viewerUrl || null,
                 category: aladinData.categoryName || "General",
                 displayTitle: aladinData.title || rec.title,
-                displayAuthor: aladinData.author || rec.author
+                displayAuthor: aladinData.author || rec.author,
+                coupangLink: coupangLink || null
             };
         });
 

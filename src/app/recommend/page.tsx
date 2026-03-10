@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -19,6 +18,7 @@ interface RecommendedBook {
     link: string | null;
     displayTitle: string;
     displayAuthor: string;
+    coupangLink: string | null;
 }
 
 export default function RecommendPage() {
@@ -303,7 +303,7 @@ export default function RecommendPage() {
                                 {mode === 'TASTE' ? "최적의 책을 선별하고 있습니다..." : "당신의 마음에 닿을 문장을 찾고 있습니다..."}
                             </h3>
                             <p className="text-gray-500">
-                                잠시만 기다려주세요 (Gemini AI Analyzing...)
+                                잠시만 기다려주세요
                             </p>
                         </div>
                     </div>
@@ -322,56 +322,76 @@ export default function RecommendPage() {
                         </div>
 
                         <div className="grid gap-8">
-                            {result.map((book, i) => (
-                                <article key={i} className="flex flex-col md:flex-row gap-6 bg-[#0B2A1F]/30 border border-white/5 p-6 rounded-xl hover:border-white/20 transition-all">
-                                    {/* Cover */}
-                                    <div className="w-full md:w-32 flex-shrink-0">
-                                        <div className="aspect-[1/1.5] w-28 mx-auto md:w-full rounded-md overflow-hidden bg-black/50 relative shadow-lg">
-                                            {typeof book.imageUrl === 'string' && book.imageUrl ? (
-                                                <Image
-                                                    src={book.imageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
-                                                    alt={`${book.displayTitle} 도서 커버`}
-                                                    fill
-                                                    className="object-cover"
-                                                    unoptimized
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">No Image</div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Content */}
-                                    <div className="flex-1 space-y-4 text-left">
-                                        <div>
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className={`text-[10px] font-bold px-2 py-1 rounded bg-white/5 uppercase tracking-wider ${mode === 'TASTE' ? 'text-accent' : 'text-[#FF5678]'}`}>
-                                                    {book.userConnectionPoint}
-                                                </span>
+                            {result.map((book, i) => {
+                                const CardContent = (
+                                    <article className="flex flex-col md:flex-row gap-6 bg-[#0B2A1F]/30 border border-white/5 p-6 rounded-xl hover:border-white/20 hover:bg-[#0B2A1F]/40 transition-all cursor-pointer group h-full">
+                                        {/* Cover */}
+                                        <div className="w-full md:w-32 flex-shrink-0">
+                                            <div className="aspect-[1/1.5] w-28 mx-auto md:w-full rounded-md overflow-hidden bg-black/50 relative shadow-lg group-hover:shadow-accent/20 transition-all">
+                                                {typeof book.imageUrl === 'string' && book.imageUrl ? (
+                                                    <Image
+                                                        src={book.imageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
+                                                        alt={`${book.displayTitle} 도서 커버`}
+                                                        fill
+                                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                                        unoptimized
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">No Image</div>
+                                                )}
                                             </div>
-                                            <h3 className="text-xl font-bold text-white mb-1">
-                                                {book.displayTitle}
-                                            </h3>
-                                            <p className="text-sm text-gray-400">{book.displayAuthor}</p>
                                         </div>
 
-                                        <div className={`p-4 rounded-lg relative ${mode === 'TASTE' ? 'bg-accent/5 border border-accent/10' : 'bg-[#FF5678]/5 border border-[#FF5678]/10'}`}>
-                                            <p className="text-gray-200 text-sm leading-relaxed font-medium">
-                                                &quot;{book.reason}&quot;
-                                            </p>
-                                        </div>
+                                        {/* Content */}
+                                        <div className="flex-1 space-y-4 text-left">
+                                            <div>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className={`text-[10px] font-bold px-2 py-1 rounded bg-white/5 uppercase tracking-wider ${mode === 'TASTE' ? 'text-accent' : 'text-[#FF5678]'}`}>
+                                                        {book.userConnectionPoint}
+                                                    </span>
+                                                </div>
+                                                <h3 className="text-xl font-bold text-white mb-1 group-hover:text-accent transition-colors">
+                                                    {book.displayTitle}
+                                                </h3>
+                                                <p className="text-sm text-gray-400">{book.displayAuthor}</p>
+                                            </div>
 
-                                        <div className="flex justify-between items-center pt-2">
-                                            <p className="text-xs text-gray-500 italic">
-                                                핵심 키워드: {book.coreMessage}
-                                            </p>
+                                            <div className={`p-4 rounded-lg relative ${mode === 'TASTE' ? 'bg-accent/5 border border-accent/10' : 'bg-[#FF5678]/5 border border-[#FF5678]/10'}`}>
+                                                <p className="text-gray-200 text-sm leading-relaxed font-medium">
+                                                    &quot;{book.reason}&quot;
+                                                </p>
+                                            </div>
 
+                                            <div className="flex flex-wrap gap-2 pt-2">
+                                                {book.coupangLink && (
+                                                    <div 
+                                                        className={`text-xs font-bold px-5 py-2 rounded-md transition-all flex items-center gap-1.5 shadow-sm group-hover:shadow-md group-hover:-translate-y-0.5 ${
+                                                            mode === 'TASTE' 
+                                                            ? 'bg-accent text-[#061A14] group-hover:bg-white' 
+                                                            : 'bg-[#FF5678] text-white group-hover:bg-white group-hover:text-[#FF5678]'
+                                                        }`}
+                                                    >
+                                                        <Image src="https://img.icons8.com/color/48/coupang.png" alt="Coupang" width={16} height={16} className="brightness-110" unoptimized />
+                                                        쿠팡에서 구매하기
+                                                    </div>
+                                                )}
+                                                <div className="text-[10px] text-gray-500 flex items-center ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    클릭하여 스토어로 이동 →
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </article>
-                            ))}
+                                    </article>
+                                );
+
+                                return book.coupangLink ? (
+                                    <Link key={i} href={book.coupangLink} target="_blank" className="block outline-none">
+                                        {CardContent}
+                                    </Link>
+                                ) : (
+                                    <div key={i}>{CardContent}</div>
+                                );
+                            })}
                         </div>
-
 
                         {/* Coupang Widget Section */}
                         <div className="w-full flex flex-col items-center bg-[#0B2A1F]/30 p-6 rounded-2xl border border-white/10 shadow-sm mt-8 mb-8">
