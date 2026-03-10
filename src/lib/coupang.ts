@@ -21,8 +21,9 @@ function getAuthHeader(method: string, path: string, query: string = '') {
 }
 
 /**
- * 쿠팡 상품 검색 및 딥링크 생성
- * 파트너스 API를 통해 가장 관련성 높은 상품 하나를 찾아 딥링크를 반환합니다.
+ * 쿠팡 상품 검색 또는 검색 페이지 딥링크 생성
+ * 1. 우선 API를 통해 직접적인 상품 링크를 찾습니다.
+ * 2. 상품 링크가 없을 경우, 해당 키워드의 쿠팡 검색 결과 페이지 딥링크를 생성합니다.
  */
 export async function getCoupangLink(keyword: string): Promise<string | null> {
     if (!ACCESS_KEY || !SECRET_KEY) {
@@ -31,28 +32,45 @@ export async function getCoupangLink(keyword: string): Promise<string | null> {
     }
 
     try {
-        const method = 'GET';
-        const path = '/v2/providers/v1/open/products/search';
-        const query = `keyword=${encodeURIComponent(keyword)}&limit=1`;
+        // 1. 상품 검색 시도
+        const searchPath = '/v2/providers/v1/open/products/search';
+        const searchQuery = `keyword=${encodeURIComponent(keyword)}&limit=1`;
+        const searchUrl = `https://api-gateway.coupang.com${searchPath}?${searchQuery}`;
         
-        const url = `https://api-gateway.coupang.com${path}?${query}`;
-        
-        const response = await axios.get(url, {
+        const searchResponse = await axios.get(searchUrl, {
             headers: {
-                'Authorization': getAuthHeader(method, path, `keyword=${keyword}&limit=1`),
+                'Authorization': getAuthHeader('GET', searchPath, `keyword=${keyword}&limit=1`),
                 'Content-Type': 'application/json'
             }
         });
 
-        if (response.data && response.data.data && response.data.data.productData && response.data.data.productData.length > 0) {
-            // 쿠팡 파트너스 딥링크 생성 API를 호출하거나, 검색 API가 리턴하는 숏링크(productUrl)를 사용
-            // 검색 API의 결과에는 이미 파트너스 링크가 포함된 productUrl이 올 수 있음
-            return response.data.data.productData[0].productUrl || null;
+        if (searchResponse.data?.data?.productData?.length > 0) {
+            return searchResponse.data.data.productData[0].productUrl;
+        }
+
+        // 2. 검색 결과가 없을 경우, 검색 페이지 딥링크 생성
+        // 쿠팡 검색 페이지 URL: https://www.coupang.com/np/search?q=[키워드]
+        const targetSearchUrl = `https://www.coupang.com/np/search?q=${encodeURIComponent(keyword)}`;
+        
+        const deeplinkPath = '/v2/providers/v1/open/deeplink';
+        const deeplinkData = {
+            coupangUrls: [targetSearchUrl]
+        };
+
+        const deeplinkResponse = await axios.post(`https://api-gateway.coupang.com${deeplinkPath}`, deeplinkData, {
+            headers: {
+                'Authorization': getAuthHeader('POST', deeplinkPath),
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (deeplinkResponse.data?.data?.[0]?.shortenUrl) {
+            return deeplinkResponse.data.data[0].shortenUrl;
         }
 
         return null;
     } catch (error) {
-        console.error('Coupang API Search Error:', error);
+        console.error('Coupang API Link Generation Error:', error);
         return null;
     }
 }
