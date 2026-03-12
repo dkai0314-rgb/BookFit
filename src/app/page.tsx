@@ -58,8 +58,8 @@ export default function Home() {
           </div>
 
           <div className="relative z-10 flex flex-col items-center space-y-6 px-4 max-w-4xl mx-auto">
-            <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/20 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-primary-foreground transition-colors">
-              <Sparkles className="w-3 h-3 mr-1 text-accent" />
+            <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/20 backdrop-blur-sm px-4 py-2 text-base font-semibold text-primary-foreground transition-colors">
+              <Sparkles className="w-4 h-4 mr-2 text-accent" />
               근거 있는 맞춤 도서 추천
             </div>
             <h1 id="hero-title" className="text-4xl md:text-7xl font-extrabold tracking-tight text-white break-keep drop-shadow-sm leading-tight relative">
@@ -108,7 +108,7 @@ export default function Home() {
                   <MessageSquare className="w-8 h-8 text-accent/80 group-hover:text-accent transition-colors" />
                 </div>
                 <h3 className="text-xl font-bold text-white">상황 분석</h3>
-                <p className="text-sm text-gray-400 leading-relaxed max-w-xs mx-auto break-keep">
+                <p className="text-base text-gray-300 leading-relaxed max-w-xs mx-auto break-keep">
                   당신의 목표, 고민, 관심사를 짧은 질문으로 정리해 핵심 키워드를 뽑아냅니다.
                 </p>
               </article>
@@ -117,7 +117,7 @@ export default function Home() {
                   <BookCheck className="w-8 h-8 text-accent/80 group-hover:text-accent transition-colors" />
                 </div>
                 <h3 className="text-xl font-bold text-white">딱 맞는 추천</h3>
-                <p className="text-sm text-gray-400 leading-relaxed max-w-xs mx-auto break-keep">
+                <p className="text-base text-gray-300 leading-relaxed max-w-xs mx-auto break-keep">
                   분석된 키워드로 지금 당신에게 가장 필요한 책 한 권을 정밀하게 추천합니다.
                 </p>
               </article>
@@ -126,7 +126,7 @@ export default function Home() {
                   <Lightbulb className="w-8 h-8 text-accent/80 group-hover:text-accent transition-colors" />
                 </div>
                 <h3 className="text-xl font-bold text-white">추천 근거</h3>
-                <p className="text-sm text-gray-400 leading-relaxed max-w-xs mx-auto break-keep">
+                <p className="text-base text-gray-300 leading-relaxed max-w-xs mx-auto break-keep">
                   ‘왜 이 책인지’를 한눈에 이해하도록, 추천 이유와 적용 포인트를 함께 제공합니다.
                 </p>
               </article>

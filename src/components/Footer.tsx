@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import BookfitLetterForm from '@/components/BookfitLetterForm';
 
 export default function Footer() {
@@ -13,7 +14,9 @@ export default function Footer() {
 
                 <div className="flex flex-col md:flex-row justify-between mb-8">
                     <div className="mb-6 md:mb-0 max-w-md">
-                        <h3 className="text-white text-lg font-bold mb-4">BookFit</h3>
+                        <div className="mb-4">
+                            <Image src="/bookfit_logo2.png" alt="BookFit Logo" width={280} height={80} className="h-6 w-auto" />
+                        </div>
                         <div className="space-y-1 text-sm">
                             <p><strong>상호</strong>: 욜드컴퍼니(YOLDCOMPANY)</p>
                             <p><strong>대표자명</strong>: 김동권</p>

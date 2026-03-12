@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -42,14 +43,14 @@ export default function Header() {
     };
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 bg-[#061A14]/80 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)] shadow-sm" role="banner">
+        <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-2 bg-[#061A14]/80 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)] shadow-sm" role="banner">
             <div className="max-w-6xl mx-auto w-full flex justify-between items-center relative">
-                <Link href="/" className="text-2xl font-bold flex items-center gap-2 font-serif tracking-tight cursor-pointer" aria-label="BookFit 홈">
-                    <span className="bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent drop-shadow-sm">BookFit</span>
+                <Link href="/" className="flex items-center gap-2 cursor-pointer" aria-label="BookFit 홈">
+                    <Image src="/bookfit_logo2.png" alt="BookFit Logo" width={400} height={120} className="h-8 w-auto" priority />
                 </Link>
 
                 {/* Desktop Navigation */}
-                <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400" aria-label="메인 네비게이션">
+                <nav className="hidden md:flex items-center gap-8 text-base font-medium text-gray-400" aria-label="메인 네비게이션">
                     <Link href="/curation" className="hover:text-accent transition-colors">이달의북핏</Link>
                     <Link href="/bestsellers" className="hover:text-accent transition-colors">베스트셀러</Link>
                     <Link href="/template" className="hover:text-accent transition-colors">독서관 템플릿</Link>
@@ -102,7 +103,7 @@ export default function Header() {
 
                         {user ? (
                             <>
-                                <div className="block w-full py-2 text-accent font-semibold text-sm border-b border-white/5 mb-2">{user.displayName || user.email?.split('@')[0]}님</div>
+                                <div className="block w-full py-2 text-accent font-semibold text-base border-b border-white/5 mb-2">{user.displayName || user.email?.split('@')[0]}님</div>
                                 <Link href="/mypage" onClick={toggleMenu} className="block w-full py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all font-medium">마이페이지</Link>
                                 <button onClick={handleLogout} className="block w-full py-3 text-red-400 hover:bg-white/5 rounded-xl transition-all font-medium">로그아웃</button>
                             </>
