@@ -48,7 +48,7 @@ export function LoginForm() {
         <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-4">
                 <div className="space-y-2">
-                    <Label htmlFor="email" className="text-gray-900 font-semibold">이메일</Label>
+                    <Label htmlFor="email" className="text-foreground font-semibold">이메일</Label>
                     <Input
                         id="email"
                         type="email"
@@ -60,8 +60,8 @@ export function LoginForm() {
                 </div>
                 <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                        <Label htmlFor="password" className="text-gray-900 font-semibold">비밀번호</Label>
-                        <Link href="/forgot-password" title="비밀번호 재설정" className="text-sm text-gray-500 hover:text-accent transition-colors">
+                        <Label htmlFor="password" className="text-foreground font-semibold">비밀번호</Label>
+                        <Link href="/forgot-password" title="비밀번호 재설정" className="text-sm text-muted-foreground hover:text-accent transition-colors">
                             비밀번호를 잊으셨나요?
                         </Link>
                     </div>
@@ -82,9 +82,9 @@ export function LoginForm() {
                 {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "로그인"}
             </Button>
 
-            <div className="text-center text-sm text-gray-500">
+            <div className="text-center text-sm text-muted-foreground">
                 계정이 없으신가요?{" "}
-                <Link href="/signup" className="text-blue-600 hover:underline">
+                <Link href="/signup" className="text-accent hover:underline font-bold">
                     회원가입하기
                 </Link>
             </div>

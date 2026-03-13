@@ -28,7 +28,7 @@ export default async function BookFitLetterListPage() {
         <>
             <Header />
             <div className="max-w-4xl mx-auto p-6 md:p-10 font-sans mt-32">
-                <h1 className="text-4xl font-extrabold text-[#FF5C39] mb-4">BookFit Letter</h1>
+                <h1 className="text-4xl font-extrabold text-primary mb-4">BookFit Letter</h1>
                 <p className="text-lg text-gray-600 mb-10">지금 당신에게 필요한 딱 한 권, 매주 배달해 드릴게요.</p>
 
                 {letters.length === 0 ? (
@@ -49,24 +49,24 @@ export default async function BookFitLetterListPage() {
                                             <>
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img
-                                                    src={letter.coverImageUrl}
+                                                    src={letter.coverImageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
                                                     alt=""
                                                     aria-hidden="true"
                                                     className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-125 z-0"
                                                 />
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img
-                                                    src={letter.coverImageUrl}
+                                                    src={letter.coverImageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
                                                     alt={letter.metaTitle || letter.title}
                                                     className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500 relative z-10 drop-shadow-xl"
                                                 />
                                             </>
                                         ) : (
-                                            <div className="w-full h-full bg-[#FF5C39] opacity-10" />
+                                            <div className="w-full h-full bg-accent/10" />
                                         )}
                                     </div>
                                     <div className="p-6">
-                                        <h2 className="text-xl font-bold mb-2 text-slate-900 group-hover:text-[#FF5C39] transition-colors line-clamp-2 leading-tight">
+                                        <h2 className="text-xl font-bold mb-2 text-foreground group-hover:text-accent transition-colors line-clamp-2 leading-tight">
                                             {letter.metaTitle || letter.title}
                                         </h2>
                                         {letter.headlineTitle && (

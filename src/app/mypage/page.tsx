@@ -112,19 +112,19 @@ export default function MyPage() {
                                 </div>
                             </div>
                         ) : (
-                            <div className="bg-white/5 border border-white/10 rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[300px]">
-                                <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
-                                    <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div className="bg-secondary border border-border rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[300px]">
+                                <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mb-4">
+                                    <svg className="w-8 h-8 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                     </svg>
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-2">보유 중인 템플릿이 없습니다</h3>
-                                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                                <h3 className="text-xl font-bold text-foreground mb-2">보유 중인 템플릿이 없습니다</h3>
+                                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                                     독서 관리를 위한 완벽한 노션 템플릿을 이제 결제 후 평생 소장하실 수 있습니다. 지금 바로 확인해보세요!
                                 </p>
                                 <a
                                     href="/template"
-                                    className="inline-flex justify-center items-center bg-accent hover:bg-white text-[#061A14] hover:text-accent font-bold py-3 px-8 rounded-lg transition-colors"
+                                    className="inline-flex justify-center items-center bg-accent hover:bg-accent/90 text-primary-foreground font-bold py-3 px-8 rounded-lg transition-colors"
                                 >
                                     템플릿 상세 보러 가기
                                 </a>
@@ -136,8 +136,8 @@ export default function MyPage() {
                     <section className="pt-6 border-t border-border">
                         <h2 className="text-2xl font-semibold mb-6">회원 정보 관리</h2>
 
-                        <div className="bg-white/5 border border-white/10 rounded-xl p-6 md:p-8 max-w-xl">
-                            <h3 className="text-lg font-medium text-white mb-4">비밀번호 변경</h3>
+                        <div className="bg-secondary border border-border rounded-xl p-6 md:p-8 max-w-xl">
+                            <h3 className="text-lg font-medium text-foreground mb-4">비밀번호 변경</h3>
 
                             <form
                                 onSubmit={async (e) => {
@@ -173,19 +173,19 @@ export default function MyPage() {
                                         placeholder="새로운 비밀번호 (6자리 이상)"
                                         value={newPassword}
                                         onChange={(e) => setNewPassword(e.target.value)}
-                                        className="w-full bg-background border border-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent"
+                                        className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-accent"
                                         required
                                     />
                                 </div>
                                 {passwordMessage.text && (
-                                    <p className={`text-sm ${passwordMessage.type === 'error' ? 'text-red-400' : 'text-green-400'}`}>
+                                    <p className={`text-sm ${passwordMessage.type === 'error' ? 'text-destructive' : 'text-primary'}`}>
                                         {passwordMessage.text}
                                     </p>
                                 )}
                                 <button
                                     type="submit"
                                     disabled={passwordUpdating || !newPassword}
-                                    className="bg-white/10 hover:bg-white/20 text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50"
+                                    className="bg-secondary/50 border border-border hover:bg-secondary text-foreground font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50"
                                 >
                                     {passwordUpdating ? "변경 중..." : "변경하기"}
                                 </button>

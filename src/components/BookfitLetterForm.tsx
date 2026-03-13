@@ -49,18 +49,18 @@ export default function BookfitLetterForm() {
 
     if (status === "success") {
         return (
-            <div className="w-full max-w-md p-6 bg-[#0B2A1F] border border-accent/20 rounded-xl text-center space-y-3">
-                <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-2">
+            <div className="w-full max-w-md p-6 bg-secondary border border-border rounded-xl text-center space-y-3">
+                <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-2">
                     <span className="text-2xl">🎉</span>
                 </div>
-                <h3 className="text-lg font-bold text-white">구독 신청 완료!</h3>
-                <p className="text-sm text-gray-300">
+                <h3 className="text-lg font-bold text-foreground">구독 신청 완료!</h3>
+                <p className="text-sm text-muted-foreground">
                     북핏레터 구독해주셔서 감사합니다.<br />
                     매주 유익한 책 추천으로 찾아뵙겠습니다.
                 </p>
                 <Button
                     variant="outline"
-                    className="mt-4 border-white/20 text-white hover:bg-white/10"
+                    className="mt-4 border-border text-foreground hover:bg-background"
                     onClick={() => setStatus("idle")}
                 >
                     다른 이메일로 추가 구독하기
@@ -72,7 +72,7 @@ export default function BookfitLetterForm() {
     return (
         <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
             <div className="space-y-2">
-                <label htmlFor="newsletter-email" className="text-sm font-semibold text-gray-300">
+                <label htmlFor="newsletter-email" className="text-sm font-semibold text-muted-foreground">
                     이메일 주소
                 </label>
                 <Input
@@ -81,19 +81,19 @@ export default function BookfitLetterForm() {
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-white/5 border-white/20 text-white placeholder:text-gray-500 focus:border-accent h-12"
+                    className="bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-accent h-12"
                     required
                     disabled={status === "loading"}
                 />
             </div>
 
             {status === "error" && (
-                <p className="text-sm text-red-400 font-medium">{errorMessage}</p>
+                <p className="text-sm text-destructive font-medium">{errorMessage}</p>
             )}
 
             <Button
                 type="submit"
-                className="w-full h-12 bg-accent text-[#061A14] hover:bg-white hover:text-accent font-bold text-base transition-all"
+                className="w-full h-12 bg-accent text-primary-foreground hover:bg-accent/90 hover:text-primary-foreground font-bold text-base transition-all"
                 disabled={status === "loading"}
             >
                 {status === "loading" ? (
@@ -102,7 +102,7 @@ export default function BookfitLetterForm() {
                     "북핏레터 무료 구독하기"
                 )}
             </Button>
-            <p className="text-xs text-gray-500 text-center mt-4">
+            <p className="text-xs text-muted-foreground text-center mt-4">
                 구독 시 개인정보 수집 및 이용에 동의하는 것으로 간주됩니다.
             </p>
         </form>

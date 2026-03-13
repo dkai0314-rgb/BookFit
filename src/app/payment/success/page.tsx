@@ -56,10 +56,10 @@ function SuccessContent() {
     }, [params, router]);
 
     return (
-        <div className="text-center text-white space-y-4">
+        <div className="text-center text-foreground space-y-4">
             <p className="text-4xl animate-bounce">📚</p>
             <p className="text-xl font-bold">결제 확인 중입니다...</p>
-            <p className="text-gray-400 text-sm">잠시만 기다려주세요</p>
+            <p className="text-muted-foreground text-sm">잠시만 기다려주세요</p>
             <div className="w-8 h-8 mx-auto border-4 border-accent border-t-transparent rounded-full animate-spin mt-4" />
         </div>
     );
@@ -67,11 +67,11 @@ function SuccessContent() {
 
 export default function PaymentSuccessPage() {
     return (
-        <div className="min-h-screen bg-[#061A14] flex items-center justify-center">
+        <div className="min-h-screen bg-background flex items-center justify-center">
             <Suspense fallback={
-                <div className="text-center text-white space-y-4">
+                <div className="text-center text-foreground space-y-4">
                     <p className="text-4xl">📚</p>
-                    <p className="text-gray-400 text-sm">로딩 중...</p>
+                    <p className="text-muted-foreground text-sm">로딩 중...</p>
                 </div>
             }>
                 <SuccessContent />

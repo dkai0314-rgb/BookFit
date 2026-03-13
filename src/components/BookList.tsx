@@ -39,7 +39,7 @@ export default function BookList() {
         <>
             {books.map((book, i) => (
                 <Link key={i} href={`/books/${book.id}`} className="group relative space-y-4 cursor-pointer block">
-                    <div className="aspect-[1/1.5] w-full overflow-hidden rounded-sm bg-[#0B2A1F] shadow-2xl border border-[rgba(255,255,255,0.05)] group-hover:shadow-[0_20px_50px_-12px_rgba(30,142,90,0.25)] transition-all duration-500 group-hover:-translate-y-2 relative">
+                    <div className="aspect-[1/1.5] w-full overflow-hidden rounded-sm bg-secondary shadow-md border border-border group-hover:shadow-lg transition-all duration-500 group-hover:-translate-y-2 relative">
                         {typeof book.imageUrl === 'string' && book.imageUrl ? (
                             <Image
                                 src={book.imageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
@@ -50,25 +50,25 @@ export default function BookList() {
                                 unoptimized
                             />
                         ) : (
-                            <div className="w-full h-full bg-[#e8e8e5] flex items-center justify-center text-gray-500">
+                            <div className="w-full h-full bg-secondary flex items-center justify-center text-muted-foreground">
                                 No Image
                             </div>
                         )}
 
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
                     </div>
 
                     <div className="space-y-2 text-left pt-2">
                         <div>
-                            <h3 className="font-bold text-lg text-white leading-tight group-hover:text-accent transition-colors">
+                            <h3 className="font-bold text-lg text-foreground leading-tight group-hover:text-accent transition-colors">
                                 {book.title}
                             </h3>
-                            <p className="text-xs font-semibold tracking-wider text-[#63756b] uppercase mt-1">
+                            <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase mt-1">
                                 {book.author}
                             </p>
                         </div>
                         {book.summary && (
-                            <p className="text-sm text-gray-400 line-clamp-2 leading-relaxed opacity-80">
+                            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed opacity-80">
                                 {book.summary}
                             </p>
                         )}

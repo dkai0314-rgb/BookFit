@@ -9,27 +9,29 @@
 @theme {
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 
-  --color-background: #061A14;
-  --color-foreground: #F5F7F6;
+  --color-background: #F8F8F6;
+  --color-foreground: #1A1A1A;
 
-  --color-primary: #0A3E27;
-  --color-primary-foreground: #F5F7F6;
-  --color-primary-hover: #08341F;
+  /* Point 1: Deep Green -> Buttons, Headers, Emphasized Sections */
+  --color-primary: #061A14;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary-hover: #0a291f;
 
-  --color-secondary: #0B2A1F;
-  --color-secondary-foreground: #F5F7F6;
-
-  --color-accent: #1E8E5A;
+  /* Point 2: Bright Green -> Interactions, Highlights */
+  --color-accent: #2D9B5A;
   --color-accent-foreground: #FFFFFF;
 
-  --color-muted: #0B2A1F;
-  --color-muted-foreground: #B9C7C0;
+  --color-secondary: #F1F5F9;
+  --color-secondary-foreground: #1A1A1A;
 
-  --color-card: #0B2A1F;
-  --color-card-foreground: #F5F7F6;
+  --color-muted: #F1F5F9;
+  --color-muted-foreground: #6B6B6B;
 
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-input: rgba(255, 255, 255, 0.08);
+  --color-card: #FFFFFF;
+  --color-card-foreground: #1A1A1A;
+
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-input: rgba(0, 0, 0, 0.08);
 
   --radius-lg: 0.5rem;
   --radius-md: 0.375rem;
@@ -96,24 +98,24 @@
 
 :root {
   --radius: 0.5rem;
-  --background: #061A14;
-  --foreground: #F5F7F6;
-  --card: #0B2A1F;
-  --card-foreground: #F5F7F6;
-  --popover: #0B2A1F;
-  --popover-foreground: #F5F7F6;
-  --primary: #0A3E27;
-  --primary-foreground: #F5F7F6;
-  --secondary: #0B2A1F;
-  --secondary-foreground: #F5F7F6;
-  --muted: #0B2A1F;
-  --muted-foreground: #B9C7C0;
-  --accent: #1E8E5A;
-  --accent-foreground: #F5F7F6;
+  --background: #F8F8F6;
+  --foreground: #1A1A1A;
+  --card: #FFFFFF;
+  --card-foreground: #1A1A1A;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+  --primary: #061A14;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F1F5F9;
+  --secondary-foreground: #1A1A1A;
+  --muted: #F1F5F9;
+  --muted-foreground: #6B6B6B;
+  --accent: #2D9B5A;
+  --accent-foreground: #FFFFFF;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #1E8E5A;
+  --border: rgba(0, 0, 0, 0.08); /* Light borders */
+  --input: rgba(0, 0, 0, 0.08);
+  --ring: #2D9B5A;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -121,7 +123,7 @@
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: #061A14;
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
@@ -130,14 +132,15 @@
 }
 
 .dark {
+  /* Temporary keep for some internal components, though the whole app is light */
   --background: #061A14;
   --foreground: #F5F7F6;
   --card: #0B2A1F;
   --card-foreground: #F5F7F6;
   --popover: #0B2A1F;
   --popover-foreground: #F5F7F6;
-  --primary: #0A3E27;
-  --primary-foreground: #F5F7F6;
+  --primary: #2D9B5A; /* inverted primary for dark mode */
+  --primary-foreground: #FFFFFF;
   --secondary: #0B2A1F;
   --secondary-foreground: #F5F7F6;
   --muted: #0B2A1F;

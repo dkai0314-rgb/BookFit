@@ -53,35 +53,35 @@ export default function Home() {
               style={{ backgroundImage: "url('/images/library_background.png')" }}
             />
             {/* Adjusted overlay for better visibility of background based on feedback */}
-            <div className="absolute inset-0 bg-[#061A14]/40" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#061A14] via-transparent to-[#061A14]/60" />
+            <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
           </div>
 
           <div className="relative z-10 flex flex-col items-center space-y-6 px-4 max-w-4xl mx-auto">
-            <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/20 backdrop-blur-sm px-4 py-2 text-base font-semibold text-primary-foreground transition-colors">
+            <div className="inline-flex items-center rounded-full border border-primary/10 bg-white/80 backdrop-blur-md px-4 py-2 text-base font-semibold text-primary transition-colors shadow-sm">
               <Sparkles className="w-4 h-4 mr-2 text-accent" />
               근거 있는 맞춤 도서 추천
             </div>
-            <h1 id="hero-title" className="text-4xl md:text-7xl font-extrabold tracking-tight text-white break-keep drop-shadow-sm leading-tight relative">
+            <h1 id="hero-title" className="text-4xl md:text-7xl font-extrabold tracking-tight text-primary break-keep drop-shadow-sm leading-tight relative">
               <span className="sr-only">BookFit(북핏) - AI 책 추천, 취향 맞춤 도서 및 베스트셀러 큐레이션</span>
               지금 당신에게 필요한 <br className="md:hidden" />
               <span className="text-accent italic">
                 딱 한 권
               </span>
             </h1>
-            <p className="max-w-[700px] text-gray-300 md:text-xl break-keep leading-relaxed drop-shadow-sm font-light">
+            <p className="max-w-[700px] text-muted-foreground md:text-xl break-keep leading-relaxed drop-shadow-sm font-medium">
               AI 분석으로 지금의 당신에게 필요한 책을 찾습니다.<br />
               읽어야 할 이유를 먼저 확인하고, 확신 있게 선택하세요.
             </p>
             <div className="flex flex-col gap-4 pt-6 w-full max-w-sm mx-auto">
               <Link href="/recommend" className="w-full">
-                <Button size="lg" className="w-full rounded-md bg-accent text-[#061A14] hover:bg-white hover:text-accent font-extrabold px-8 py-8 text-xl shadow-lg shadow-black/20 transition-all hover:scale-105 border border-transparent" aria-label="취향or마음 맞춤 추천 시작하기">
+                <Button size="lg" className="w-full rounded-md bg-accent text-white hover:bg-primary font-extrabold px-8 py-8 text-xl shadow-lg shadow-accent/20 transition-all hover:scale-105 border border-transparent" aria-label="취향or마음 맞춤 추천 시작하기">
                   <Sparkles className="mr-2 h-6 w-6" />
                   취향or마음 추천
                 </Button>
               </Link>
               <Link href="/template" className="w-full">
-                <Button variant="outline" size="lg" className="w-full rounded-md border-white/20 bg-white/5 text-white hover:bg-white/10 px-8 py-6 text-lg backdrop-blur-sm transition-all hover:border-white/40" aria-label="독서관 노션 템플릿 확인하기">
+                <Button variant="outline" size="lg" className="w-full rounded-md border-primary/20 bg-white/50 text-primary hover:bg-primary/5 px-8 py-6 text-lg backdrop-blur-sm transition-all hover:border-primary/40 shadow-sm" aria-label="독서관 노션 템플릿 확인하기">
                   <BookCheck className="mr-2 h-5 w-5" />
                   독서관 노션 템플릿
                 </Button>
@@ -95,38 +95,38 @@ export default function Home() {
         <CurationSection id="curation" />
 
         {/* Your BookFit Journey (Previously The BookFit Approach) - Updated */}
-        <section className="w-full py-24 px-6 relative" aria-labelledby="journey-title">
+        <section className="w-full py-24 px-6 relative bg-white border-t border-border" aria-labelledby="journey-title">
           <div className="max-w-6xl mx-auto text-center space-y-16">
             <div className="space-y-4">
-              <h2 id="journey-title" className="text-3xl md:text-4xl font-bold text-white font-serif">Your BookFit Journey</h2>
-              <div className="w-12 h-0.5 bg-accent/30 mx-auto" aria-hidden="true"></div>
+              <h2 id="journey-title" className="text-3xl md:text-4xl font-bold text-primary font-serif">Your BookFit Journey</h2>
+              <div className="w-12 h-0.5 bg-accent/50 mx-auto" aria-hidden="true"></div>
             </div>
 
             <div className="grid md:grid-cols-3 gap-12 md:gap-8">
               <article className="flex flex-col items-center text-center space-y-4 group">
-                <div className="mb-2 p-4 rounded-full bg-transparent group-hover:bg-white/5 transition-colors" aria-hidden="true">
+                <div className="mb-2 p-4 rounded-full bg-secondary group-hover:bg-accent/10 transition-colors" aria-hidden="true">
                   <MessageSquare className="w-8 h-8 text-accent/80 group-hover:text-accent transition-colors" />
                 </div>
-                <h3 className="text-xl font-bold text-white">상황 분석</h3>
-                <p className="text-base text-gray-300 leading-relaxed max-w-xs mx-auto break-keep">
+                <h3 className="text-xl font-bold text-primary">상황 분석</h3>
+                <p className="text-base text-muted-foreground leading-relaxed max-w-xs mx-auto break-keep">
                   당신의 목표, 고민, 관심사를 짧은 질문으로 정리해 핵심 키워드를 뽑아냅니다.
                 </p>
               </article>
               <article className="flex flex-col items-center text-center space-y-4 group">
-                <div className="mb-2 p-4 rounded-full bg-transparent group-hover:bg-white/5 transition-colors" aria-hidden="true">
+                <div className="mb-2 p-4 rounded-full bg-secondary group-hover:bg-accent/10 transition-colors" aria-hidden="true">
                   <BookCheck className="w-8 h-8 text-accent/80 group-hover:text-accent transition-colors" />
                 </div>
-                <h3 className="text-xl font-bold text-white">딱 맞는 추천</h3>
-                <p className="text-base text-gray-300 leading-relaxed max-w-xs mx-auto break-keep">
+                <h3 className="text-xl font-bold text-primary">딱 맞는 추천</h3>
+                <p className="text-base text-muted-foreground leading-relaxed max-w-xs mx-auto break-keep">
                   분석된 키워드로 지금 당신에게 가장 필요한 책 한 권을 정밀하게 추천합니다.
                 </p>
               </article>
               <article className="flex flex-col items-center text-center space-y-4 group">
-                <div className="mb-2 p-4 rounded-full bg-transparent group-hover:bg-white/5 transition-colors" aria-hidden="true">
+                <div className="mb-2 p-4 rounded-full bg-secondary group-hover:bg-accent/10 transition-colors" aria-hidden="true">
                   <Lightbulb className="w-8 h-8 text-accent/80 group-hover:text-accent transition-colors" />
                 </div>
-                <h3 className="text-xl font-bold text-white">추천 근거</h3>
-                <p className="text-base text-gray-300 leading-relaxed max-w-xs mx-auto break-keep">
+                <h3 className="text-xl font-bold text-primary">추천 근거</h3>
+                <p className="text-base text-muted-foreground leading-relaxed max-w-xs mx-auto break-keep">
                   ‘왜 이 책인지’를 한눈에 이해하도록, 추천 이유와 적용 포인트를 함께 제공합니다.
                 </p>
               </article>

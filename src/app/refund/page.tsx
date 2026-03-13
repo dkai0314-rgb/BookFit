@@ -4,11 +4,10 @@ export const metadata = {
     title: '환불 규정 | BookFit',
     description: 'BookFit 디지털 콘텐츠 및 서비스에 대한 환불 규정 안내입니다.',
 };
-
 export default function RefundPolicy() {
     return (
-        <div className="container mx-auto px-4 py-12 max-w-4xl text-white">
-            <div className="prose prose-invert max-w-none prose-headings:text-white prose-p:text-gray-300 prose-li:text-gray-300">
+        <div className="container mx-auto px-4 py-12 max-w-4xl text-foreground">
+            <div className="prose prose-invert max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-li:text-muted-foreground">
                 <h1 className="text-3xl font-bold mb-6">환불 규정</h1>
                 <p className="mb-4">
                     본 환불 규정은 욜드컴퍼니(YOLDCOMPANY)(이하 “회사”)가 운영하는 북핏(BookFit)에서 제공하는 디지털 콘텐츠 및 관련 서비스의 환불에 관한 사항을 규정함을 목적으로 합니다.

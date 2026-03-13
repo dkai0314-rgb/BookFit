@@ -54,7 +54,7 @@ export function CategoryCarousel({ category, books }: { category: string, books:
                     <button
                         onClick={() => scroll('left')}
                         disabled={!canScrollLeft}
-                        className={`p-2 rounded-full transition-colors ${canScrollLeft ? 'bg-white/5 hover:bg-white/10 text-white' : 'bg-white/5 text-white/30 cursor-not-allowed'}`}
+                        className={`p-2 rounded-full transition-colors ${canScrollLeft ? 'bg-secondary hover:bg-accent/10 text-foreground' : 'bg-transparent text-muted-foreground cursor-not-allowed'}`}
                         aria-label="이전"
                     >
                         <ChevronLeft className="w-4 h-4" />
@@ -62,7 +62,7 @@ export function CategoryCarousel({ category, books }: { category: string, books:
                     <button
                         onClick={() => scroll('right')}
                         disabled={!canScrollRight}
-                        className={`p-2 rounded-full transition-colors ${canScrollRight ? 'bg-white/5 hover:bg-white/10 text-white' : 'bg-white/5 text-white/30 cursor-not-allowed'}`}
+                        className={`p-2 rounded-full transition-colors ${canScrollRight ? 'bg-secondary hover:bg-accent/10 text-foreground' : 'bg-transparent text-muted-foreground cursor-not-allowed'}`}
                         aria-label="다음"
                     >
                         <ChevronRight className="w-4 h-4" />
@@ -79,7 +79,7 @@ export function CategoryCarousel({ category, books }: { category: string, books:
                 {books.map((book, i) => (
                     <div key={book.id} className="w-[calc(50%-0.5rem)] md:w-[calc(25%-0.75rem)] shrink-0 snap-start">
                         <Link href={book.coupangLink || "#"} target="_blank" rel="noopener noreferrer" className="group space-y-4 block">
-                            <div className="aspect-[1/1.5] relative rounded-sm overflow-hidden shadow-2xl border border-white/5 group-hover:shadow-accent/20 transition-all duration-500 group-hover:-translate-y-2">
+                            <div className="aspect-[1/1.5] relative rounded-sm overflow-hidden shadow-md border border-border group-hover:shadow-accent/40 transition-all duration-500 group-hover:-translate-y-2">
                                 {typeof book.imageUrl === 'string' && book.imageUrl ? (
                                     <Image
                                         src={book.imageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")}
@@ -90,17 +90,17 @@ export function CategoryCarousel({ category, books }: { category: string, books:
                                         unoptimized
                                     />
                                 ) : (
-                                    <div className="w-full h-full bg-slate-800 flex items-center justify-center text-gray-500">No Image</div>
+                                    <div className="w-full h-full bg-secondary flex items-center justify-center text-muted-foreground">No Image</div>
                                 )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent opacity-90" />
                                 <div className="absolute bottom-4 left-4 right-4 text-left pr-10">
                                     <div className="text-[10px] text-accent font-bold uppercase tracking-tighter mb-1">Pick {i + 1}</div>
-                                    <div className="text-white font-bold text-sm leading-tight drop-shadow-md">{book.title}</div>
+                                    <div className="text-foreground font-bold text-sm leading-tight drop-shadow-md">{book.title}</div>
                                 </div>
                             </div>
                             <div className="space-y-1">
-                                <div className="bg-white/5 border border-white/10 rounded-md p-3 hover:bg-white/10 transition-colors">
-                                    <p className="text-xs text-gray-300 font-light leading-relaxed">
+                                <div className="bg-background border border-border rounded-md p-3 hover:bg-secondary transition-colors shadow-sm">
+                                    <p className="text-xs text-muted-foreground font-medium leading-relaxed">
                                         {book.recommendation}
                                     </p>
                                 </div>
@@ -168,13 +168,13 @@ export default function CurationSection({ id }: CurationProps = {}) {
 
     if (!curation) {
         return (
-            <section id={id} className="w-full py-24 px-6 max-w-6xl mx-auto text-center border-y border-white/5 bg-white/2">
+            <section id={id} className="w-full py-24 px-6 max-w-6xl mx-auto text-center border-y border-border bg-secondary/30">
                 <div className="space-y-6">
-                    <h2 className="text-3xl font-serif text-white opacity-50">BookFit Choice</h2>
-                    <p className="text-gray-500 font-light">곧 새로운 큐레이션이 공개됩니다. 잠시만 기다려 주세요!</p>
+                    <h2 className="text-3xl font-serif text-foreground opacity-50">BookFit Choice</h2>
+                    <p className="text-muted-foreground font-light">곧 새로운 큐레이션이 공개됩니다. 잠시만 기다려 주세요!</p>
                     <div className="flex justify-center gap-8 opacity-20 grayscale pointer-events-none">
                         {[1, 2, 3].map(i => (
-                            <div key={i} className="aspect-[1/1.5] w-32 bg-slate-800 rounded shadow-2xl" />
+                            <div key={i} className="aspect-[1/1.5] w-32 bg-secondary rounded shadow-sm" />
                         ))}
                     </div>
                 </div>
@@ -190,10 +190,10 @@ export default function CurationSection({ id }: CurationProps = {}) {
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest mb-2">
                         <Sparkles className="w-3 h-3" /> Monthly Selection
                     </div>
-                    <h2 className="text-3xl md:text-5xl font-black text-white font-serif leading-tight">
+                    <h2 className="text-3xl md:text-5xl font-black text-primary font-serif leading-tight">
                         BookFit Choice
                     </h2>
-                    <p className="text-lg text-gray-400 font-light leading-relaxed whitespace-pre-line">
+                    <p className="text-lg text-muted-foreground font-light leading-relaxed whitespace-pre-line">
                         이번 달, 북핏의 큐레이터들이 선정한 깊이 있는 사유의 조각들입니다.
                     </p>
                 </div>
@@ -216,7 +216,7 @@ export default function CurationSection({ id }: CurationProps = {}) {
             {/* View All Button */}
             <div className="mt-12 flex justify-center">
                 <Link href="/curation">
-                    <button className="px-8 py-3 rounded-full border border-white/20 hover:bg-white/10 text-white font-medium transition-all group flex items-center gap-2">
+                    <button className="px-8 py-3 rounded-full border border-border bg-background hover:bg-secondary text-foreground font-medium transition-all group flex items-center gap-2 shadow-sm">
                         View All Collection
                         <Sparkles className="w-4 h-4 text-accent opacity-50 group-hover:opacity-100 transition-opacity" />
                     </button>

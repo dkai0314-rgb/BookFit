@@ -73,7 +73,7 @@ export async function searchAladinBooks(query: string): Promise<BookMeta[]> {
                 publishedDate: item.pubDate || '',
                 isbn13,
                 categories: item.categoryName ? item.categoryName.split('>') : [],
-                coverImageUrl: item.cover ? item.cover.replace(/^http:/i, 'https:') : '',
+                coverImageUrl: item.cover ? item.cover.replace('coversum', 'cover500').replace(/^http:/i, 'https:') : '',
                 sourceId: String(itemId),
                 sourceText: sourceText || item.description || '',
                 raw: item

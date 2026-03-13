@@ -155,65 +155,98 @@ ${COMMON_CONSTRAINTS}
 
 export async function generateBookFitLetter(book: BookMeta): Promise<string> {
     const today = new Date().toISOString().split('T')[0];
-    const baseTitle = `${book.title} 요약: 출간 배경과 핵심 특징`;
-    const baseDesc = `${book.title}의 주요 내용과 핵심 정리입니다.`;
+    const baseTitle = `${book.title} 요약 | 핵심 인사이트 정리 [북핏]`;
+    const baseDesc = `${book.title}의 주요 내용과 핵심 정리입니다. 지금 바로 확인하세요.`;
 
     const template = `---
 meta_title: "${baseTitle}"
 meta_description: "${baseDesc}"
+og_title: "${book.title} - 북핏 핵심 요약"
+og_description: "${book.title}의 주요 내용. 북핏 핵심 요약."
 slug: "bookfit-${book.sourceId}"
+canonical_url: "https://bookfit.kr/bookfit-letter/bookfit-${book.sourceId}"
 published_at: "${today}"
+updated_at: "${today}"
+category: "${book.categories?.[0] || '미분류'}"
+tags: ["${book.title.replace(/\s/g, '')}", "북핏추천"]
+reading_time: "5분"
 source: "aladin"
 item_id: "${book.sourceId}"
 isbn13: "${book.isbn13 || ''}"
 ---
 
-# ${book.title} 요약
+# ${book.title}
+
+> "이 책의 핵심을 관통하는 강렬한 한 문장 (작성 필요)"
+
+[이 책을 꼭 읽어야 하는 이유, 서론 1~2문장을 여기에 작성해주세요]
+
+---
 
 <!--META_INFO_START-->
 ## 📖 책 한눈에 보기
+
 | 항목 | 내용 |
 |---|---|
-| 제목 | ${book.title} |
 | 저자 | ${book.authors?.join(', ') || '(정보 확인 필요)'} |
-| 분류 | ${book.categories?.join(', ') || '(정보 확인 필요)'} |
+| 출판 | ${book.publisher || '(정보 확인 필요)'} |
+| 출간 | ${book.publishedDate || '(정보 확인 필요)'} |
+| 분야 | ${book.categories?.join(' / ') || '(정보 확인 필요)'} |
+| 난이도 | ⭐⭐⭐☆☆ (누구나 읽기 쉬움) |
+| 분량 | 중간 (빠른 독자 기준 4~5시간) |
 <!--META_INFO_END-->
 
-## 💡 핵심 요약
-- [도서의 가장 중요한 가치나 핵심 메시지 1]
-- [핵심 메시지 2]
-- [핵심 메시지 3]
+---
+
+## 💡 이 책을 한 줄로 말하면
+
+> **"성공은... (이 책 전체를 관통하는 핵심 메시지 1문장)"**
 
 ---
 
-## 🎯 북핏 핵심 인사이트
-### 1) [아이디어 1 소제목]
-> [아이디어 1 상세 설명]
+## 🎯 북핏 핵심 인사이트 3
 
-### 2) [아이디어 2 소제목]
-> [아이디어 2 상세 설명]
+### 1) [핵심 인사이트 1 제목]
+[핵심 인사이트 1에 대한 상세 설명 및 시사점]
 
-### 3) [아이디어 3 소제목]
-> [아이디어 3 상세 설명]
+### 2) [핵심 인사이트 2 제목]
+[핵심 인사이트 2에 대한 상세 설명 및 시사점]
 
----
-
-## 📅 적용 실험
-[기간]: 7일
-[규칙]: [구체적인 일상 행동 규칙]
-[목표]: [7일 뒤 달성할 목표]
+### 3) [핵심 인사이트 3 제목]
+[핵심 인사이트 3에 대한 상세 설명 및 시사점]
 
 ---
 
-## 🙋‍♀️ 추천하는 경우
+## 📅 7일 적용 실험
+
+**기간:** 7일
+**규칙:** [매일 실천할 수 있는 작고 구체적인 행동 규칙]
+**목표:** 7일 뒤 예상되는 나의 변화
+
+---
+
+## 🙋 이런 분께 추천해요
+
 - [추천 대상 1]
 - [추천 대상 2]
 - [추천 대상 3]
 
 ---
 
-## 🎁 감사합니다
-[👉 이 책 확인하고 내 삶에 적용해보기](링크를_여기에_입력하세요)
+## ❓ 자주 묻는 질문 (FAQ)
+
+**Q. 이 책은 어떤 책인가요?**
+A. [책에 대한 간략한 답변]
+
+**Q. 비슷한 다른 책과 무엇이 다른가요?**
+A. [차별점에 대한 간략한 답변]
+
+**Q. 읽기 어렵지는 않나요?**
+A. [난이도에 대한 간략한 답변]
+
+---
+
+[👉 ${book.title} 지금 바로 보기](링크를_여기에_입력하세요)
 `;
     return template;
 }

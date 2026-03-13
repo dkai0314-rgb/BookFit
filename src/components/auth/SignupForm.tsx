@@ -70,37 +70,37 @@ export function SignupForm() {
             <form onSubmit={handleSignup} className="space-y-6">
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="name" className="text-gray-900 dark:text-gray-100 font-bold">이름</Label>
+                        <Label htmlFor="name" className="text-foreground font-bold">이름</Label>
                         <Input
                             id="name"
                             placeholder="홍길동"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="bg-white dark:bg-[#061A14] text-gray-900 dark:text-white border-gray-300 dark:border-white/30 focus:border-accent"
+                            className="bg-background text-foreground border-input focus:border-accent"
                             required
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="email" className="text-gray-900 dark:text-gray-100 font-bold">이메일</Label>
+                        <Label htmlFor="email" className="text-foreground font-bold">이메일</Label>
                         <Input
                             id="email"
                             type="email"
                             placeholder="name@example.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="bg-white dark:bg-[#061A14] text-gray-900 dark:text-white border-gray-300 dark:border-white/30 focus:border-accent"
+                            className="bg-background text-foreground border-input focus:border-accent"
                             required
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="password" className="text-gray-900 dark:text-gray-100 font-bold">비밀번호</Label>
+                        <Label htmlFor="password" className="text-foreground font-bold">비밀번호</Label>
                         <Input
                             id="password"
                             type="password"
                             placeholder="비밀번호(6자리 이상)를 입력하세요"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="bg-white dark:bg-[#061A14] text-gray-900 dark:text-white border-gray-300 dark:border-white/30 focus:border-accent"
+                            className="bg-background text-foreground border-input focus:border-accent"
                             required
                         />
                     </div>
@@ -112,9 +112,9 @@ export function SignupForm() {
                             id="newsletter"
                             checked={newsletter}
                             onChange={(e) => setNewsletter(e.target.checked)}
-                            className="w-4 h-4 text-primary bg-white dark:bg-[#061A14] border-gray-300 dark:border-white/30 rounded focus:ring-accent focus:ring-2 cursor-pointer"
+                            className="w-4 h-4 text-primary bg-background border-input rounded focus:ring-accent focus:ring-2 cursor-pointer"
                         />
-                        <Label htmlFor="newsletter" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer text-gray-800 dark:text-gray-200">
+                        <Label htmlFor="newsletter" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer text-foreground">
                             (선택) 신간 및 추천 도서 뉴스레터 수신 동의
                         </Label>
                     </div>
@@ -126,7 +126,7 @@ export function SignupForm() {
                     {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "회원가입 완료"}
                 </Button>
 
-                <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+                <div className="text-center text-sm text-muted-foreground mt-4">
                     이미 계정이 있으신가요?{" "}
                     <Link href="/login" className="text-primary hover:underline font-bold">
                         로그인하기

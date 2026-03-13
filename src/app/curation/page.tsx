@@ -25,12 +25,12 @@ export default async function CurationPage() {
 
     if (!curation) {
         return (
-            <div className="min-h-screen bg-[#061A14] flex items-center justify-center text-white">
+            <div className="min-h-screen bg-background flex items-center justify-center text-foreground">
                 <div className="text-center space-y-4">
                     <h2 className="text-2xl font-bold">No Curation Found</h2>
-                    <p className="text-gray-400">Please check back later.</p>
+                    <p className="text-muted-foreground">Please check back later.</p>
                     <Link href="/">
-                        <Button variant="outline" className="mt-4 border-white/20 text-white hover:bg-white/10">
+                        <Button variant="outline" className="mt-4 border-border text-foreground hover:bg-secondary">
                             Go Home
                         </Button>
                     </Link>
@@ -55,16 +55,16 @@ export default async function CurationPage() {
     const categories = Object.keys(booksByCategory);
 
     return (
-        <div className="min-h-screen bg-[#061A14] text-white">
+        <div className="min-h-screen bg-background text-foreground">
             {/* Header */}
-            <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 h-[64px] flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
+            <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 h-[64px] flex justify-between items-center bg-background/90 backdrop-blur-md border-b border-border shadow-sm">
                 <div className="max-w-6xl mx-auto w-full flex items-center justify-between">
-                    <Link href="/#curation" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                    <Link href="/#curation" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
                         <ArrowLeft className="w-5 h-5" />
                         <span className="font-medium">Back</span>
                     </Link>
                     <div className="text-xl font-bold font-serif tracking-tight">
-                        <span className="bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent">BookFit Choice</span>
+                        <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">BookFit Choice</span>
                     </div>
                     <div className="w-16"></div> {/* Spacer for center alignment */}
                 </div>
@@ -77,21 +77,21 @@ export default async function CurationPage() {
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-bold uppercase tracking-widest">
                             <Sparkles className="w-4 h-4" /> Monthly Curation
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-black font-serif leading-tight">
+                        <h1 className="text-4xl md:text-6xl font-black font-serif leading-tight text-primary">
                             북핏초이스
                         </h1>
-                        <p className="text-xl text-gray-300 font-light leading-relaxed whitespace-pre-line">
+                        <p className="text-xl text-muted-foreground font-light leading-relaxed whitespace-pre-line">
                             북핏 큐레이터들이 선정한 베스트셀러
                         </p>
                     </div>
 
                     {/* Category Navigation Buttons (Sticky) */}
-                    <div className="sticky top-[64px] z-40 bg-[#061A14]/95 backdrop-blur-md py-4 border-b border-white/5 flex flex-wrap justify-center gap-3 shadow-sm px-4">
+                    <div className="sticky top-[64px] z-40 bg-background/95 backdrop-blur-md py-4 border-b border-border flex flex-wrap justify-center gap-3 shadow-sm px-4">
                         {categories.map((category) => (
                             <Link
                                 key={category}
                                 href={`#category-${category}`}
-                                className="px-4 py-2 rounded-full border border-white/10 hover:border-accent hover:text-accent hover:bg-accent/5 bg-white/5 text-sm text-gray-300 transition-all duration-300"
+                                className="px-4 py-2 rounded-full border border-border hover:border-accent hover:text-accent hover:bg-accent/5 bg-secondary text-sm text-muted-foreground transition-all duration-300"
                             >
                                 {category}
                             </Link>

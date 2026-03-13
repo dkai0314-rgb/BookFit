@@ -4,16 +4,16 @@ import { ArrowLeft, Mail } from "lucide-react";
 
 export default function NewsletterPage() {
     return (
-        <div className="min-h-screen bg-[#061A14] text-white flex flex-col">
+        <div className="min-h-screen bg-background text-foreground flex flex-col">
             {/* Header */}
-            <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#061A14]/90 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
+            <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-background/90 backdrop-blur-md border-b border-border shadow-sm">
                 <div className="max-w-6xl mx-auto w-full flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                    <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
                         <ArrowLeft className="w-5 h-5" />
                         <span className="font-medium">Back</span>
                     </Link>
                     <div className="text-xl font-bold font-serif tracking-tight">
-                        <span className="bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent">BookFit Letter</span>
+                        <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">BookFit Letter</span>
                     </div>
                     <div className="w-16"></div> {/* Spacer */}
                 </div>
@@ -26,11 +26,11 @@ export default function NewsletterPage() {
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-bold uppercase tracking-widest">
                             <Mail className="w-4 h-4" /> Weekly Newsletter
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-black font-serif leading-tight">
+                        <h1 className="text-4xl md:text-5xl font-black font-serif leading-tight text-primary">
                             사유의 조각을<br />
                             매주 받아보세요
                         </h1>
-                        <p className="text-lg text-gray-400 font-light leading-relaxed">
+                        <p className="text-lg text-muted-foreground font-light leading-relaxed">
                             바쁜 일상 속, 북핏 큐레이터들이<br />
                             엄선한 책과 문장들을 놓치지 마세요.<br />
                             가장 먼저 새로운 큐레이션을 만나볼 수 있습니다.

@@ -116,7 +116,7 @@ export default function AdminBookFitLetterPage() {
 
     return (
         <div className="p-8 max-w-5xl mx-auto space-y-8 font-sans">
-            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FF5C39] to-orange-400">
+            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
                 북핏레터 파이프라인 Admin
             </h1>
 
@@ -129,13 +129,13 @@ export default function AdminBookFitLetterPage() {
                         placeholder="책 제목 또는 키워드 입력..."
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        className="border p-2 rounded flex-1 focus:ring-2 focus:ring-[#FF5C39] focus:outline-none"
+                        className="border p-2 rounded flex-1 focus:ring-2 focus:ring-primary focus:outline-none"
                         onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                     />
                     <button
                         onClick={handleSearch}
                         disabled={isSearching}
-                        className="bg-[#FF5C39] text-white px-6 py-2 rounded font-medium hover:bg-[#e64724] disabled:opacity-50"
+                        className="bg-primary text-primary-foreground px-6 py-2 rounded font-medium hover:bg-primary/90 disabled:opacity-50"
                     >
                         {isSearching ? '검색 중...' : '검색'}
                     </button>
@@ -194,14 +194,14 @@ export default function AdminBookFitLetterPage() {
                             placeholder="ex: the-great-gatsby-review"
                             value={slug}
                             onChange={(e) => setSlug(e.target.value)}
-                            className="border p-2 w-full rounded focus:ring-2 focus:ring-[#FF5C39] focus:outline-none"
+                            className="border p-2 w-full rounded focus:ring-2 focus:ring-primary focus:outline-none"
                         />
                     </div>
 
                     <div className="space-y-2">
                         <label className="block font-medium text-sm text-gray-700">마크다운 초안 (Gemini 생성본)</label>
                         <textarea
-                            className="w-full h-[500px] border p-4 rounded font-mono text-sm focus:ring-2 focus:ring-[#FF5C39] focus:outline-none"
+                            className="w-full h-[500px] border p-4 rounded font-mono text-sm focus:ring-2 focus:ring-primary focus:outline-none"
                             value={draftContent}
                             onChange={(e) => setDraftContent(e.target.value)}
                         />
@@ -216,7 +216,7 @@ export default function AdminBookFitLetterPage() {
                         </button>
                         <button
                             onClick={() => handleSave('PUBLISHED')}
-                            className="bg-[#FF5C39] text-white px-8 py-3 rounded-lg font-bold shadow hover:bg-[#e64724] transition-colors"
+                            className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-bold shadow hover:bg-primary/90 transition-colors"
                         >
                             즉시 발행 상태로 저장 (PUBLISH)
                         </button>

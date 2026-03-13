@@ -53,7 +53,7 @@ export default async function BookFitLetterDetailPage({ params }: Props) {
                     {letter.coverImageUrl && (
                         <div className="w-32 h-44 mx-auto mb-6 shadow-md rounded-md overflow-hidden relative">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={letter.coverImageUrl} alt={letter.title} className="w-full h-full object-cover" />
+                            <img src={letter.coverImageUrl.replace("coversum", "cover500").replace(/^http:/i, "https:")} alt={letter.title} className="w-full h-full object-cover" />
                         </div>
                     )}
                     <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-4 tracking-tight">
@@ -74,12 +74,12 @@ export default async function BookFitLetterDetailPage({ params }: Props) {
                     </p>
                 </header>
 
-                <div className="prose prose-lg prose-[#FF5C39] max-w-none 
+                <div className="prose prose-lg prose-primary max-w-none 
           prose-headings:font-bold prose-headings:tracking-tight 
           prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:text-slate-800
           prose-h3:text-xl prose-h3:text-slate-700
-          prose-a:text-[#FF5C39] hover:prose-a:text-[#d44829]
-          prose-blockquote:border-l-4 prose-blockquote:border-[#FF5C39] prose-blockquote:bg-gray-50 prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:not-italic prose-blockquote:text-slate-800 prose-blockquote:rounded-r-lg
+          prose-a:text-accent hover:prose-a:text-accent/80
+          prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:bg-gray-50 prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:not-italic prose-blockquote:text-slate-800 prose-blockquote:rounded-r-lg
           prose-img:rounded-xl prose-img:shadow-md
           prose-ul:list-disc prose-ol:list-decimal">
                     <ReactMarkdown
@@ -93,7 +93,7 @@ export default async function BookFitLetterDetailPage({ params }: Props) {
                                     return (
                                         <a
                                             {...props}
-                                            className="not-prose block w-full sm:w-10/12 md:w-8/12 mx-auto my-12 bg-[#FF5C39] text-white text-center font-bold text-lg md:text-xl py-5 px-6 rounded-2xl hover:bg-[#e04b2a] transition-all shadow-lg hover:shadow-xl hover:-translate-y-1"
+                                            className="not-prose block w-full sm:w-10/12 md:w-8/12 mx-auto my-12 bg-accent text-primary-foreground text-center font-bold text-lg md:text-xl py-5 px-6 rounded-2xl hover:bg-accent/90 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
