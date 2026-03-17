@@ -67,13 +67,8 @@ export default async function BookFitLetterListPage() {
                                     </div>
                                     <div className="p-6">
                                         <h2 className="text-xl font-bold mb-2 text-foreground group-hover:text-accent transition-colors line-clamp-2 leading-tight">
-                                            {letter.metaTitle || letter.title}
+                                            {letter.headlineTitle || letter.metaTitle || letter.title}
                                         </h2>
-                                        {letter.headlineTitle && (
-                                            <p className="text-sm text-gray-600 mb-3 line-clamp-2 leading-snug">
-                                                {letter.headlineTitle}
-                                            </p>
-                                        )}
                                         <p className="text-xs text-gray-400 font-medium mt-auto">
                                             발행일: {new Date(letter.publishedAt || letter.createdAt).toLocaleDateString('ko-KR')}
                                         </p>
