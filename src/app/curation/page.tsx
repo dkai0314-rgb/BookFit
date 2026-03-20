@@ -1,7 +1,7 @@
 
 import { fetchCurationFromSheet } from "@/lib/google-sheets";
 import Link from "next/link";
-import { Sparkles, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CategoryCarousel, CurationBook } from "@/components/CurationSection";
 
@@ -75,7 +75,7 @@ export default async function CurationPage() {
                     {/* Hero Section of Curation */}
                     <div className="text-center space-y-6 max-w-3xl mx-auto px-6">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-bold uppercase tracking-widest">
-                            <Sparkles className="w-4 h-4" /> Monthly Curation
+                            Monthly Curation
                         </div>
                         <h1 className="text-4xl md:text-6xl font-black font-serif leading-tight text-primary">
                             북핏초이스

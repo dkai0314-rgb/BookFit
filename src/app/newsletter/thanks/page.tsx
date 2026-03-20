@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, ArrowLeft } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function NewsletterThanksPage() {
@@ -7,7 +7,7 @@ export default function NewsletterThanksPage() {
         <div className="min-h-screen bg-background flex flex-col items-center justify-center text-foreground p-6">
             <div className="max-w-lg w-full text-center space-y-8">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 border border-accent/20 mb-4">
-                    <Sparkles className="w-8 h-8 text-accent" />
+                    <CheckCircle2 className="w-8 h-8 text-accent" />
                 </div>
 
                 <h1 className="text-3xl md:text-4xl font-black font-serif text-foreground leading-tight">

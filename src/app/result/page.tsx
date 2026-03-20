@@ -6,7 +6,7 @@ import { useSurveyStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { ArrowLeft, ShoppingCart, RefreshCw, BookOpen, ExternalLink, Box } from "lucide-react";
+import { ArrowLeft, ShoppingCart, RefreshCw, BookOpen, ExternalLink, Box, Pill, Bot, Lightbulb } from "lucide-react";
 
 export default function ResultPage() {
     const router = useRouter();
@@ -36,9 +36,9 @@ export default function ResultPage() {
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 text-secondary-foreground text-sm font-medium mb-4"
+                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 text-secondary-foreground text-sm font-medium mb-4"
                     >
-                        AI 북 카운셀러 처방전 💊
+                        AI 북 카운셀러 처방전 <Pill className="w-4 h-4 text-primary" />
                     </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, scale: 0.9 }}
@@ -102,7 +102,9 @@ export default function ResultPage() {
                                     {/* AI Reason */}
                                     <div className="bg-primary/5 p-4 rounded-lg flex-1 border border-primary/10">
                                         <p className="text-sm text-foreground/90 leading-relaxed">
-                                            <span className="font-bold text-primary mr-2">🤖 AI 추천 사유:</span>
+                                            <span className="font-bold text-primary mr-2 flex items-center gap-1 inline-flex">
+                                                <Bot className="w-4 h-4" /> AI 추천 사유:
+                                            </span>
                                             {book.reason}
                                         </p>
                                     </div>
@@ -137,9 +139,10 @@ export default function ResultPage() {
                     ))}
                 </div>
 
-                {/* Coupang Widget Section */}
                 <div className="w-full flex flex-col items-center bg-secondary/5 p-6 rounded-2xl border border-secondary/10 shadow-sm mt-8 mb-8">
-                    <p className="text-foreground/80 mb-4 font-medium text-center text-lg">💡 추천받은 책, 쿠팡에서 바로 찾아보세요!</p>
+                    <p className="text-foreground/80 mb-4 font-medium text-center text-lg flex items-center gap-2">
+                        <Lightbulb className="w-5 h-5 text-yellow-500" /> 추천받은 책, 쿠팡에서 바로 찾아보세요!
+                    </p>
                     <div className="w-full overflow-hidden rounded-lg bg-white/80 p-1">
                         <iframe src="https://coupa.ng/clGXS1" width="100%" height="44" frameBorder="0" scrolling="no" referrerPolicy="unsafe-url"></iframe>
                     </div>

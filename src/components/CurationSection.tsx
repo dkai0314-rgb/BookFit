@@ -4,7 +4,7 @@
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 
 export interface CurationBook {
@@ -188,7 +188,7 @@ export default function CurationSection({ id }: CurationProps = {}) {
                 {/* Header: Title & Description */}
                 <div className="text-center max-w-3xl mx-auto space-y-4">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest mb-2">
-                        <Sparkles className="w-3 h-3" /> Monthly Selection
+                        Monthly Selection
                     </div>
                     <h2 className="text-3xl md:text-5xl font-black text-primary font-serif leading-tight">
                         BookFit Choice
@@ -218,7 +218,6 @@ export default function CurationSection({ id }: CurationProps = {}) {
                 <Link href="/curation">
                     <button className="px-8 py-3 rounded-full border border-border bg-background hover:bg-secondary text-foreground font-medium transition-all group flex items-center gap-2 shadow-sm">
                         View All Collection
-                        <Sparkles className="w-4 h-4 text-accent opacity-50 group-hover:opacity-100 transition-opacity" />
                     </button>
                 </Link>
             </div>

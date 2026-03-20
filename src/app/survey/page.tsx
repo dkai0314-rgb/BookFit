@@ -7,17 +7,18 @@ import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/survey/progress-bar";
 import { ChoiceCard } from "@/components/survey/choice-card";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft, Search } from "lucide-react";
+import { ChevronRight, ChevronLeft, Search, Smile, Leaf, Cloud, BatteryFull, Wind, Sparkles, ChevronDown, Brain } from "lucide-react";
+import Link from "next/link";
 
 const TOTAL_STEPS = 4;
 
 const EMOTIONS = [
-    { label: "행복함", value: "happy", icon: "😊" },
-    { label: "차분함", value: "calm", icon: "🌿" },
-    { label: "우울함", value: "depressed", icon: "☁️" },
-    { label: "지침", value: "tired", icon: "🔋" },
-    { label: "불안함", value: "anxious", icon: "🌪️" },
-    { label: "설렘", value: "excited", icon: "✨" },
+    { label: "행복함", value: "happy", icon: <Smile className="w-6 h-6 text-yellow-500" /> },
+    { label: "차분함", value: "calm", icon: <Leaf className="w-6 h-6 text-green-500" /> },
+    { label: "우울함", value: "depressed", icon: <Cloud className="w-6 h-6 text-slate-400" /> },
+    { label: "지침", value: "tired", icon: <BatteryFull className="w-6 h-6 text-red-400" /> },
+    { label: "불안함", value: "anxious", icon: <Wind className="w-6 h-6 text-blue-300" /> },
+    { label: "설렘", value: "excited", icon: <Sparkles className="w-6 h-6 text-pink-400" /> },
 ];
 
 const SITUATIONS = [
@@ -117,7 +118,14 @@ export default function SurveyPage() {
     return (
         <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
             <div className="w-full max-w-2xl space-y-8">
-                {/* Header */}
+                {/* Header Links */}
+                <div className="flex justify-start">
+                    <Link href="/" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 text-sm">
+                        BookFit 홈으로
+                    </Link>
+                </div>
+
+                {/* Question Area */}
                 <div className="space-y-4 text-center">
                     <ProgressBar currentStep={step} totalSteps={TOTAL_STEPS} />
                     <p className="text-sm font-medium text-muted-foreground">
@@ -125,7 +133,6 @@ export default function SurveyPage() {
                     </p>
                 </div>
 
-                {/* Question Area */}
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={step}
@@ -135,7 +142,7 @@ export default function SurveyPage() {
                         transition={{ duration: 0.3 }}
                         className="space-y-6"
                     >
-                        <h2 className="text-2xl md:text-3xl font-bold text-center text-primary break-keep">
+                        <h2 className="text-2xl md:text-3xl font-bold text-center text-primary break-keep leading-tight">
                             {step === 1 && "오늘 하루, 기분이 어떠셨나요?"}
                             {step === 2 && "요즘 가장 큰 고민거리는 무엇인가요?"}
                             {step === 3 && "어떤 스타일의 조언을 원하시나요?"}
@@ -201,8 +208,8 @@ export default function SurveyPage() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <p className="text-sm text-muted-foreground text-center">
-                                        어떻게 써야 할지 모르겠다면? 👇
+                                    <p className="text-sm text-muted-foreground text-center flex items-center justify-center gap-1">
+                                        어떻게 써야 할지 모르겠다면? <ChevronDown className="w-4 h-4" />
                                     </p>
                                     <div className="flex flex-wrap gap-2 justify-center">
                                         {GUIDE_CHIPS.map((chip) => (
@@ -227,7 +234,7 @@ export default function SurveyPage() {
                         variant="ghost"
                         onClick={prevStep}
                         disabled={step === 1 || isSubmitting}
-                        className="text-muted-foreground hover:text-primary"
+                        className="text-muted-foreground hover:text-primary transition-colors"
                     >
                         <ChevronLeft className="w-4 h-4 mr-2" />
                         이전
@@ -238,7 +245,7 @@ export default function SurveyPage() {
                         className="bg-primary hover:bg-primary/90 text-white px-8 rounded-full shadow-lg transition-all"
                     >
                         {isSubmitting ? (
-                            <span>분석 중... 🧠</span>
+                            <span className="flex items-center gap-2">분석 중... <Brain className="w-4 h-4 animate-pulse" /></span>
                         ) : (
                             <>
                                 {step === TOTAL_STEPS ? "AI 추천 받기" : "다음"}

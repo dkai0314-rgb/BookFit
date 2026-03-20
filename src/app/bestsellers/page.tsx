@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, Lightbulb } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -161,7 +161,9 @@ export default function BestsellersPage() {
                                     </div>
 
                                     <div className="w-full max-w-3xl mx-auto flex flex-col items-center bg-secondary p-6 rounded-2xl border border-border mt-8 shadow-sm" id={`coupang-widget-${sectionIdx}`}>
-                                        <p className="text-foreground mb-4 font-medium text-center text-lg">💡 지금 읽기 딱 좋은 {categoryItem.category} 책, 쿠팡에서 바로 찾아보세요!</p>
+                                        <p className="text-foreground mb-4 font-medium text-center text-lg flex items-center gap-2">
+                                            <Lightbulb className="w-5 h-5 text-yellow-500" /> 지금 읽기 딱 좋은 {categoryItem.category} 책, 쿠팡에서 바로 찾아보세요!
+                                        </p>
                                         <div className="w-full overflow-hidden rounded-lg bg-background p-1 border border-border shadow-sm">
                                             <iframe src="https://coupa.ng/clGXS1" width="100%" height="44" frameBorder="0" scrolling="no" referrerPolicy="unsafe-url"></iframe>
                                         </div>

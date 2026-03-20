@@ -4,18 +4,18 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChoiceCard } from "@/components/survey/choice-card";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft, Sparkles, RefreshCcw } from "lucide-react";
+import { ChevronRight, ChevronLeft, RefreshCcw, Smile, Leaf, Cloud, BatteryFull, Wind, Lightbulb, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 const TOTAL_STEPS = 2;
 
 const EMOTIONS = [
-    { label: "행복함", value: "happy", icon: "😊" },
-    { label: "차분함", value: "calm", icon: "🌿" },
-    { label: "우울함", value: "depressed", icon: "☁️" },
-    { label: "지침", value: "tired", icon: "🔋" },
-    { label: "불안함", value: "anxious", icon: "🌪️" },
-    { label: "설렘", value: "excited", icon: "✨" },
+    { label: "행복함", value: "happy", icon: <Smile className="w-6 h-6 text-yellow-500" /> },
+    { label: "차분함", value: "calm", icon: <Leaf className="w-6 h-6 text-green-500" /> },
+    { label: "우울함", value: "depressed", icon: <Cloud className="w-6 h-6 text-slate-400" /> },
+    { label: "지침", value: "tired", icon: <BatteryFull className="w-6 h-6 text-red-400" /> },
+    { label: "불안함", value: "anxious", icon: <Wind className="w-6 h-6 text-blue-300" /> },
+    { label: "설렘", value: "excited", icon: <Sparkles className="w-6 h-6 text-pink-400" /> },
 ];
 
 const SITUATIONS = [
@@ -51,7 +51,6 @@ export default function AdvicePage() {
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsClient(true);
     }, []);
 
@@ -86,16 +85,18 @@ export default function AdvicePage() {
     };
 
     return (
-        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-foreground">
             <div className="w-full max-w-2xl space-y-8">
-                {/* Header (Hidden on result step) */}
+                {/* Header Links */}
+                <div className="flex justify-start">
+                    <Link href="/" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 text-sm">
+                        <ChevronLeft className="w-4 h-4" /> BookFit 홈으로
+                    </Link>
+                </div>
+
+                {/* Progress (Hidden on result step) */}
                 {step <= TOTAL_STEPS && (
                     <div className="space-y-4 text-center">
-                        <div className="mb-8">
-                            <Link href="/" className="text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-2">
-                                <Sparkles className="w-4 h-4" /> BookFit 홈으로
-                            </Link>
-                        </div>
                         <div className="w-full bg-secondary/30 h-2 rounded-full overflow-hidden">
                             <motion.div
                                 className="h-full bg-primary"
@@ -122,15 +123,15 @@ export default function AdvicePage() {
                     >
                         {step === 1 && (
                             <>
-                                <h2 className="text-2xl md:text-3xl font-bold text-center text-primary break-keep">
-                                    오늘 하루, 기분이 어떠신가요?
+                                <h2 className="text-2xl md:text-3xl font-bold text-center text-primary break-keep leading-tight">
+                                    오늘 하루, 기분이 어떠셨나요?
                                 </h2>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                     {EMOTIONS.map((item) => (
                                         <ChoiceCard
                                             key={item.value}
                                             label={item.label}
-                                            icon={<span className="text-2xl">{item.icon}</span>}
+                                            icon={item.icon}
                                             selected={emotion === item.value}
                                             onClick={() => setEmotion(item.value)}
                                         />
@@ -141,7 +142,7 @@ export default function AdvicePage() {
 
                         {step === 2 && (
                             <>
-                                <h2 className="text-2xl md:text-3xl font-bold text-center text-primary break-keep">
+                                <h2 className="text-2xl md:text-3xl font-bold text-center text-primary break-keep leading-tight">
                                     요즘 가장 큰 고민거리는 무엇인가요?
                                 </h2>
                                 <div className="grid grid-cols-2 gap-4">
@@ -166,22 +167,22 @@ export default function AdvicePage() {
                                     className="space-y-6"
                                 >
                                     <div className="inline-flex items-center justify-center p-4 bg-primary/10 rounded-full mb-4">
-                                        <Sparkles className="w-12 h-12 text-primary" />
+                                        <Lightbulb className="w-12 h-12 text-primary" />
                                     </div>
                                     <h2 className="text-2xl md:text-3xl font-bold text-foreground">
                                         오늘의 조언
                                     </h2>
                                     <div className="bg-card border border-border/50 p-8 rounded-2xl shadow-sm max-w-lg mx-auto">
-                                        <p className="text-lg md:text-xl text-muted-foreground whitespace-pre-line leading-relaxed">
+                                        <p className="text-lg md:text-xl text-muted-foreground whitespace-pre-line leading-relaxed font-medium">
                                             {advice}
                                         </p>
                                     </div>
                                     <div className="flex gap-4 justify-center pt-8">
-                                        <Button onClick={reset} variant="outline" className="gap-2">
+                                        <Button onClick={reset} variant="outline" className="gap-2 border-border text-muted-foreground hover:text-foreground hover:bg-secondary">
                                             <RefreshCcw className="w-4 h-4" /> 다시 하기
                                         </Button>
-                                        <Link href="/search">
-                                            <Button className="gap-2 bg-primary hover:bg-primary/90">
+                                        <Link href="/recommend">
+                                            <Button className="gap-2 bg-primary hover:bg-primary/90 text-white shadow-lg rounded-full px-6">
                                                 이 기분에 맞는 책 찾기 <ChevronRight className="w-4 h-4" />
                                             </Button>
                                         </Link>
@@ -199,7 +200,7 @@ export default function AdvicePage() {
                             variant="ghost"
                             onClick={handlePrev}
                             disabled={step === 1}
-                            className="text-muted-foreground hover:text-primary"
+                            className="text-muted-foreground hover:text-primary transition-colors"
                         >
                             <ChevronLeft className="w-4 h-4 mr-2" />
                             이전
@@ -210,8 +211,7 @@ export default function AdvicePage() {
                             className="bg-primary hover:bg-primary/90 text-white px-8 rounded-full shadow-lg transition-all"
                         >
                             {step === TOTAL_STEPS ? "조언 보기" : "다음"}
-                            {step !== TOTAL_STEPS && <ChevronRight className="w-4 h-4 ml-2" />}
-                            {step === TOTAL_STEPS && <Sparkles className="w-4 h-4 ml-2" />}
+                            <ChevronRight className="w-4 h-4 ml-2" />
                         </Button>
                     </div>
                 )}

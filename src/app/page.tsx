@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Sparkles, MessageSquare, BookCheck, Lightbulb } from "lucide-react";
+import { MessageSquare, BookCheck, Lightbulb } from "lucide-react";
 import CurationSection from "@/components/CurationSection";
 import JsonLd from "@/components/JsonLd";
 import Header from "@/components/Header";
@@ -59,7 +59,6 @@ export default function Home() {
 
           <div className="relative z-10 flex flex-col items-center space-y-6 px-4 max-w-4xl mx-auto">
             <div className="inline-flex items-center rounded-full border border-primary/10 bg-white/80 backdrop-blur-md px-4 py-2 text-base font-semibold text-primary transition-colors shadow-sm">
-              <Sparkles className="w-4 h-4 mr-2 text-accent" />
               수만 권 중 지금 당신의 책은? 📚
             </div>
             <h1 id="hero-title" className="text-4xl md:text-7xl font-extrabold tracking-tight text-primary break-keep drop-shadow-sm leading-tight relative">
@@ -75,7 +74,6 @@ export default function Home() {
             <div className="flex flex-col gap-4 pt-6 w-full max-w-sm mx-auto">
               <Link href="/recommend" className="w-full">
                 <Button size="lg" className="w-full rounded-md bg-accent text-white hover:bg-primary font-extrabold px-8 py-8 text-xl shadow-lg shadow-accent/20 transition-all hover:scale-105 border border-transparent" aria-label="지금 내 책 찾기">
-                  <Sparkles className="mr-2 h-6 w-6" />
                   지금 내 책 찾기 🔍
                 </Button>
               </Link>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Search, Loader2 } from "lucide-react";
+import { Search, Loader2, BookOpen } from "lucide-react";
 import { useSurveyStore } from "@/lib/store";
 
 const GUIDE_CHIPS = [
@@ -79,7 +79,7 @@ export default function SearchPage() {
                 {/* Header */}
                 <div className="text-center space-y-4">
                     <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-full mb-4 animate-pulse">
-                        <Sparkles className="w-6 h-6 text-primary" />
+                        <BookOpen className="w-6 h-6 text-primary" />
                     </div>
                     <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-foreground break-keep leading-tight">
                         어떤 책을 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">찾고 계신가요?</span>
