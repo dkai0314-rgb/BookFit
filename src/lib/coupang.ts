@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import crypto from 'crypto';
+import { createHmac } from 'crypto';
 
 const ACCESS_KEY = process.env.COUPANG_ACCESS_KEY || '';
 const SECRET_KEY = process.env.COUPANG_SECRET_KEY || '';
@@ -12,8 +12,7 @@ function getAuthHeader(method: string, path: string, query: string = '') {
     const datetime = new Date().toISOString().replace(/[:\-]|\.\d{3}/g, '').slice(0, 15) + 'Z';
     const message = datetime + method + path + query;
 
-    const signature = crypto
-        .createHmac('sha256', SECRET_KEY)
+    const signature = createHmac('sha256', SECRET_KEY)
         .update(message)
         .digest('hex');
 
@@ -47,12 +46,12 @@ export async function getCoupangLink(keyword: string): Promise<string | null> {
         if (searchResponse.data?.data?.productData?.length > 0) {
             return searchResponse.data.data.productData[0].productUrl;
         }
+        console.warn('[Coupang] Product search returned no results for:', keyword);
 
         // 2. 검색 결과가 없을 경우, 검색 페이지 딥링크 생성
-        // 쿠팡 검색 페이지 URL: https://www.coupang.com/np/search?q=[키워드]
         const targetSearchUrl = `https://www.coupang.com/np/search?q=${encodeURIComponent(keyword)}`;
-        
-        const deeplinkPath = '/v2/providers/v1/open/deeplink';
+
+        const deeplinkPath = '/v2/providers/affiliate_open_api/apis/openapi/v1/deeplink';
         const deeplinkData = {
             coupangUrls: [targetSearchUrl]
         };
@@ -64,13 +63,19 @@ export async function getCoupangLink(keyword: string): Promise<string | null> {
             }
         });
 
+        console.log('[Coupang] Deeplink response status:', deeplinkResponse.status, JSON.stringify(deeplinkResponse.data));
+
         if (deeplinkResponse.data?.data?.[0]?.shortenUrl) {
             return deeplinkResponse.data.data[0].shortenUrl;
         }
 
         return null;
-    } catch (error) {
-        console.error('Coupang API Link Generation Error:', error);
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            console.error('[Coupang] API Error:', error.response?.status, JSON.stringify(error.response?.data));
+        } else {
+            console.error('[Coupang] Unexpected Error:', error);
+        }
         return null;
     }
 }
