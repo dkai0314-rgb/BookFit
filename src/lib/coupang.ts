@@ -9,7 +9,16 @@ const SECRET_KEY = process.env.COUPANG_SECRET_KEY || '';
  * 쿠팡 파트너스 API 인증 헤더 생성
  */
 function getAuthHeader(method: string, path: string, query: string = '') {
-    const datetime = new Date().toISOString().replace(/[:\-]|\.\d{3}/g, '').slice(0, 15) + 'Z';
+    // 공식 가이드 형식: YYMMDD[T]HHmmss[Z] (2자리 연도)
+    const now = new Date();
+    const yy = String(now.getUTCFullYear()).slice(2);
+    const MM = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const dd = String(now.getUTCDate()).padStart(2, '0');
+    const HH = String(now.getUTCHours()).padStart(2, '0');
+    const mm = String(now.getUTCMinutes()).padStart(2, '0');
+    const ss = String(now.getUTCSeconds()).padStart(2, '0');
+    const datetime = `${yy}${MM}${dd}T${HH}${mm}${ss}Z`;
+
     const message = datetime + method + path + query;
 
     const signature = createHmac('sha256', SECRET_KEY)
