@@ -26,55 +26,38 @@ function getAuthHeader(method: string, path: string, query: string = '') {
  */
 export async function getCoupangLink(keyword: string): Promise<string | null> {
     if (!ACCESS_KEY || !SECRET_KEY) {
-        console.error('Coupang API keys are not configured');
+        console.error('[Coupang] API keys are not configured');
         return null;
     }
 
+    // 딥링크 생성 (파트너스 추적 링크)
+    const targetSearchUrl = `https://www.coupang.com/np/search?q=${encodeURIComponent(keyword)}`;
+    const deeplinkPath = '/v2/providers/affiliate_open_api/apis/openapi/v1/deeplink';
+
     try {
-        // 1. 상품 검색 시도
-        const searchPath = '/v2/providers/v1/open/products/search';
-        const searchQuery = `keyword=${encodeURIComponent(keyword)}&limit=1`;
-        const searchUrl = `https://api-gateway.coupang.com${searchPath}?${searchQuery}`;
-        
-        const searchResponse = await axios.get(searchUrl, {
-            headers: {
-                'Authorization': getAuthHeader('GET', searchPath, `keyword=${keyword}&limit=1`),
-                'Content-Type': 'application/json'
+        const deeplinkResponse = await axios.post(
+            `https://api-gateway.coupang.com${deeplinkPath}`,
+            { coupangUrls: [targetSearchUrl] },
+            {
+                headers: {
+                    'Authorization': getAuthHeader('POST', deeplinkPath),
+                    'Content-Type': 'application/json'
+                }
             }
-        });
+        );
 
-        if (searchResponse.data?.data?.productData?.length > 0) {
-            return searchResponse.data.data.productData[0].productUrl;
-        }
-        console.warn('[Coupang] Product search returned no results for:', keyword);
+        console.log('[Coupang] Deeplink response:', deeplinkResponse.status, JSON.stringify(deeplinkResponse.data));
 
-        // 2. 검색 결과가 없을 경우, 검색 페이지 딥링크 생성
-        const targetSearchUrl = `https://www.coupang.com/np/search?q=${encodeURIComponent(keyword)}`;
+        const shortenUrl = deeplinkResponse.data?.data?.[0]?.shortenUrl;
+        if (shortenUrl) return shortenUrl;
 
-        const deeplinkPath = '/v2/providers/affiliate_open_api/apis/openapi/v1/deeplink';
-        const deeplinkData = {
-            coupangUrls: [targetSearchUrl]
-        };
-
-        const deeplinkResponse = await axios.post(`https://api-gateway.coupang.com${deeplinkPath}`, deeplinkData, {
-            headers: {
-                'Authorization': getAuthHeader('POST', deeplinkPath),
-                'Content-Type': 'application/json'
-            }
-        });
-
-        console.log('[Coupang] Deeplink response status:', deeplinkResponse.status, JSON.stringify(deeplinkResponse.data));
-
-        if (deeplinkResponse.data?.data?.[0]?.shortenUrl) {
-            return deeplinkResponse.data.data[0].shortenUrl;
-        }
-
+        console.warn('[Coupang] No shortenUrl in response');
         return null;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
-            console.error('[Coupang] API Error:', error.response?.status, JSON.stringify(error.response?.data));
+            console.error('[Coupang] Deeplink API Error:', error.response?.status, JSON.stringify(error.response?.data));
         } else {
-            console.error('[Coupang] Unexpected Error:', error);
+            console.error('[Coupang] Unexpected Error:', String(error));
         }
         return null;
     }
