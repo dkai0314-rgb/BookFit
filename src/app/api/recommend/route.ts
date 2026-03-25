@@ -26,9 +26,10 @@ export async function POST(request: Request) {
                 return null;
             }
 
-            // 3. Get Coupang Link - fallback to search URL if API fails
-            const coupangSearchFallback = `https://www.coupang.com/np/search?q=${encodeURIComponent(rec.title)}`;
-            const coupangLink = await getCoupangLink(`${rec.title} ${rec.author}`) || coupangSearchFallback;
+            // 3. Get Coupang Link - use verified Aladin title for accurate search
+            const verifiedTitle = aladinData.title || rec.title;
+            const coupangSearchFallback = `https://www.coupang.com/np/search?q=${encodeURIComponent(verifiedTitle)}`;
+            const coupangLink = await getCoupangLink(verifiedTitle) || coupangSearchFallback;
 
             return {
                 ...rec,
