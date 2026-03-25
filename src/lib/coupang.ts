@@ -46,18 +46,20 @@ export async function getCoupangLink(keyword: string): Promise<string | null> {
             }
         );
 
-        console.log('[Coupang] Deeplink response:', deeplinkResponse.status, JSON.stringify(deeplinkResponse.data));
+        const raw = JSON.stringify(deeplinkResponse.data).slice(0, 300);
+        console.error('[Coupang] status=' + deeplinkResponse.status + ' body=' + raw);
 
         const shortenUrl = deeplinkResponse.data?.data?.[0]?.shortenUrl;
         if (shortenUrl) return shortenUrl;
 
-        console.warn('[Coupang] No shortenUrl in response');
+        console.error('[Coupang] shortenUrl not found in response');
         return null;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
-            console.error('[Coupang] Deeplink API Error:', error.response?.status, JSON.stringify(error.response?.data));
+            const errBody = JSON.stringify(error.response?.data).slice(0, 200);
+            console.error('[Coupang] Error ' + error.response?.status + ': ' + errBody);
         } else {
-            console.error('[Coupang] Unexpected Error:', String(error));
+            console.error('[Coupang] Error: ' + String(error).slice(0, 200));
         }
         return null;
     }
