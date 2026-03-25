@@ -265,7 +265,7 @@ export default function TemplateDetail() {
                         const formElement = document.getElementById('template-form-section');
                         if (formElement) formElement.scrollIntoView({ behavior: 'smooth' });
                     }}>
-                        템플릿 무료로 받기
+                        구매하기
                     </Button>
                 </div>
             </section>
