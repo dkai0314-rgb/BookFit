@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         // 2. Fetch Metadata from Aladin (Parallel)
         // 2. Fetch Metadata from Aladin (Parallel)
         const enrichedBooksPromises = aiRecommendations.map(async (rec) => {
-            const aladinData = await searchBookInAladin(rec.title);
+            const aladinData = await searchBookInAladin(rec.title, rec.author);
 
             // Verification Step: If Aladin returns null, this book does not exist or title is wrong.
             if (!aladinData) {
@@ -44,16 +44,14 @@ export async function POST(request: Request) {
 
         const enrichedBooksResults = await Promise.all(enrichedBooksPromises);
 
-        // 3. Filter Verified Books & Limit to 3
-        const validBooks = enrichedBooksResults.filter((book) => book !== null && book.thumbnail); // Must have thumbnail
+        // 3. Filter Verified Books & Return up to 5
+        const validBooks = enrichedBooksResults.filter((book) => book !== null);
 
         if (validBooks.length === 0) {
-            // Fallback: If strict verification kills all books, what to do?
-            // For now, return error to trigger retry or handle gracefully.
             return NextResponse.json({ error: "No verified books found matching your request." }, { status: 404 });
         }
 
-        return NextResponse.json(validBooks.slice(0, 3));
+        return NextResponse.json(validBooks.slice(0, 5));
 
     } catch (error) {
         console.error("Recommendation API Error:", error);

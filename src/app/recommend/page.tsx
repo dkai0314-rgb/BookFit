@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Heart, Brain, ArrowRight, Loader2, Library, Zap, Lightbulb, Smile, Sprout, BookOpen, Flame, Search, Rocket, Moon, Cloud, Target, ChevronLeft } from "lucide-react";
+import { Heart, Brain, ArrowRight, Loader2, ChevronLeft } from "lucide-react";
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -28,33 +28,20 @@ export default function RecommendPage() {
     const [result, setResult] = useState<RecommendedBook[]>([]);
 
     // Inputs
-    const [tasteTopics, setTasteTopics] = useState<string[]>([]);
     const [tasteCustomTopic, setTasteCustomTopic] = useState("");
-    const [tasteStyle, setTasteStyle] = useState("");
-    const [tastePurpose, setTastePurpose] = useState("");
-    const [tasteReadingLevel, setTasteReadingLevel] = useState("");
-
-    const [mindEmotions, setMindEmotions] = useState<string[]>([]);
     const [mindSituation, setMindSituation] = useState("");
-    const [mindWantTo, setMindWantTo] = useState("");
-    const [mindReadingMood, setMindReadingMood] = useState("");
 
-    const TASTE_TAGS = ["자기계발", "창업/비즈니스", "마케팅", "심리/인간관계", "소설/문학", "인문/철학", "트렌드", "재테크"];
-    const TASTE_STYLES = ["실용적이고 구체적인", "새로운 인사이트", "가볍고 재미있는", "깊이 있는/학술적인"];
-    const TASTE_PURPOSES = ["배경지식", "실무적용", "영감", "재미"];
-    const TASTE_READING_LEVELS = ["입문", "중급", "심화"];
+    const TASTE_EXAMPLES = [
+        "마케팅 초보인데 실무에서 바로 써먹을 수 있는 브랜딩 책을 찾고 있어. 너무 이론적이지 않고 사례 중심으로 쉽게 설명된 책이 좋겠어.",
+        "스타트업 창업을 준비 중인데 초기 팀 빌딩과 조직 문화를 다룬 책이 필요해. 실제 창업자 경험이 담긴 책이면 더 좋겠어.",
+        "재테크를 처음 시작하려는데 주식보다는 자산 배분이나 투자 마인드셋을 쌓는 데 도움되는 책 추천해줘.",
+    ];
 
-    const MIND_EMOTIONS = ["지침/번아웃", "불안/걱정", "자존감 하락", "관계의 어려움", "무기력", "새로운 시작", "위로가 필요해"];
-    const MIND_WANT_TO = ["위로", "이해", "변화", "현실도피"];
-    const MIND_READING_MOODS = ["가볍게", "깊이"];
-
-    const toggleTasteTag = (tag: string) => {
-        setTasteTopics(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
-    };
-
-    const toggleMindEmotion = (tag: string) => {
-        setMindEmotions(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
-    };
+    const MIND_EXAMPLES = [
+        "요즘 번아웃이 와서 아무것도 하기 싫고 무기력해. 억지로 뭔가를 해야 한다는 압박 없이 그냥 쉬어가는 느낌의 책이 필요해.",
+        "새로운 도시로 이사를 했는데 아는 사람이 없어서 외로워. 혼자만의 시간을 즐기는 방법이나 위로가 되는 책이 있을까?",
+        "직장에서 인간관계가 너무 힘들어. 감정 소모 없이 관계를 유지하는 방법을 다룬 책을 읽고 싶어.",
+    ];
 
     const handleRecommend = async () => {
         setLoading(true);
@@ -62,17 +49,10 @@ export default function RecommendPage() {
 
         const payload = mode === 'TASTE' ? {
             mode: 'TASTE',
-            topics: tasteTopics,
             customQuery: tasteCustomTopic,
-            style: tasteStyle,
-            purpose: tastePurpose,
-            readingLevel: tasteReadingLevel
         } : {
             mode: 'MIND',
-            emotion: mindEmotions,
             situation: mindSituation,
-            wantTo: mindWantTo,
-            readingMood: mindReadingMood
         };
 
         try {
@@ -96,15 +76,8 @@ export default function RecommendPage() {
         setMode('SELECT');
         setResult([]);
         setHasSearched(false);
-        setTasteTopics([]);
         setTasteCustomTopic("");
-        setTasteStyle("");
-        setTastePurpose("");
-        setTasteReadingLevel("");
-        setMindEmotions([]);
         setMindSituation("");
-        setMindWantTo("");
-        setMindReadingMood("");
     };
 
     return (
@@ -172,61 +145,31 @@ export default function RecommendPage() {
                             <p className="text-muted-foreground">당신의 독서 취향을 알려주세요.</p>
                         </div>
 
-                        <div className="space-y-6 bg-secondary p-8 rounded-xl border border-border shadow-sm">
+                        <div className="space-y-5 bg-secondary p-8 rounded-xl border border-border shadow-sm">
                             <div className="space-y-3">
                                 <label className="text-base font-bold text-primary uppercase tracking-wider flex justify-between">
-                                    <span>어떤 책을 찾으시나요? (필수)</span>
-                                    <span className="text-accent/80 text-sm normal-case">* 최소 10자 이상 입력해주세요</span>
+                                    <span>어떤 책을 찾으시나요?</span>
+                                    <span className="text-accent/80 text-sm normal-case font-normal">구체적일수록 추천이 정확해져요</span>
                                 </label>
                                 <textarea
-                                    rows={4}
-                                    placeholder="찾으시는 책의 주제, 목적, 난이도를 자유롭게 적어주세요. (예: 마케팅 초보자인데, 브랜딩의 기초부터 실무까지 쉽게 배울 수 있는 책을 추천해줘.)"
-                                    className="w-full bg-background border border-input rounded-md px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors resize-none text-lg leading-relaxed shadow-sm"
+                                    rows={5}
+                                    placeholder="주제, 목적, 분위기, 상황 등을 자유롭게 적어주세요."
+                                    className="w-full bg-background border border-input rounded-md px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors resize-none text-base leading-relaxed shadow-sm"
                                     value={tasteCustomTopic}
                                     onChange={(e) => setTasteCustomTopic(e.target.value)}
                                 />
                             </div>
 
-                            <div className="space-y-3">
-                                <span className="text-base font-bold text-primary opacity-80 uppercase tracking-wider">관심 키워드 (참고용)</span>
-                                <div className="flex flex-wrap gap-2">
-                                    {TASTE_TAGS.map(tag => (
+                            <div className="space-y-2">
+                                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">이렇게 써보세요</span>
+                                <div className="space-y-2">
+                                    {TASTE_EXAMPLES.map((ex, i) => (
                                         <button
-                                            key={tag}
-                                            onClick={() => toggleTasteTag(tag)}
-                                            className={`px-4 py-2 rounded-full text-base transition-all border shadow-sm ${tasteTopics.includes(tag) ? 'bg-accent/10 text-accent border-accent font-bold' : 'bg-background text-muted-foreground border-border'}`}
+                                            key={i}
+                                            onClick={() => setTasteCustomTopic(ex)}
+                                            className="w-full text-left px-4 py-3 rounded-lg bg-background border border-border hover:border-accent hover:bg-accent/5 transition-all text-sm text-muted-foreground hover:text-foreground leading-relaxed"
                                         >
-                                            {tag}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="space-y-3">
-                                <span className="text-base font-bold text-primary opacity-80 uppercase tracking-wider">이 책의 목적</span>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                                    {TASTE_PURPOSES.map(purpose => (
-                                        <button
-                                            key={purpose}
-                                            onClick={() => setTastePurpose(purpose)}
-                                            className={`px-4 py-3 rounded-lg text-base transition-all border text-center shadow-sm ${tastePurpose === purpose ? 'bg-accent/10 text-accent border-accent font-bold' : 'bg-background text-muted-foreground border-border'}`}
-                                        >
-                                            {purpose}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="space-y-3">
-                                <span className="text-base font-bold text-primary opacity-80 uppercase tracking-wider">원하는 난이도</span>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {TASTE_READING_LEVELS.map(level => (
-                                        <button
-                                            key={level}
-                                            onClick={() => setTasteReadingLevel(level)}
-                                            className={`px-4 py-3 rounded-lg text-base transition-all border text-center shadow-sm ${tasteReadingLevel === level ? 'bg-accent/10 text-accent border-accent font-bold' : 'bg-background text-muted-foreground border-border'}`}
-                                        >
-                                            {level}
+                                            &ldquo;{ex}&rdquo;
                                         </button>
                                     ))}
                                 </div>
@@ -239,7 +182,7 @@ export default function RecommendPage() {
                             </button>
                             <Button
                                 onClick={handleRecommend}
-                                disabled={!tasteCustomTopic || tasteCustomTopic.length < 10}
+                                disabled={!tasteCustomTopic || tasteCustomTopic.trim().length < 10}
                                 className="bg-accent text-white hover:bg-primary px-8 py-6 rounded-lg text-lg font-bold shadow-md shadow-accent/20 hover:shadow-lg transition-all"
                             >
                                 AI 맞춤 추천 받기
@@ -256,31 +199,31 @@ export default function RecommendPage() {
                             <p className="text-muted-foreground">오늘 당신의 마음은 어떤가요?</p>
                         </div>
 
-                        <div className="space-y-6 bg-secondary p-8 rounded-xl border border-border shadow-sm">
+                        <div className="space-y-5 bg-secondary p-8 rounded-xl border border-border shadow-sm">
                             <div className="space-y-3">
                                 <label className="text-base font-bold text-primary uppercase tracking-wider flex justify-between">
-                                    <span>상황 설명 (필수)</span>
-                                    <span className="text-[#FF5678] text-sm font-bold normal-case">* 최소 10자 이상 입력해주세요</span>
+                                    <span>지금 어떤 상황인가요?</span>
+                                    <span className="text-[#FF5678]/80 text-sm font-normal normal-case">솔직하게 털어놓을수록 좋아요</span>
                                 </label>
                                 <textarea
-                                    rows={4}
-                                    placeholder="지금 겪고 있는 상황이나 고민을 구체적으로 적어주세요. (예: 요즘 번아웃이 와서 아무것도 하기 싫고 무기력해요. 위로가 필요합니다.)"
-                                    className="w-full bg-background border border-input rounded-md px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-[#FF5678] focus:ring-1 focus:ring-[#FF5678] transition-colors resize-none text-lg leading-relaxed shadow-sm"
+                                    rows={5}
+                                    placeholder="지금 겪고 있는 상황, 감정, 고민을 자유롭게 적어주세요."
+                                    className="w-full bg-background border border-input rounded-md px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-[#FF5678] focus:ring-1 focus:ring-[#FF5678] transition-colors resize-none text-base leading-relaxed shadow-sm"
                                     value={mindSituation}
                                     onChange={(e) => setMindSituation(e.target.value)}
                                 />
                             </div>
 
-                            <div className="space-y-3">
-                                <span className="text-base font-bold text-primary opacity-80 uppercase tracking-wider">감정/상태 키워드</span>
-                                <div className="flex flex-wrap gap-2">
-                                    {MIND_EMOTIONS.map(tag => (
+                            <div className="space-y-2">
+                                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">이렇게 써보세요</span>
+                                <div className="space-y-2">
+                                    {MIND_EXAMPLES.map((ex, i) => (
                                         <button
-                                            key={tag}
-                                            onClick={() => toggleMindEmotion(tag)}
-                                            className={`px-4 py-2 rounded-full text-base transition-all border shadow-sm ${mindEmotions.includes(tag) ? 'bg-[#FF5678] text-white border-[#FF5678] font-bold' : 'bg-background text-muted-foreground border-border'}`}
+                                            key={i}
+                                            onClick={() => setMindSituation(ex)}
+                                            className="w-full text-left px-4 py-3 rounded-lg bg-background border border-border hover:border-[#FF5678] hover:bg-[#FF5678]/5 transition-all text-sm text-muted-foreground hover:text-foreground leading-relaxed"
                                         >
-                                            {tag}
+                                            &ldquo;{ex}&rdquo;
                                         </button>
                                     ))}
                                 </div>
@@ -293,7 +236,7 @@ export default function RecommendPage() {
                             </button>
                             <Button
                                 onClick={handleRecommend}
-                                disabled={!mindSituation || mindSituation.length < 10}
+                                disabled={!mindSituation || mindSituation.trim().length < 10}
                                 className="bg-[#FF5678] text-white hover:opacity-90 px-8 py-6 rounded-lg text-lg font-bold shadow-md shadow-[#FF5678]/20 hover:shadow-lg transition-all"
                             >
                                 공감 처방 받기

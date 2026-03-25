@@ -8,15 +8,8 @@ export type RecommendMode = 'TASTE' | 'MIND';
 
 export interface RecommendationRequest {
     mode: RecommendMode;
-    topics?: string[];
-    style?: string;
-    customQuery?: string;
-    purpose?: string;
-    readingLevel?: string;
-    emotion?: string[];
-    situation?: string;
-    wantTo?: string;
-    readingMood?: string;
+    customQuery?: string;  // TASTE mode
+    situation?: string;    // MIND mode
 }
 
 export interface RecommendedBookBase {
@@ -34,6 +27,8 @@ const COMMON_CONSTRAINTS = `
 3. 반드시 실제 ISBN이 존재하는 도서만 추천하십시오. 제목을 절대 지어내지 마십시오.
 4. 동일 저자의 책은 1권만 추천하십시오.
 5. 베스트셀러 편중을 피하고, 진짜 이 상황에 맞는 책을 큐레이션하십시오.
+6. title 필드는 알라딘에서 검색 가능한 정확한 한국어 제목으로 작성하십시오. 번역서는 반드시 한국어 번역 제목을 사용하십시오.
+7. 너무 생소하거나 절판된 책보다는 현재 유통 중인 책을 우선적으로 추천하십시오.
 `;
 
 export async function getRecommendations(request: RecommendationRequest): Promise<RecommendedBookBase[]> {
@@ -43,18 +38,54 @@ export async function getRecommendations(request: RecommendationRequest): Promis
     if (request.mode === 'TASTE') {
         prompt = `
 [Role]
-당신은 "Premium High-End Book Curator"입니다.
-...
+당신은 "Premium High-End Book Curator"입니다. 사용자의 독서 취향과 요청을 깊이 이해하고, 진짜 그 사람에게 맞는 책을 큐레이션하는 전문가입니다.
+
+[User Request]
+${request.customQuery}
+
+[Task]
+위 요청을 분석하여 가장 적합한 책 10권을 추천하십시오.
+요청의 맥락(주제, 목적, 난이도, 분위기 등)을 최대한 반영하십시오.
+
 ${COMMON_CONSTRAINTS}
-...
+
+[Output Format]
+반드시 아래 JSON 배열 형식으로만 응답하십시오. 다른 텍스트는 포함하지 마십시오.
+[
+  {
+    "title": "알라딘에서 검색 가능한 정확한 한국어 책 제목",
+    "author": "저자명",
+    "reason": "이 책을 추천하는 이유 (사용자 요청과의 연관성 중심, 2-3문장)",
+    "coreMessage": "이 책의 핵심 메시지 한 문장",
+    "userConnectionPoint": "이 책이 독자에게 주는 가치 (10자 이내 키워드)"
+  }
+]
 `;
     } else {
         prompt = `
 [Role]
-당신은 "Soul Therapist & Book Curator"입니다.
-...
+당신은 "Soul Therapist & Book Curator"입니다. 사용자의 감정과 상황을 깊이 공감하고, 지금 이 순간 그 사람에게 진심으로 필요한 책을 찾아주는 따뜻한 큐레이터입니다.
+
+[User Situation]
+${request.situation}
+
+[Task]
+위 상황에 처한 사람에게 가장 도움이 될 책 10권을 추천하십시오.
+처방이 아닌 동행의 관점으로, 이 상황과 감정에 공명할 수 있는 책을 선택하십시오.
+
 ${COMMON_CONSTRAINTS}
-...
+
+[Output Format]
+반드시 아래 JSON 배열 형식으로만 응답하십시오. 다른 텍스트는 포함하지 마십시오.
+[
+  {
+    "title": "알라딘에서 검색 가능한 정확한 한국어 책 제목",
+    "author": "저자명",
+    "reason": "이 책을 추천하는 이유 (사용자 상황과의 공명 중심, 2-3문장)",
+    "coreMessage": "이 책의 핵심 메시지 한 문장",
+    "userConnectionPoint": "이 책이 독자에게 주는 위로/가치 (10자 이내 키워드)"
+  }
+]
 `;
     }
 
