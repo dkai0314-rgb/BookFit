@@ -311,16 +311,14 @@ export default function RecommendPage() {
                                                 </p>
                                             </div>
 
-                                            {book.coupangLink && (
-                                                <a 
-                                                    href={book.coupangLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-md font-bold text-sm transition-all ${mode === 'TASTE' ? 'bg-accent text-white hover:bg-accent/80' : 'bg-[#FF5678] text-white hover:bg-[#FF5678]/80'}`}
-                                                >
-                                                    쿠팡에서 보기
-                                                </a>
-                                            )}
+                                            <a
+                                                href={book.coupangLink || `https://www.coupang.com/np/search?q=${encodeURIComponent(book.displayTitle || book.title)}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-md font-bold text-sm transition-all ${mode === 'TASTE' ? 'bg-accent text-white hover:bg-accent/80' : 'bg-[#FF5678] text-white hover:bg-[#FF5678]/80'}`}
+                                            >
+                                                쿠팡에서 검색하기
+                                            </a>
                                         </div>
                                     </article>
                                 ))}

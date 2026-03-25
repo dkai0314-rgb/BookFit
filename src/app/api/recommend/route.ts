@@ -26,8 +26,9 @@ export async function POST(request: Request) {
                 return null;
             }
 
-            // 3. Get Coupang Link (Parallel) - Search by title + author for accuracy
-            const coupangLink = await getCoupangLink(`${rec.title} ${rec.author}`);
+            // 3. Get Coupang Link - fallback to search URL if API fails
+            const coupangSearchFallback = `https://www.coupang.com/np/search?q=${encodeURIComponent(rec.title)}`;
+            const coupangLink = await getCoupangLink(`${rec.title} ${rec.author}`) || coupangSearchFallback;
 
             return {
                 ...rec,
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
                 category: aladinData.categoryName || "General",
                 displayTitle: aladinData.title || rec.title,
                 displayAuthor: aladinData.author || rec.author,
-                coupangLink: coupangLink || null
+                coupangLink
             };
         });
 
