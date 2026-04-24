@@ -136,32 +136,32 @@
     },
     {
       "id": "choice-18",
-      "title": "포지셔닝",
-      "author": "알 리스 / 잭 트라우트",
+      "title": "포지셔닝 (40주년 기념 스페셜 에디션) - 인류 불변의 마케팅 클래식",
+      "author": "잭 트라우트, 알 리스 (지은이), 안진환 (옮긴이)",
       "category": "마케팅",
       "recommendation": "마케팅은 제품보다 고객의 머릿속 자리를 선점하는 싸움이라는 고전입니다. 차별점은 “우리가 뭐가 더 좋다”가 아니라 어떤 단어로 기억되느냐에 달려 있어요.",
       "coupangLink": "https://link.coupang.com/a/dO0baJ",
-      "imageUrl": null,
+      "imageUrl": "https://image.aladin.co.kr/product/26785/89/coversum/8932474400_1.jpg",
       "viewerUrl": null
     },
     {
       "id": "choice-19",
-      "title": "비범한 평범",
-      "author": "조수용",
+      "title": "비범한 평범 - 매거진《B》 조수용의 브랜드 이야기",
+      "author": "조수용 (지은이)",
       "category": "마케팅",
       "recommendation": "특별함은 멀리 있지 않고, 평범함을 비범하게 다듬는 디테일에서 나온다고 말합니다. 브랜드는 메시지보다 경험의 일관성으로 쌓인다는 관점이 인상적이에요.",
       "coupangLink": "https://link.coupang.com/a/d2VShH",
-      "imageUrl": null,
+      "imageUrl": "https://image.aladin.co.kr/product/37880/73/coversum/k782033904_1.jpg",
       "viewerUrl": null
     },
     {
       "id": "choice-20",
-      "title": "무기가 되는 스토리",
-      "author": "도널드 밀러",
+      "title": "무기가 되는 스토리 - 브랜드 전쟁에서 살아남는 7가지 문장 공식",
+      "author": "도널드 밀러 (지은이), 이지연 (옮긴이)",
       "category": "마케팅",
       "recommendation": "고객을 주인공으로 두고, 브랜드는 조력자가 되어야 한다는 스토리 설계법입니다. 복잡한 설명 대신 명확한 갈등-해결-행동 구조로 메시지를 정리하게 해줘요.",
       "coupangLink": "https://link.coupang.com/a/dO0cn9",
-      "imageUrl": null,
+      "imageUrl": "https://image.aladin.co.kr/product/16901/95/coversum/k022534274_1.jpg",
       "viewerUrl": null
     },
     {
@@ -255,5 +255,5 @@
       "viewerUrl": null
     }
   ],
-  "updatedAt": "2026-04-23T23:58:29.281Z"
+  "updatedAt": "2026-04-24T03:41:35.404Z"
 }
