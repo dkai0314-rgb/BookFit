@@ -6,22 +6,22 @@
   "books": [
     {
       "id": "choice-5",
-      "title": "아주 작은 습관의 힘",
-      "author": "제임스 클리어",
+      "title": "아주 작은 습관의 힘 (50만 부 기념 스페셜 에디션) - 최고의 변화는 어떻게 만들어지는가",
+      "author": "제임스 클리어 (지은이), 이한이 (옮긴이)",
       "category": "자기계발",
       "recommendation": "거창한 결심보다 작은 행동의 반복이 인생을 바꾼다는 실전 습관서입니다. 시스템(환경·규칙)을 설계해 좋은 습관은 쉽게, 나쁜 습관은 어렵게 만드는 방법을 제시해요.",
       "coupangLink": "https://link.coupang.com/a/dOYPb6",
-      "imageUrl": null,
+      "imageUrl": "https://image.aladin.co.kr/product/37944/74/coversum/k672033454_3.jpg",
       "viewerUrl": null
     },
     {
       "id": "choice-6",
-      "title": "딥 워크",
-      "author": "칼 뉴포트",
+      "title": "딥 워크 - 강렬한 몰입, 최고의 성과",
+      "author": "칼 뉴포트 (지은이), 김태훈 (옮긴이)",
       "category": "자기계발",
       "recommendation": "산만함의 시대에 경쟁력을 만드는 건 깊은 집중(딥 워크)이라고 말합니다. 집중을 방해하는 습관을 걷어내고, 의식적으로 몰입 시간을 확보하는 훈련법이 핵심이에요.",
       "coupangLink": "https://link.coupang.com/a/dOYQpK",
-      "imageUrl": null,
+      "imageUrl": "https://image.aladin.co.kr/product/10672/44/coversum/8937434083_2.jpg",
       "viewerUrl": null
     },
     {
@@ -255,5 +255,5 @@
       "viewerUrl": null
     }
   ],
-  "updatedAt": "2026-04-27T03:50:46.419Z"
+  "updatedAt": "2026-04-27T06:35:50.325Z"
 }
