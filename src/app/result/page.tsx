@@ -6,7 +6,7 @@ import { useSurveyStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { ArrowLeft, ShoppingCart, RefreshCw, BookOpen, ExternalLink, Box, Pill, Bot, Lightbulb } from "lucide-react";
+import { ArrowLeft, ShoppingCart, RefreshCw, BookOpen, Pill, Bot } from "lucide-react";
 
 export default function ResultPage() {
     const router = useRouter();
@@ -25,7 +25,7 @@ export default function ResultPage() {
 
     const handleRetest = () => {
         reset();
-        router.push("/survey");
+        router.push("/recommend");
     };
 
     return (
@@ -118,19 +118,25 @@ export default function ResultPage() {
 
                                     {/* Actions */}
                                     <div className="pt-2 flex flex-col gap-2">
-
                                         <Button
                                             className="w-full bg-accent hover:bg-accent/90 text-white shadow-md font-bold"
                                             onClick={() => {
-                                                if (book.isbn) {
-                                                    window.open(`https://www.coupang.com/np/search?q=${book.isbn}`, '_blank');
-                                                } else {
-                                                    window.open(`https://www.coupang.com/np/search?q=${encodeURIComponent(book.title + " " + book.authors[0])}`, '_blank');
-                                                }
+                                                const q = book.isbn || `${book.title} ${book.authors?.[0] ?? ""}`;
+                                                window.open(`https://www.coupang.com/np/search?q=${encodeURIComponent(q)}`, '_blank');
                                             }}
                                         >
                                             <ShoppingCart className="w-4 h-4 mr-2" />
-                                            쿠팡 로켓배송 확인
+                                            구매처 보기
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full text-sm"
+                                            onClick={() => {
+                                                const q = book.isbn || `${book.title} ${book.authors?.[0] ?? ""}`;
+                                                window.open(`https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&KeyWord=${encodeURIComponent(q)}`, '_blank');
+                                            }}
+                                        >
+                                            알라딘에서 찾기
                                         </Button>
                                     </div>
                                 </div>
@@ -139,15 +145,9 @@ export default function ResultPage() {
                     ))}
                 </div>
 
-                <div className="w-full flex flex-col items-center bg-secondary/5 p-6 rounded-2xl border border-secondary/10 shadow-sm mt-8 mb-8">
-                    <p className="text-foreground/80 mb-4 font-medium text-center text-lg flex items-center gap-2">
-                        <Lightbulb className="w-5 h-5 text-yellow-500" /> 추천받은 책, 쿠팡에서 바로 찾아보세요!
-                    </p>
-                    <div className="w-full overflow-hidden rounded-lg bg-white/80 p-1">
-                        <iframe src="https://coupa.ng/clGXS1" width="100%" height="44" frameBorder="0" scrolling="no" referrerPolicy="unsafe-url"></iframe>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-4 text-center">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
-                </div>
+                <p className="text-xs text-muted-foreground text-center mt-2">
+                    구매처 링크는 정보 제공용입니다. 쿠팡 파트너스 활동의 일환으로 일정액의 수수료를 제공받을 수 있습니다.
+                </p>
 
                 {/* Footer Actions */}
                 <motion.div

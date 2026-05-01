@@ -311,14 +311,24 @@ export default function RecommendPage() {
                                                 </p>
                                             </div>
 
-                                            <a
-                                                href={book.coupangLink || `https://www.coupang.com/np/search?q=${encodeURIComponent(book.displayTitle || book.title)}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-md font-bold text-sm transition-all ${mode === 'TASTE' ? 'bg-accent text-white hover:bg-accent/80' : 'bg-[#FF5678] text-white hover:bg-[#FF5678]/80'}`}
-                                            >
-                                                쿠팡에서 검색하기
-                                            </a>
+                                            <div className="flex flex-wrap gap-2">
+                                                <a
+                                                    href={book.coupangLink || `https://www.coupang.com/np/search?q=${encodeURIComponent(book.displayTitle || book.title)}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-md font-bold text-sm transition-all ${mode === 'TASTE' ? 'bg-accent text-white hover:bg-accent/80' : 'bg-[#FF5678] text-white hover:bg-[#FF5678]/80'}`}
+                                                >
+                                                    구매처 보기
+                                                </a>
+                                                <a
+                                                    href={book.link || `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&KeyWord=${encodeURIComponent(book.displayTitle || book.title)}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-md font-medium text-sm border border-border text-foreground hover:bg-secondary transition-all"
+                                                >
+                                                    알라딘에서 찾기
+                                                </a>
+                                            </div>
                                         </div>
                                     </article>
                                 ))}

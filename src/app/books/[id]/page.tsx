@@ -1,9 +1,20 @@
 
 import { prisma } from '@/lib/db';
-import { Button } from "@/components/ui/button";
-import { Info, BookOpen } from "lucide-react";
+import { Info, BookOpen, ShoppingBag } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
+
+type Vendor = { name: string; href: string; primary?: boolean };
+
+function buildVendorLinks(book: { title: string; author: string; purchaseLink: string | null }): Vendor[] {
+    const q = encodeURIComponent(`${book.title} ${book.author}`);
+    return [
+        { name: '쿠팡', href: `https://www.coupang.com/np/search?q=${q}`, primary: true },
+        { name: '알라딘', href: book.purchaseLink || `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&KeyWord=${q}` },
+        { name: '예스24', href: `https://www.yes24.com/Product/Search?domain=BOOK&query=${q}` },
+        { name: '교보문고', href: `https://search.kyobobook.co.kr/search?keyword=${q}&gbCode=TOT&target=total` },
+    ];
+}
 
 async function getBook(id: string) {
     const book = await prisma.book.findUnique({
@@ -19,6 +30,8 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
     if (!book) {
         return <div className="text-center py-20 text-foreground">Book not found</div>;
     }
+
+    const vendors = buildVendorLinks(book);
 
     return (
         <div className="min-h-screen bg-background flex flex-col items-center">
@@ -47,12 +60,6 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                         )}
                     </div>
 
-                    <div className="w-full bg-secondary border border-border rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground text-center leading-relaxed flex items-center justify-center gap-1.5">
-                            <Info className="w-3 h-3 shrink-0" /> 이 게시물은 쿠팡 파트너스 활동의 일환으로,<br />
-                            이에 따른 일정액의 수수료를 제공받습니다.
-                        </p>
-                    </div>
                 </div>
 
                 {/* Right: Content */}
@@ -87,12 +94,31 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                         </div>
                     </div>
 
-                    <div className="pt-6">
-                        <a href={book.purchaseLink || "#"} target="_blank" rel="noopener noreferrer" className="w-full block">
-                            <Button size="lg" className="w-full rounded-md bg-accent text-primary-foreground hover:bg-accent/90 font-bold text-lg py-6 transition-all shadow-lg hover:shadow-accent/40">
-                                구매하기 (최저가 확인)
-                            </Button>
-                        </a>
+                    <div className="pt-6 space-y-3">
+                        <h3 className="text-lg font-bold text-primary flex items-center gap-2">
+                            <ShoppingBag className="w-5 h-5" /> 이 책을 구할 수 있는 곳
+                        </h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                            {vendors.map((vendor) => (
+                                <a
+                                    key={vendor.name}
+                                    href={vendor.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`text-center px-4 py-3 rounded-md border font-semibold text-sm transition-all ${
+                                        vendor.primary
+                                            ? 'bg-accent text-primary-foreground border-accent hover:bg-accent/90'
+                                            : 'bg-background border-border text-foreground hover:bg-secondary'
+                                    }`}
+                                >
+                                    {vendor.name}
+                                </a>
+                            ))}
+                        </div>
+                        <p className="text-xs text-muted-foreground flex items-start gap-1.5 leading-relaxed">
+                            <Info className="w-3 h-3 shrink-0 mt-0.5" />
+                            구매처 링크는 정보 제공용입니다. 쿠팡 파트너스 활동의 일환으로 일정액의 수수료를 제공받을 수 있습니다.
+                        </p>
                     </div>
                 </div>
             </main>

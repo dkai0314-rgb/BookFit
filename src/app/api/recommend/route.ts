@@ -1,6 +1,6 @@
 
 import { NextResponse } from 'next/server';
-import { getRecommendations, RecommendationRequest } from '@/lib/gemini';
+import { getRecommendations, RecommendationRequest } from '@/lib/anthropic';
 import { searchBookInAladin } from '@/lib/aladin';
 import { getCoupangLink } from '@/lib/coupang';
 

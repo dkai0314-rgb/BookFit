@@ -11,8 +11,8 @@
     "generate-curation": "tsx --env-file=.env.local scripts/update-bookfit-choice.ts"
   },
   "dependencies": {
-    "@ai-sdk/google": "^3.0.29",
-    "@google/generative-ai": "^0.24.1",
+    "@ai-sdk/anthropic": "^2.0.0",
+    "@anthropic-ai/sdk": "^0.40.0",
     "@prisma/client": "^5.22.0",
     "@radix-ui/react-label": "^2.1.8",
     "@resvg/resvg-js": "^2.6.2",
@@ -33,7 +33,6 @@
     "next": "16.1.6",
     "next-share": "^0.27.0",
     "node-fetch": "^3.3.2",
-    "openai": "^6.24.0",
     "prisma": "^5.22.0",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",

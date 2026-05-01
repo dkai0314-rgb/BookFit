@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { generateBookFitLetter } from '@/lib/gemini';
+import { generateBookFitLetter } from '@/lib/anthropic';
 
 export async function POST(request: Request) {
     try {

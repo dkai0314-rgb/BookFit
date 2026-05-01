@@ -1,21 +1,9 @@
-
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { google } from '@ai-sdk/google';
+import { anthropic } from '@ai-sdk/anthropic';
 import { generateObject } from 'ai';
-import { z } from 'zod';
 import { searchBookInAladin } from '@/lib/aladin';
-
-// Schema for Gemini Output
-const curationSchema = z.object({
-    title: z.string().describe("A catchy, emotional title for the book collection"),
-    description: z.string().describe("A warm, empathetic introduction to the collection (approx. 2-3 sentences)"),
-    books: z.array(z.object({
-        title: z.string(),
-        reason: z.string().describe("Why this book fits the theme (1 sentence)"),
-    })).length(3),
-    instaCaption: z.string().describe("An engaging Instagram caption with emojis and hashtags"),
-});
+import { buildCurationPrompt, curationSchema } from '@/lib/prompts/curation';
 
 export async function POST(request: Request) {
     try {
@@ -25,30 +13,16 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Theme is required' }, { status: 400 });
         }
 
-        // 1. Generate Content with Gemini
+        // 1. Generate Content with Claude
         const { object: curationData } = await generateObject({
-            model: google('gemini-2.0-flash'),
+            model: anthropic('claude-haiku-4-5'),
             schema: curationSchema,
-            prompt: `
-        You are an expert book curator for "BookFit", an AI book prescription service.
-        Create a curated collection of 3 books for the following theme: "${theme}".
-        
-        The tone should be:
-        - Empathetic, warm, and professional.
-        - Like a close friend recommending books.
-        - Korean language only.
-
-        For the Instagram caption:
-        - Use line breaks for readability.
-        - Include hashtags like #북핏 #BookFit #책추천 #[ThemeKeywords].
-        - Use emojis relevant to the theme.
-      `,
+            prompt: buildCurationPrompt(theme),
         });
 
         // 2. Fetch Real Book Data from Aladin
         const finalizedBooks = [];
 
-        // Process books sequentially to avoid race conditions in DB creation if parallels
         for (const item of curationData.books) {
             const bestMatch = await searchBookInAladin(item.title);
 
@@ -56,7 +30,6 @@ export async function POST(request: Request) {
                 continue;
             }
 
-            // Check existence by title (semantically unique for our purpose)
             let book = await prisma.book.findFirst({
                 where: { title: bestMatch.title }
             });
@@ -65,7 +38,7 @@ export async function POST(request: Request) {
                 book = await prisma.book.create({
                     data: {
                         title: bestMatch.title,
-                        author: bestMatch.author, // Aladin author is already cleaned in lib
+                        author: bestMatch.author,
                         category: bestMatch.categoryName || 'General',
                         description: bestMatch.description || '',
                         imageUrl: bestMatch.cover,
@@ -93,7 +66,6 @@ export async function POST(request: Request) {
             }
         });
 
-        // 4. Return Result (Frontend will generate image using Satori endpoint)
         return NextResponse.json(curation);
 
     } catch (error) {
