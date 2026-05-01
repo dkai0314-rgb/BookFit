@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, Brain, ArrowRight, Loader2, ChevronLeft } from "lucide-react";
 import Image from 'next/image';
 import Link from 'next/link';
+import { trackEvent } from '@/lib/analytics';
 
 type Mode = 'SELECT' | 'TASTE' | 'MIND';
 
@@ -62,8 +63,12 @@ export default function RecommendPage() {
                 body: JSON.stringify(payload)
             });
             const data = await res.json();
-            setResult(Array.isArray(data) ? data : []);
+            const list = Array.isArray(data) ? data : [];
+            setResult(list);
             setHasSearched(true);
+            if (mode !== 'SELECT') {
+                trackEvent({ name: 'recommend_complete', mode, resultCount: list.length });
+            }
         } catch (e) {
             console.error(e);
             alert("추천 중 문제가 발생했습니다.");

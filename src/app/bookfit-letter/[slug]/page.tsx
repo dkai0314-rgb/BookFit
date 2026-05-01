@@ -7,25 +7,42 @@ import Header from '@/components/Header';
 
 export const revalidate = 60;
 
+const SITE_ORIGIN = 'https://bookfit.kr';
+
 interface Props {
-    params: {
-        slug: string;
-    };
+    params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
     const letter = await prisma.letter.findUnique({ where: { slug } });
 
-    if (!letter) return {};
+    if (!letter) return { title: '레터를 찾을 수 없어요 | 북핏' };
+
+    const title = letter.metaTitle || letter.title;
+    const description =
+        letter.metaDescription || letter.headlineTitle || letter.title;
+    const ogImage = letter.ogImageUrl || letter.coverImageUrl || undefined;
 
     return {
-        title: letter.metaTitle || letter.title,
-        description: letter.metaDescription || letter.headlineTitle || letter.title,
+        title,
+        description,
+        alternates: { canonical: `${SITE_ORIGIN}/bookfit-letter/${letter.slug}` },
         openGraph: {
-            title: letter.metaTitle || letter.title,
-            description: letter.metaDescription || letter.headlineTitle || letter.title,
-            images: letter.ogImageUrl || letter.coverImageUrl ? [letter.ogImageUrl || letter.coverImageUrl!] : [],
+            type: 'article',
+            title,
+            description,
+            url: `${SITE_ORIGIN}/bookfit-letter/${letter.slug}`,
+            siteName: 'BookFit',
+            images: ogImage ? [{ url: ogImage }] : undefined,
+            publishedTime: letter.publishedAt?.toISOString(),
+            modifiedTime: letter.updatedAt.toISOString(),
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: ogImage ? [ogImage] : undefined,
         },
     };
 }
@@ -45,8 +62,32 @@ export default async function BookFitLetterDetailPage({ params }: Props) {
     let displayContent = letter.contentMarkdown;
     displayContent = displayContent.replace(/<!--META_INFO_START-->[\s\S]*?<!--META_INFO_END-->/g, '');
 
+    const articleJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: letter.headlineTitle || letter.title,
+        description: letter.metaDescription || undefined,
+        image: letter.ogImageUrl || letter.coverImageUrl || undefined,
+        datePublished: letter.publishedAt?.toISOString() || letter.createdAt.toISOString(),
+        dateModified: letter.updatedAt.toISOString(),
+        author: { '@type': 'Organization', name: 'BookFit' },
+        publisher: {
+            '@type': 'Organization',
+            name: 'BookFit',
+            logo: { '@type': 'ImageObject', url: `${SITE_ORIGIN}/logo-square.png` },
+        },
+        mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': `${SITE_ORIGIN}/bookfit-letter/${letter.slug}`,
+        },
+    };
+
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+            />
             <Header />
             <article className="max-w-3xl mx-auto p-6 md:p-10 font-sans mt-32 bg-white shadow-sm rounded-xl mb-20">
                 <header className="mb-10 text-center border-b pb-8">

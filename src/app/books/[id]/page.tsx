@@ -3,7 +3,43 @@ import { prisma } from '@/lib/db';
 import { Info, BookOpen, ShoppingBag } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import ShelfButton from '@/components/ShelfButton';
+
+const SITE_ORIGIN = 'https://bookfit.kr';
+
+type Props = { params: Promise<{ id: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { id } = await params;
+    const book = await prisma.book.findUnique({ where: { id } });
+    if (!book) return { title: '책을 찾을 수 없어요 | 북핏' };
+
+    const title = `${book.title} - ${book.author} | 북핏`;
+    const description = book.summary || book.recommendation || book.description?.slice(0, 140) || `${book.title}에 대한 북핏 큐레이션 정보`;
+    const image = book.imageUrl?.replace('coversum', 'cover500').replace(/^http:/i, 'https:') || undefined;
+
+    return {
+        title,
+        description,
+        alternates: { canonical: `${SITE_ORIGIN}/books/${book.id}` },
+        openGraph: {
+            type: 'book',
+            title,
+            description,
+            url: `${SITE_ORIGIN}/books/${book.id}`,
+            siteName: 'BookFit',
+            images: image ? [{ url: image }] : undefined,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: image ? [image] : undefined,
+        },
+    };
+}
 
 type Vendor = { name: string; href: string; primary?: boolean };
 
@@ -24,18 +60,31 @@ async function getBook(id: string) {
     return book;
 }
 
-export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function BookDetailPage({ params }: Props) {
     const { id } = await params;
     const book = await getBook(id);
 
-    if (!book) {
-        return <div className="text-center py-20 text-foreground">Book not found</div>;
-    }
+    if (!book) notFound();
 
     const vendors = buildVendorLinks(book);
 
+    const bookJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Book',
+        name: book.title,
+        author: { '@type': 'Person', name: book.author },
+        image: book.imageUrl?.replace('coversum', 'cover500').replace(/^http:/i, 'https:') || undefined,
+        description: book.summary || book.recommendation || book.description?.slice(0, 280) || undefined,
+        url: `${SITE_ORIGIN}/books/${book.id}`,
+        genre: book.category,
+    };
+
     return (
         <div className="min-h-screen bg-background flex flex-col items-center">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(bookJsonLd) }}
+            />
             {/* Detailed Page Header */}
             <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-primary/90 backdrop-blur-md border-b border-border shadow-sm">
                 <div className="max-w-6xl mx-auto w-full flex justify-between items-center">

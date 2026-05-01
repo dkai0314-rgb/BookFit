@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Bookmark, BookOpen, CheckCircle, X } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 type Status = 'want' | 'reading' | 'done';
 
@@ -72,6 +73,7 @@ export default function ShelfButton({ bookId }: { bookId: string }) {
                 return;
             }
             setStatus(next);
+            trackEvent({ name: 'shelf_add', bookId, status: next });
         } catch (e) {
             console.error(e);
             setError('네트워크 오류');
@@ -96,6 +98,7 @@ export default function ShelfButton({ bookId }: { bookId: string }) {
                 return;
             }
             setStatus(null);
+            trackEvent({ name: 'shelf_remove', bookId });
         } catch (e) {
             console.error(e);
             setError('네트워크 오류');

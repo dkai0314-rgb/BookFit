@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Sparkles, BookOpen } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 type Recommendation = { title: string; author: string; reason: string };
 
@@ -46,6 +47,12 @@ export default function PersonalRecommendWidget() {
                         setError(json?.error || '추천을 불러오지 못했어요.');
                     } else {
                         setData(json);
+                        if (json.eligible) {
+                            trackEvent({
+                                name: 'personal_recommend_view',
+                                cached: !!json.cached,
+                            });
+                        }
                     }
                 }
             } catch (e) {
