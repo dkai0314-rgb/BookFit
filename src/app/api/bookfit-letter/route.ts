@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db'; // Prisma 클라이언트 경로
+import { dispatchEmail, buildLetterEmailHtml } from '@/lib/brevo-dispatch';
 
 export async function POST(request: Request) {
     try {
@@ -100,7 +101,36 @@ export async function POST(request: Request) {
             }
         });
 
-        return NextResponse.json({ success: true, newLetter });
+        // W4-2: published 상태로 발행되면 Brevo로 자동 발송 (idempotent)
+        let dispatch: { sentCount: number; skipped: boolean; error?: string } | null = null;
+        if (status === 'PUBLISHED' || status === 'published') {
+            try {
+                const { subject, htmlBody } = buildLetterEmailHtml({
+                    slug: newLetter.slug,
+                    headlineTitle: newLetter.headlineTitle,
+                    title: newLetter.title,
+                    metaDescription: newLetter.metaDescription,
+                    contentMarkdown: newLetter.contentMarkdown,
+                    coverImageUrl: newLetter.coverImageUrl,
+                });
+                dispatch = await dispatchEmail({
+                    type: 'letter',
+                    targetId: newLetter.id,
+                    subject,
+                    htmlBody,
+                    idempotent: true,
+                });
+            } catch (e) {
+                console.error('[bookfit-letter] dispatch failed', e);
+                dispatch = {
+                    sentCount: 0,
+                    skipped: false,
+                    error: e instanceof Error ? e.message : String(e),
+                };
+            }
+        }
+
+        return NextResponse.json({ success: true, newLetter, dispatch });
     } catch (error: unknown) {
         const err = error as Error;
         console.error('[API] /api/bookfit-letter error:', err);

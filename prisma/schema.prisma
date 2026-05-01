@@ -45,6 +45,7 @@ model Book {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   curations   Curation[] // Relation to Curation
+  shelves     UserBookShelf[] // W4 — user library entries
 }
 
 model Curation {
@@ -114,4 +115,43 @@ model PageContent {
   id        String   @id // ex: "template-intro"
   content   String   // Storing HTML from WYSIWYG
   updatedAt DateTime @updatedAt
+}
+
+// W4 — User Retention models
+model UserBookShelf {
+  id        String   @id @default(uuid())
+  userId    String   // Firebase uid
+  bookId    String
+  status    String   // "want" | "reading" | "done"
+  rating    Int?     // 1~5
+  oneLiner  String?  // 한줄 리뷰 (본인 노출 only at v1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bookId])
+  @@index([userId, status])
+}
+
+model EmailDispatchLog {
+  id           String   @id @default(uuid())
+  type         String   // "letter" | "curation"
+  targetId     String   // letter.id or curation.id
+  sentCount    Int      @default(0)
+  errorMessage String?
+  sentAt       DateTime @default(now())
+
+  @@index([type, targetId])
+}
+
+model PersonalRecommendCache {
+  id          String   @id @default(uuid())
+  userId      String
+  fingerprint String   // hash of user's bookmark set
+  payload     String   // JSON serialized recommendation list
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, fingerprint])
+  @@index([userId])
 }

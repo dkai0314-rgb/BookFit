@@ -6,7 +6,9 @@ import { auth, db, isFirebaseConfigValid } from "@/lib/firebase";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import Header from '@/components/Header';
+import PersonalRecommendWidget from '@/components/PersonalRecommendWidget';
 
 export default function MyPage() {
     const [user, setUser] = useState<User | null>(null);
@@ -71,6 +73,33 @@ export default function MyPage() {
                 </div>
 
                 <div className="space-y-12">
+                    {/* W4: 내 서재 바로가기 */}
+                    <section>
+                        <h2 className="text-2xl font-semibold mb-6">내 서재</h2>
+                        <Link
+                            href="/mypage/library"
+                            className="block bg-secondary/40 border border-border rounded-xl p-6 hover:border-accent transition-colors"
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="space-y-1">
+                                    <div className="text-xs font-bold uppercase tracking-widest text-accent">
+                                        Library
+                                    </div>
+                                    <h3 className="text-lg font-bold">읽고 싶은 책 · 읽는 중 · 완독</h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        책 상세 페이지에서 담은 책들을 모아 한줄리뷰와 별점을 남길 수 있어요.
+                                    </p>
+                                </div>
+                                <span className="text-accent font-bold">→</span>
+                            </div>
+                        </Link>
+                    </section>
+
+                    {/* W4: 개인화 AI 추천 */}
+                    <section>
+                        <PersonalRecommendWidget />
+                    </section>
+
                     {/* 내 템플릿 영역 */}
                     <section>
                         <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">

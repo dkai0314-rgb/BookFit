@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { Info, BookOpen, ShoppingBag } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
+import ShelfButton from '@/components/ShelfButton';
 
 type Vendor = { name: string; href: string; primary?: boolean };
 
@@ -92,6 +93,13 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                                 {book.recommendation || book.summary}
                             </div>
                         </div>
+                    </div>
+
+                    <div className="pt-6 space-y-3">
+                        <h3 className="text-lg font-bold text-primary flex items-center gap-2">
+                            <BookOpen className="w-5 h-5" /> 내 서재에 담기
+                        </h3>
+                        <ShelfButton bookId={book.id} />
                     </div>
 
                     <div className="pt-6 space-y-3">
