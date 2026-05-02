@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { listShelfEntries } from '@/lib/firestore-models';
 import { requireAuthUser } from '@/lib/auth';
 import {
     getPersonalRecommendations,
@@ -11,11 +11,7 @@ export async function GET(request: Request) {
     if ('response' in auth) return auth.response;
     const { user } = auth;
 
-    const shelf = await prisma.userBookShelf.findMany({
-        where: { userId: user.uid },
-        include: { book: true },
-        orderBy: { updatedAt: 'desc' },
-    });
+    const shelf = await listShelfEntries(user.uid);
 
     if (shelf.length < MIN_BOOKS_FOR_PERSONAL_RECOMMEND) {
         return NextResponse.json({
@@ -26,13 +22,15 @@ export async function GET(request: Request) {
         });
     }
 
-    const books = shelf.map((s) => ({
-        bookId: s.bookId,
-        title: s.book.title,
-        author: s.book.author,
-        category: s.book.category,
-        status: s.status,
-    }));
+    const books = shelf
+        .filter((s) => !!s.book)
+        .map((s) => ({
+            bookId: s.bookId,
+            title: s.book!.title,
+            author: s.book!.author,
+            category: s.book!.category,
+            status: s.status,
+        }));
 
     const result = await getPersonalRecommendations(user.uid, books);
 

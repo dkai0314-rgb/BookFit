@@ -1,5 +1,11 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import {
+    getCuration,
+    getBooksByIds,
+    findCurationBySlug,
+    updateCuration,
+    deleteCuration,
+} from '@/lib/firestore-models';
 import { slugifyKo } from '@/lib/prompts/curation';
 
 type Params = { params: Promise<{ id: string }> };
@@ -21,8 +27,6 @@ const ALLOWED_FIELDS = [
     'theme',
 ] as const;
 
-type AllowedField = (typeof ALLOWED_FIELDS)[number];
-
 export async function PATCH(request: Request, { params }: Params) {
     try {
         const { id } = await params;
@@ -30,14 +34,12 @@ export async function PATCH(request: Request, { params }: Params) {
 
         const data: Record<string, unknown> = {};
         for (const key of ALLOWED_FIELDS) {
-            if (key in body) data[key as AllowedField] = body[key];
+            if (key in body) data[key] = body[key];
         }
 
         if (typeof data.slug === 'string') {
             const slug = slugifyKo(data.slug as string) || (data.slug as string);
-            const conflict = await prisma.curation.findFirst({
-                where: { slug, NOT: { id } },
-            });
+            const conflict = await findCurationBySlug(slug, id);
             if (conflict) {
                 return NextResponse.json(
                     { error: '이미 사용중인 slug입니다.' },
@@ -48,10 +50,7 @@ export async function PATCH(request: Request, { params }: Params) {
         }
 
         if (data.status === 'published') {
-            const current = await prisma.curation.findUnique({
-                where: { id },
-                select: { publishedAt: true, slug: true },
-            });
+            const current = await getCuration(id);
             if (!current?.slug && !data.slug) {
                 return NextResponse.json(
                     { error: 'published 전환 전에 slug를 먼저 지정하세요.' },
@@ -68,13 +67,12 @@ export async function PATCH(request: Request, { params }: Params) {
             data.isPublished = false;
         }
 
-        const updated = await prisma.curation.update({
-            where: { id },
-            data,
-            include: { books: true },
-        });
-
-        return NextResponse.json({ success: true, curation: updated });
+        const updated = await updateCuration(id, data);
+        if (!updated) {
+            return NextResponse.json({ error: 'Not found' }, { status: 404 });
+        }
+        const books = await getBooksByIds(updated.bookIds);
+        return NextResponse.json({ success: true, curation: { ...updated, books } });
     } catch (error) {
         console.error('PATCH /api/curation/[id] failed:', error);
         return NextResponse.json(
@@ -87,7 +85,7 @@ export async function PATCH(request: Request, { params }: Params) {
 export async function DELETE(_request: Request, { params }: Params) {
     try {
         const { id } = await params;
-        await prisma.curation.delete({ where: { id } });
+        await deleteCuration(id);
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error('DELETE /api/curation/[id] failed:', error);
@@ -101,14 +99,12 @@ export async function DELETE(_request: Request, { params }: Params) {
 export async function GET(_request: Request, { params }: Params) {
     try {
         const { id } = await params;
-        const curation = await prisma.curation.findUnique({
-            where: { id },
-            include: { books: true },
-        });
+        const curation = await getCuration(id);
         if (!curation) {
             return NextResponse.json({ error: 'Not found' }, { status: 404 });
         }
-        return NextResponse.json({ success: true, curation });
+        const books = await getBooksByIds(curation.bookIds);
+        return NextResponse.json({ success: true, curation: { ...curation, books } });
     } catch (error) {
         console.error('GET /api/curation/[id] failed:', error);
         return NextResponse.json(

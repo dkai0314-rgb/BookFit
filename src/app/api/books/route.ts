@@ -1,6 +1,6 @@
-
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { listIsChoiceBooks, createBook } from '@/lib/firestore-models';
+import { tryDb } from '@/lib/db';
 
 // GET /api/books?choice=true
 export async function GET(request: Request) {
@@ -8,25 +8,22 @@ export async function GET(request: Request) {
     const isChoice = searchParams.get('choice') === 'true';
 
     try {
-        const books = await prisma.book.findMany({
-            where: isChoice ? { isChoice: true } : {},
-            orderBy: { createdAt: 'desc' }
-        });
+        if (isChoice) {
+            const books = await listIsChoiceBooks(200);
+            return NextResponse.json(books);
+        }
+        const db = tryDb();
+        if (!db) return NextResponse.json([], { status: 200 });
+        const snap = await db.collection('books').orderBy('createdAt', 'desc').limit(200).get();
+        const books = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
         return NextResponse.json(books);
-    } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-        console.error("Database Error:", error);
-        return NextResponse.json({
-            error: 'Failed to fetch books',
-            details: error.message,
-            stack: error.stack,
-            cwd: process.cwd(),
-            envUrl: process.env.DATABASE_URL,
-            files: {
-                rootDbExists: require('fs').existsSync(require('path').join(process.cwd(), 'dev.db')),
-                prismaDbExists: require('fs').existsSync(require('path').join(process.cwd(), 'prisma/dev.db')),
-                rootDirFiles: require('fs').readdirSync(process.cwd()),
-            }
-        }, { status: 500 });
+    } catch (error) {
+        const err = error as Error;
+        console.error('books query error:', err);
+        return NextResponse.json(
+            { error: 'Failed to fetch books', details: err.message },
+            { status: 500 },
+        );
     }
 }
 
@@ -34,20 +31,18 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const book = await prisma.book.create({
-            data: {
-                title: body.title,
-                author: body.author,
-                category: body.category,
-                description: body.description,
-                summary: body.summary,
-                imageUrl: body.imageUrl,
-                purchaseLink: body.purchaseLink,
-                isChoice: body.isChoice || false
-            }
+        const book = await createBook({
+            title: body.title,
+            author: body.author,
+            category: body.category,
+            description: body.description,
+            imageUrl: body.imageUrl ?? null,
+            purchaseLink: body.purchaseLink ?? null,
+            recommendation: body.recommendation ?? null,
         });
         return NextResponse.json(book);
-    } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+        console.error('book create error', error);
         return NextResponse.json({ error: 'Failed to create book' }, { status: 500 });
     }
 }

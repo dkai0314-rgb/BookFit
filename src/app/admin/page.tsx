@@ -1,5 +1,13 @@
 import Link from 'next/link';
-import { prisma } from '@/lib/db';
+import {
+    countLetters,
+    countCurations,
+    listCurations,
+    countShelfTotal,
+    countShelfSince,
+    listRecentDispatchLogs,
+    sumDispatchSentCount,
+} from '@/lib/firestore-models';
 import { Mail, Sparkles, Bookmark, Send, BarChart3 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -40,82 +48,31 @@ export default async function AdminDashboardPage() {
         totalShelf,
         weekShelf,
         recentDispatch,
-        totalDispatchSent,
+        dispatchTotal,
     ] = await Promise.all([
-        safeQuery(() => prisma.letter.count(), 0),
-        safeQuery(() => prisma.letter.count({ where: { status: 'PUBLISHED' } }), 0),
+        safeQuery(() => countLetters(), 0),
+        safeQuery(() => countLetters({ status: 'PUBLISHED' }), 0),
+        safeQuery(() => countLetters({ status: 'PUBLISHED', sinceDate: since7d }), 0),
+        safeQuery(() => countCurations(), 0),
+        safeQuery(() => countCurations({ status: 'published' }), 0),
+        safeQuery(() => countCurations({ status: 'published', sinceDate: sinceMonth }), 0),
         safeQuery(
             () =>
-                prisma.letter.count({
-                    where: { status: 'PUBLISHED', publishedAt: { gte: since7d } },
+                listCurations({
+                    status: 'published',
+                    limit: 5,
+                    orderBy: [
+                        { field: 'viewCount', dir: 'desc' },
+                        { field: 'publishedAt', dir: 'desc' },
+                    ],
                 }),
-            0,
+            [] as Awaited<ReturnType<typeof listCurations>>,
         ),
-        safeQuery(() => prisma.curation.count(), 0),
-        safeQuery(() => prisma.curation.count({ where: { status: 'published' } }), 0),
-        safeQuery(
-            () =>
-                prisma.curation.count({
-                    where: { status: 'published', publishedAt: { gte: sinceMonth } },
-                }),
-            0,
-        ),
-        safeQuery(
-            () =>
-                prisma.curation.findMany({
-                    where: { status: 'published' },
-                    orderBy: [{ viewCount: 'desc' }, { publishedAt: 'desc' }],
-                    take: 5,
-                    select: {
-                        id: true,
-                        title: true,
-                        slug: true,
-                        viewCount: true,
-                        publishedAt: true,
-                        category: true,
-                    },
-                }),
-            [] as {
-                id: string;
-                title: string;
-                slug: string | null;
-                viewCount: number;
-                publishedAt: Date | null;
-                category: string | null;
-            }[],
-        ),
-        safeQuery(() => prisma.userBookShelf.count(), 0),
-        safeQuery(() => prisma.userBookShelf.count({ where: { createdAt: { gte: since7d } } }), 0),
-        safeQuery(
-            () =>
-                prisma.emailDispatchLog.findMany({
-                    orderBy: { sentAt: 'desc' },
-                    take: 5,
-                    select: {
-                        id: true,
-                        type: true,
-                        targetId: true,
-                        sentCount: true,
-                        errorMessage: true,
-                        sentAt: true,
-                    },
-                }),
-            [] as {
-                id: string;
-                type: string;
-                targetId: string;
-                sentCount: number;
-                errorMessage: string | null;
-                sentAt: Date;
-            }[],
-        ),
-        safeQuery(
-            () => prisma.emailDispatchLog.aggregate({ _sum: { sentCount: true } }),
-            { _sum: { sentCount: 0 } },
-        ),
+        safeQuery(() => countShelfTotal(), 0),
+        safeQuery(() => countShelfSince(since7d), 0),
+        safeQuery(() => listRecentDispatchLogs(5), [] as Awaited<ReturnType<typeof listRecentDispatchLogs>>),
+        safeQuery(() => sumDispatchSentCount(), 0),
     ]);
-
-    const dispatchTotal = totalDispatchSent._sum.sentCount ?? 0;
 
     return (
         <div className="p-8 max-w-6xl mx-auto space-y-8 font-sans text-gray-900">

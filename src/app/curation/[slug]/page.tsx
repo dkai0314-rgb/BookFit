@@ -1,19 +1,24 @@
-import { prisma } from '@/lib/db';
+import { getCurationBySlug, getBooksByIds, type Book, type Curation } from '@/lib/firestore-models';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ShoppingBag, Info, ArrowLeft, BookOpen } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 type Props = { params: Promise<{ slug: string }> };
 
 const SITE_ORIGIN = 'https://bookfit.kr';
 
-async function getCuration(slug: string) {
-    return prisma.curation.findUnique({
-        where: { slug },
-        include: { books: true },
-    });
+type CurationWithBooks = Curation & { books: Book[] };
+
+async function getCurationWithBooks(slug: string): Promise<CurationWithBooks | null> {
+    const c = await getCurationBySlug(slug);
+    if (!c) return null;
+    const books = await getBooksByIds(c.bookIds);
+    return { ...c, books };
 }
 
 function isVisible(curation: { status: string | null } | null): boolean {
@@ -23,7 +28,7 @@ function isVisible(curation: { status: string | null } | null): boolean {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-    const curation = await getCuration(slug);
+    const curation = await getCurationWithBooks(slug);
     if (!isVisible(curation) || !curation) return { title: '큐레이션을 찾을 수 없어요 | 북핏' };
 
     const title = curation.seoTitle || `${curation.title} | 북핏`;
@@ -64,7 +69,7 @@ function buildVendorLinks(book: { title: string; author: string }) {
 
 export default async function CurationDetailPage({ params }: Props) {
     const { slug } = await params;
-    const curation = await getCuration(slug);
+    const curation = await getCurationWithBooks(slug);
     if (!isVisible(curation) || !curation) notFound();
 
     const ogImage = curation.ogImage || curation.cardImageUrl || curation.books[0]?.imageUrl;

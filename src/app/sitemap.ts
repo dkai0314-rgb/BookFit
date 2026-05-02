@@ -1,5 +1,10 @@
 import { MetadataRoute } from 'next';
-import { prisma } from '@/lib/db';
+import {
+    listLetters,
+    listCurations,
+    listIsChoiceBooks,
+    listCurationCategories,
+} from '@/lib/firestore-models';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -29,45 +34,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
 
     const [letters, curations, popularBooks, categories] = await Promise.all([
+        safeQuery(() => listLetters({ status: 'PUBLISHED', limit: 500 }), []),
         safeQuery(
             () =>
-                prisma.letter.findMany({
-                    where: { status: 'PUBLISHED' },
-                    orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
-                    take: 500,
-                    select: { slug: true, publishedAt: true, updatedAt: true },
+                listCurations({
+                    status: 'published',
+                    requireSlug: true,
+                    limit: 500,
+                    orderBy: [
+                        { field: 'publishedAt', dir: 'desc' },
+                        { field: 'createdAt', dir: 'desc' },
+                    ],
                 }),
-            [] as { slug: string; publishedAt: Date | null; updatedAt: Date }[],
+            [],
         ),
-        safeQuery(
-            () =>
-                prisma.curation.findMany({
-                    where: { status: 'published', slug: { not: null } },
-                    orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
-                    take: 500,
-                    select: { slug: true, publishedAt: true, createdAt: true, category: true },
-                }),
-            [] as { slug: string | null; publishedAt: Date | null; createdAt: Date; category: string | null }[],
-        ),
-        safeQuery(
-            () =>
-                prisma.book.findMany({
-                    where: { isChoice: true },
-                    orderBy: { updatedAt: 'desc' },
-                    take: 200,
-                    select: { id: true, updatedAt: true },
-                }),
-            [] as { id: string; updatedAt: Date }[],
-        ),
-        safeQuery(
-            () =>
-                prisma.curation.findMany({
-                    where: { status: 'published', category: { not: null } },
-                    distinct: ['category'],
-                    select: { category: true },
-                }),
-            [] as { category: string | null }[],
-        ),
+        safeQuery(() => listIsChoiceBooks(200), []),
+        safeQuery(() => listCurationCategories(), [] as string[]),
     ]);
 
     const letterUrls: MetadataRoute.Sitemap = letters.map((l) => ({
@@ -78,9 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     const curationUrls: MetadataRoute.Sitemap = curations
-        .filter((c): c is { slug: string; publishedAt: Date | null; createdAt: Date; category: string | null } =>
-            !!c.slug,
-        )
+        .filter((c) => !!c.slug)
         .map((c) => ({
             url: `${BASE_URL}/curation/${c.slug}`,
             lastModified: c.publishedAt || c.createdAt,
@@ -88,9 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.7,
         }));
 
-    const categoryUrls: MetadataRoute.Sitemap = Array.from(
-        new Set(categories.map((c) => c.category).filter((s): s is string => !!s)),
-    ).map((category) => ({
+    const categoryUrls: MetadataRoute.Sitemap = categories.map((category) => ({
         url: `${BASE_URL}/curation/category/${encodeURIComponent(category)}`,
         lastModified: now,
         changeFrequency: 'weekly',

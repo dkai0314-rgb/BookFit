@@ -1,5 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { prisma } from './db';
+import {
+    getPersonalRecommendCache,
+    upsertPersonalRecommendCache,
+} from './firestore-models';
 import { createHash } from 'crypto';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
@@ -105,9 +108,7 @@ export async function getPersonalRecommendations(
     const fingerprint = computeFingerprint(books);
     const now = new Date();
 
-    const existing = await prisma.personalRecommendCache.findUnique({
-        where: { userId_fingerprint: { userId, fingerprint } },
-    });
+    const existing = await getPersonalRecommendCache(userId, fingerprint);
 
     if (existing && existing.expiresAt > now) {
         try {
@@ -122,11 +123,7 @@ export async function getPersonalRecommendations(
     const expiresAt = new Date(now.getTime() + CACHE_TTL_HOURS * 60 * 60 * 1000);
     const payload = JSON.stringify(recommendations);
 
-    await prisma.personalRecommendCache.upsert({
-        where: { userId_fingerprint: { userId, fingerprint } },
-        update: { payload, expiresAt },
-        create: { userId, fingerprint, payload, expiresAt },
-    });
+    await upsertPersonalRecommendCache(userId, fingerprint, payload, expiresAt);
 
     return { recommendations, cached: false, eligible: true };
 }

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db';
+import { listCurations, getBooksByIds } from '@/lib/firestore-models';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,11 +13,23 @@ const SITE_ORIGIN = 'https://bookfit.kr';
 type Props = { params: Promise<{ category: string }> };
 
 async function getCurations(category: string) {
-    return prisma.curation.findMany({
-        where: { category, status: 'published' },
-        orderBy: [{ isFeatured: 'desc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }],
-        include: { books: { take: 1 } },
+    const list = await listCurations({
+        status: 'published',
+        category,
+        requireSlug: true,
+        orderBy: [
+            { field: 'isFeatured', dir: 'desc' },
+            { field: 'publishedAt', dir: 'desc' },
+            { field: 'createdAt', dir: 'desc' },
+        ],
     });
+    const ids = Array.from(new Set(list.map((c) => c.bookIds[0]).filter((id): id is string => !!id)));
+    const books = await getBooksByIds(ids);
+    const bookMap = new Map(books.map((b) => [b.id, b]));
+    return list.map((c) => ({
+        ...c,
+        firstBook: c.bookIds[0] ? bookMap.get(c.bookIds[0]) ?? null : null,
+    }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -72,7 +84,7 @@ export default async function CurationCategoryPage({ params }: Props) {
 
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {curations.map((c) => {
-                        const cover = c.ogImage || c.cardImageUrl || c.books[0]?.imageUrl;
+                        const cover = c.ogImage || c.cardImageUrl || c.firstBook?.imageUrl;
                         const href = c.slug ? `/curation/${c.slug}` : '#';
                         return (
                             <Link

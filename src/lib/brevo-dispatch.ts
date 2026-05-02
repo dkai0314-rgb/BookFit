@@ -1,4 +1,7 @@
-import { prisma } from './db';
+import {
+    findRecentSuccessfulDispatch,
+    createDispatchLog,
+} from './firestore-models';
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
 const BREVO_BASE_URL = process.env.BREVO_BASE_URL || 'https://api.brevo.com/v3';
@@ -96,10 +99,7 @@ export async function dispatchEmail(input: DispatchInput): Promise<DispatchResul
     }
 
     if (input.idempotent) {
-        const existing = await prisma.emailDispatchLog.findFirst({
-            where: { type: input.type, targetId: input.targetId, errorMessage: null },
-            orderBy: { sentAt: 'desc' },
-        });
+        const existing = await findRecentSuccessfulDispatch(input.type, input.targetId);
         if (existing) {
             return { sentCount: existing.sentCount, skipped: true };
         }
@@ -110,25 +110,21 @@ export async function dispatchEmail(input: DispatchInput): Promise<DispatchResul
         recipients = await fetchAllContacts(BREVO_LIST_ID);
     } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
-        await prisma.emailDispatchLog.create({
-            data: {
-                type: input.type,
-                targetId: input.targetId,
-                sentCount: 0,
-                errorMessage: `list fetch failed: ${msg}`,
-            },
+        await createDispatchLog({
+            type: input.type,
+            targetId: input.targetId,
+            sentCount: 0,
+            errorMessage: `list fetch failed: ${msg}`,
         });
         return { sentCount: 0, skipped: false, error: msg };
     }
 
     if (recipients.length === 0) {
-        await prisma.emailDispatchLog.create({
-            data: {
-                type: input.type,
-                targetId: input.targetId,
-                sentCount: 0,
-                errorMessage: 'no recipients',
-            },
+        await createDispatchLog({
+            type: input.type,
+            targetId: input.targetId,
+            sentCount: 0,
+            errorMessage: 'no recipients',
         });
         return { sentCount: 0, skipped: false };
     }
@@ -148,13 +144,11 @@ export async function dispatchEmail(input: DispatchInput): Promise<DispatchResul
         }
     }
 
-    await prisma.emailDispatchLog.create({
-        data: {
-            type: input.type,
-            targetId: input.targetId,
-            sentCount,
-            errorMessage: lastError ?? null,
-        },
+    await createDispatchLog({
+        type: input.type,
+        targetId: input.targetId,
+        sentCount,
+        errorMessage: lastError ?? null,
     });
 
     return { sentCount, skipped: false, error: lastError };

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db';
+import { listCurations, getBooksByIds, type Book } from '@/lib/firestore-models';
 import { fetchCurationFromSheet } from '@/lib/google-sheets';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,16 +12,28 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 async function getPublishedCurations() {
-    return prisma.curation.findMany({
-        where: { status: 'published' },
-        orderBy: [
-            { isFeatured: 'desc' },
-            { publishedAt: 'desc' },
-            { createdAt: 'desc' },
-        ],
-        take: 24,
-        include: { books: { take: 3 } },
-    });
+    try {
+        const list = await listCurations({
+            status: 'published',
+            requireSlug: true,
+            limit: 24,
+            orderBy: [
+                { field: 'isFeatured', dir: 'desc' },
+                { field: 'publishedAt', dir: 'desc' },
+                { field: 'createdAt', dir: 'desc' },
+            ],
+        });
+        const bookIds = Array.from(new Set(list.flatMap((c) => c.bookIds.slice(0, 1))));
+        const books = await getBooksByIds(bookIds);
+        const bookMap = new Map(books.map((b) => [b.id, b]));
+        return list.map((c) => ({
+            ...c,
+            firstBook: c.bookIds[0] ? bookMap.get(c.bookIds[0]) ?? null : null,
+        }));
+    } catch (error) {
+        console.error('curation list query failed', error);
+        return [] as ((Awaited<ReturnType<typeof listCurations>>[number]) & { firstBook: Book | null })[];
+    }
 }
 
 async function getBookFitChoice() {
@@ -113,7 +125,7 @@ export default async function CurationListPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {curations.map((c) => {
                                     const cover =
-                                        c.ogImage || c.cardImageUrl || c.books[0]?.imageUrl;
+                                        c.ogImage || c.cardImageUrl || c.firstBook?.imageUrl;
                                     const href = c.slug ? `/curation/${c.slug}` : '#';
                                     return (
                                         <Link

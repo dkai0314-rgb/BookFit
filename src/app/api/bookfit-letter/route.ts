@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db'; // Prisma 클라이언트 경로
+import { upsertLetter } from '@/lib/firestore-models';
 import { dispatchEmail, buildLetterEmailHtml } from '@/lib/brevo-dispatch';
 
 export async function POST(request: Request) {
@@ -7,25 +7,19 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { title, slug, content, metadata, status = 'DRAFT' } = body;
 
-        let generatedHeadline = '';
-        let generatedMetaDesc = '';
-        let cleanContent = content; // frontmatter 제거된 내용용
-
+        let cleanContent = content as string;
         let metaTitleFM = '';
         let metaDescFM = '';
-        let slugFM = slug; // frontmatter slug가 있으면 덮어씌움
+        let slugFM = slug as string;
         let publishedAtFM = '';
         let sourceFM = metadata?.source || 'aladin';
         let itemIdFM = metadata?.sourceId || metadata?.volumeId || '';
         let isbn13FM = metadata?.isbn13 || '';
 
-        // Frontmatter 파싱 (간단 정규식 활용)
-        const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+        const frontmatterMatch = cleanContent.match(/^---\n([\s\S]*?)\n---/);
         if (frontmatterMatch) {
             const fmText = frontmatterMatch[1];
-            // 본문에서 프론트매터 블록 완전 제거
-            cleanContent = content.slice(frontmatterMatch[0].length).trim();
-
+            cleanContent = cleanContent.slice(frontmatterMatch[0].length).trim();
             const lines = fmText.split('\n');
             lines.forEach((line: string) => {
                 const idx = line.indexOf(':');
@@ -45,7 +39,7 @@ export async function POST(request: Request) {
             });
         }
 
-        // H1 태그 추출 (# 제목)
+        let generatedHeadline = '';
         const h1Match = cleanContent.match(/^#\s+(.*)$/m);
         if (h1Match) {
             generatedHeadline = h1Match[1].trim();
@@ -53,52 +47,31 @@ export async function POST(request: Request) {
             generatedHeadline = metaTitleFM || `${title} 요약`;
         }
 
-        generatedMetaDesc = metaDescFM || '';
-
+        let generatedMetaDesc = metaDescFM || '';
         if (!generatedMetaDesc) {
-            const stripped = cleanContent.replace(/!\[.*?\]\(.*?\)/g, '')
+            const stripped = cleanContent
+                .replace(/!\[.*?\]\(.*?\)/g, '')
                 .replace(/[#*>\-`]/g, '')
                 .replace(/\s+/g, ' ')
                 .trim();
             generatedMetaDesc = stripped.substring(0, 100);
         }
 
-        // slug 중복 시 업데이트(upsert) 처리
-        const newLetter = await prisma.letter.upsert({
-            where: { slug },
-            update: {
-                title,
-                contentMarkdown: cleanContent,
-                googleVolumeId: itemIdFM || metadata?.sourceId || metadata?.volumeId || null,
-                isbn13: isbn13FM || metadata?.isbn13 || null,
-                source: sourceFM || 'aladin',
-                authors: metadata?.authors ? metadata.authors.join(', ') : null,
-                publisher: metadata?.publisher || null,
-                publishedDate: metadata?.publishedDate || null,
-                coverImageUrl: metadata?.coverImageUrl || null,
-                headlineTitle: generatedHeadline,
-                metaTitle: metaTitleFM || null,
-                metaDescription: generatedMetaDesc,
-                publishedAt: publishedAtFM ? new Date(publishedAtFM) : null,
-                status
-            },
-            create: {
-                title,
-                slug,
-                contentMarkdown: cleanContent,
-                googleVolumeId: itemIdFM || metadata?.sourceId || metadata?.volumeId || null,
-                isbn13: isbn13FM || metadata?.isbn13 || null,
-                source: sourceFM || 'aladin',
-                authors: metadata?.authors ? metadata.authors.join(', ') : null,
-                publisher: metadata?.publisher || null,
-                publishedDate: metadata?.publishedDate || null,
-                coverImageUrl: metadata?.coverImageUrl || null,
-                headlineTitle: generatedHeadline,
-                metaTitle: metaTitleFM || null,
-                metaDescription: generatedMetaDesc,
-                publishedAt: publishedAtFM ? new Date(publishedAtFM) : null,
-                status
-            }
+        const newLetter = await upsertLetter(slugFM, {
+            title,
+            contentMarkdown: cleanContent,
+            googleVolumeId: itemIdFM || metadata?.sourceId || metadata?.volumeId || null,
+            isbn13: isbn13FM || metadata?.isbn13 || null,
+            source: sourceFM || 'aladin',
+            authors: metadata?.authors ? metadata.authors.join(', ') : null,
+            publisher: metadata?.publisher || null,
+            publishedDate: metadata?.publishedDate || null,
+            coverImageUrl: metadata?.coverImageUrl || null,
+            headlineTitle: generatedHeadline,
+            metaTitle: metaTitleFM || null,
+            metaDescription: generatedMetaDesc,
+            publishedAt: publishedAtFM ? new Date(publishedAtFM) : null,
+            status,
         });
 
         // W4-2: published 상태로 발행되면 Brevo로 자동 발송 (idempotent)

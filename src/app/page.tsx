@@ -5,42 +5,47 @@ import { ArrowRight, BookOpen, MessageSquare, BookCheck, Lightbulb, Sparkles, Ma
 import CurationSection from '@/components/CurationSection';
 import JsonLd from '@/components/JsonLd';
 import Header from '@/components/Header';
-import { prisma } from '@/lib/db';
+import {
+    listLetters,
+    listCurations,
+    getBooksByIds,
+    getLatestBestsellerMonth,
+    listBestsellersForMonth,
+    type Curation,
+    type Book,
+} from '@/lib/firestore-models';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 async function getLatestLetters() {
     try {
-        return await prisma.letter.findMany({
-            where: { status: 'published' },
-            orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
-            take: 3,
-            select: {
-                id: true,
-                slug: true,
-                title: true,
-                headlineTitle: true,
-                metaDescription: true,
-                coverImageUrl: true,
-                publishedAt: true,
-                readingTime: true,
-            },
-        });
+        return await listLetters({ status: 'PUBLISHED', limit: 3 });
     } catch (error) {
         console.error('home/getLatestLetters', error);
         return [];
     }
 }
 
-async function getRecentCurations() {
+async function getRecentCurations(): Promise<{ curation: Curation; firstBook: Book | null }[]> {
     try {
-        return await prisma.curation.findMany({
-            where: { status: 'published' },
-            orderBy: [{ isFeatured: 'desc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }],
-            take: 6,
-            include: { books: { take: 1 } },
+        const list = await listCurations({
+            status: 'published',
+            limit: 6,
+            requireSlug: true,
+            orderBy: [
+                { field: 'isFeatured', dir: 'desc' },
+                { field: 'publishedAt', dir: 'desc' },
+                { field: 'createdAt', dir: 'desc' },
+            ],
         });
+        const firstBookIds = list.map((c) => c.bookIds[0]).filter((id): id is string => !!id);
+        const books = await getBooksByIds(Array.from(new Set(firstBookIds)));
+        const bookMap = new Map(books.map((b) => [b.id, b]));
+        return list.map((c) => ({
+            curation: c,
+            firstBook: c.bookIds[0] ? bookMap.get(c.bookIds[0]) ?? null : null,
+        }));
     } catch (error) {
         console.error('home/getRecentCurations', error);
         return [];
@@ -49,20 +54,13 @@ async function getRecentCurations() {
 
 async function getMonthlyBestsellers() {
     try {
-        const latestSnapshot = await prisma.monthlyBestseller.findFirst({
-            orderBy: { snapshotMonth: 'desc' },
-            select: { snapshotMonth: true },
-        });
-        if (!latestSnapshot) return { month: null, books: [] };
-        const books = await prisma.monthlyBestseller.findMany({
-            where: { snapshotMonth: latestSnapshot.snapshotMonth },
-            orderBy: { rank: 'asc' },
-            take: 8,
-        });
-        return { month: latestSnapshot.snapshotMonth, books };
+        const month = await getLatestBestsellerMonth();
+        if (!month) return { month: null, books: [] as Awaited<ReturnType<typeof listBestsellersForMonth>> };
+        const books = await listBestsellersForMonth(month, 8);
+        return { month, books };
     } catch (error) {
         console.error('home/getMonthlyBestsellers', error);
-        return { month: null, books: [] };
+        return { month: null, books: [] as Awaited<ReturnType<typeof listBestsellersForMonth>> };
     }
 }
 
@@ -243,8 +241,8 @@ export default async function Home() {
                                 <p className="text-base text-muted-foreground">테마별로 묶인 책 3권으로 이번 주의 독서 흐름을 잡아보세요.</p>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {curations.map((c) => {
-                                    const cover = c.ogImage || c.cardImageUrl || c.books[0]?.imageUrl;
+                                {curations.map(({ curation: c, firstBook }) => {
+                                    const cover = c.ogImage || c.cardImageUrl || firstBook?.imageUrl;
                                     const href = c.slug ? `/curation/${c.slug}` : '#';
                                     return (
                                         <Link

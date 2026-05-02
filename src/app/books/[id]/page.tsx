@@ -1,5 +1,5 @@
 
-import { prisma } from '@/lib/db';
+import { getBook } from '@/lib/firestore-models';
 import { Info, BookOpen, ShoppingBag } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
@@ -7,13 +7,16 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import ShelfButton from '@/components/ShelfButton';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 const SITE_ORIGIN = 'https://bookfit.kr';
 
 type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
-    const book = await prisma.book.findUnique({ where: { id } });
+    const book = await getBook(id);
     if (!book) return { title: '책을 찾을 수 없어요 | 북핏' };
 
     const title = `${book.title} - ${book.author} | 북핏`;
@@ -51,13 +54,6 @@ function buildVendorLinks(book: { title: string; author: string; purchaseLink: s
         { name: '예스24', href: `https://www.yes24.com/Product/Search?domain=BOOK&query=${q}` },
         { name: '교보문고', href: `https://search.kyobobook.co.kr/search?keyword=${q}&gbCode=TOT&target=total` },
     ];
-}
-
-async function getBook(id: string) {
-    const book = await prisma.book.findUnique({
-        where: { id },
-    });
-    return book;
 }
 
 export default async function BookDetailPage({ params }: Props) {

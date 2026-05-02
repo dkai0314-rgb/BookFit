@@ -1,28 +1,19 @@
-import { prisma } from '@/lib/db';
+import { listLetters, type Letter } from '@/lib/firestore-models';
 import Link from 'next/link';
 import Header from '@/components/Header';
 
-export const revalidate = 60; // 1분마다 페이지 재생성 유효성 검사
+// Build-time prerender 시 DB 의존 차단 — 매 요청마다 SSR.
+// 런타임 DB 실패 시에도 빈 목록으로 fallback.
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export default async function BookFitLetterListPage() {
-    const letters = await prisma.letter.findMany({
-        where: {
-            status: 'PUBLISHED',
-        },
-        select: {
-            id: true,
-            slug: true,
-            title: true,
-            metaTitle: true,
-            headlineTitle: true,
-            coverImageUrl: true,
-            createdAt: true,
-            publishedAt: true,
-        },
-        orderBy: {
-            createdAt: 'desc',
-        },
-    });
+    let letters: Letter[] = [];
+    try {
+        letters = await listLetters({ status: 'PUBLISHED' });
+    } catch (error) {
+        console.error('bookfit-letter list query failed', error);
+    }
 
     return (
         <>

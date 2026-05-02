@@ -1,11 +1,12 @@
-import { prisma } from '@/lib/db';
+import { getLetterBySlug } from '@/lib/firestore-models';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Header from '@/components/Header';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 const SITE_ORIGIN = 'https://bookfit.kr';
 
@@ -15,7 +16,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-    const letter = await prisma.letter.findUnique({ where: { slug } });
+    const letter = await getLetterBySlug(slug);
 
     if (!letter) return { title: '레터를 찾을 수 없어요 | 북핏' };
 
@@ -50,11 +51,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BookFitLetterDetailPage({ params }: Props) {
     const { slug } = await params;
 
-    const letter = await prisma.letter.findUnique({
-        where: { slug },
-    });
+    const letter = await getLetterBySlug(slug);
 
-    if (!letter || letter.status !== 'PUBLISHED') {
+    if (!letter || (letter.status !== 'PUBLISHED' && letter.status !== 'published')) {
         notFound();
     }
 

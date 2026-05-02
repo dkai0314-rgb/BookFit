@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db';
+import { getCuration, getBooksByIds } from '@/lib/firestore-models';
 import { notFound } from 'next/navigation';
 import AdminCurationEditClient from './AdminCurationEditClient';
 
@@ -9,11 +9,9 @@ type Props = { params: Promise<{ id: string }> };
 
 export default async function AdminCurationEditPage({ params }: Props) {
     const { id } = await params;
-    const c = await prisma.curation.findUnique({
-        where: { id },
-        include: { books: true },
-    });
+    const c = await getCuration(id);
     if (!c) notFound();
+    const books = await getBooksByIds(c.bookIds);
 
     return (
         <AdminCurationEditClient
@@ -35,7 +33,7 @@ export default async function AdminCurationEditPage({ params }: Props) {
                 status: c.status,
                 publishedAt: c.publishedAt ? c.publishedAt.toISOString() : null,
                 createdAt: c.createdAt.toISOString(),
-                books: c.books.map((b) => ({
+                books: books.map((b) => ({
                     id: b.id,
                     title: b.title,
                     author: b.author,
