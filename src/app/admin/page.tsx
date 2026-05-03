@@ -2,12 +2,13 @@ import Link from 'next/link';
 import {
     countLetters,
     listLetters,
+    listThemes,
     countShelfTotal,
     countShelfSince,
     listRecentDispatchLogs,
     sumDispatchSentCount,
 } from '@/lib/firestore-models';
-import { Mail, Sparkles, Bookmark, Send, BarChart3 } from 'lucide-react';
+import { Mail, Sparkles, Bookmark, Send, BarChart3, Calendar } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -47,6 +48,7 @@ export default async function AdminDashboardPage() {
         weekShelf,
         recentDispatch,
         dispatchTotal,
+        unusedThemes,
     ] = await Promise.all([
         safeQuery(() => countLetters(), 0),
         safeQuery(() => countLetters({ status: 'PUBLISHED' }), 0),
@@ -72,6 +74,7 @@ export default async function AdminDashboardPage() {
         safeQuery(() => countShelfSince(since7d), 0),
         safeQuery(() => listRecentDispatchLogs(5), [] as Awaited<ReturnType<typeof listRecentDispatchLogs>>),
         safeQuery(() => sumDispatchSentCount(), 0),
+        safeQuery(() => listThemes({ used: false }), [] as Awaited<ReturnType<typeof listThemes>>),
     ]);
 
     return (
@@ -85,10 +88,31 @@ export default async function AdminDashboardPage() {
                 </div>
                 <nav className="flex gap-2 flex-wrap">
                     <AdminLink href="/admin/letters" label="북핏레터" />
+                    <AdminLink href="/admin/themes" label="테마 풀" />
                 </nav>
             </header>
 
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Link
+                    href="/admin/themes"
+                    className={`block bg-white border rounded-xl p-5 shadow-sm space-y-2 hover:border-accent transition-colors ${
+                        unusedThemes.length === 0 ? 'border-red-300 bg-red-50' : 'border-gray-200'
+                    }`}
+                >
+                    <div className="flex items-center gap-2 text-gray-600 text-xs font-bold uppercase tracking-widest">
+                        <Calendar className="w-5 h-5" />
+                        자동 발행 큐
+                    </div>
+                    <div className="text-2xl font-bold">
+                        {unusedThemes.length === 0 ? '⚠️ 비었음' : `${unusedThemes.length}주치`}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                        {unusedThemes.length === 0
+                            ? '테마 등록 필요 — 다음 일요일 cron 실패'
+                            : `다음: "${unusedThemes[0].theme.slice(0, 24)}${unusedThemes[0].theme.length > 24 ? '...' : ''}"`}
+                    </div>
+                </Link>
+
                 <KpiCard
                     icon={<Mail className="w-5 h-5" />}
                     label="이번주 발행 레터"

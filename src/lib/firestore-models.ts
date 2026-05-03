@@ -15,6 +15,7 @@ const COLLECTIONS = {
     templateRequests: 'templateRequests',
     emailDispatchLogs: 'emailDispatchLogs',
     personalRecommendCaches: 'personalRecommendCaches',
+    themePool: 'themePool',
 } as const;
 
 // ===== Types =====
@@ -642,6 +643,107 @@ export async function upsertPersonalRecommendCache(
             expiresAt,
             createdAt: new Date(),
         });
+}
+
+// ===== Theme Pool (자동 발행 큐) =====
+
+export type ThemePoolEntry = {
+    id: string;
+    theme: string;
+    kind: LetterKind; // 'monthly_pick' (default) | 'weekly' | 'special'
+    used: boolean;
+    usedAt: Date | null;
+    usedLetterSlug: string | null;
+    priority: number; // 낮을수록 먼저 (default 100)
+    note: string | null;
+    createdAt: Date;
+};
+
+function themeFromDoc(doc: admin.firestore.DocumentSnapshot): ThemePoolEntry {
+    const d = doc.data() ?? {};
+    const rawKind = d.kind;
+    const kind: LetterKind =
+        rawKind === 'weekly' || rawKind === 'special' ? rawKind : 'monthly_pick';
+    return {
+        id: doc.id,
+        theme: d.theme ?? '',
+        kind,
+        used: !!d.used,
+        usedAt: tsToDate(d.usedAt),
+        usedLetterSlug: d.usedLetterSlug ?? null,
+        priority: typeof d.priority === 'number' ? d.priority : 100,
+        note: d.note ?? null,
+        createdAt: tsToDate(d.createdAt) ?? new Date(),
+    };
+}
+
+export type ThemeListOpts = { used?: boolean; kind?: LetterKind };
+
+export async function listThemes(opts: ThemeListOpts = {}): Promise<ThemePoolEntry[]> {
+    const db = tryDb();
+    if (!db) return [];
+    let q: admin.firestore.Query = db.collection(COLLECTIONS.themePool);
+    if (typeof opts.used === 'boolean') q = q.where('used', '==', opts.used);
+    if (opts.kind) q = q.where('kind', '==', opts.kind);
+    const snap = await q.get();
+    const list = snap.docs.map(themeFromDoc);
+    list.sort((a, b) => {
+        if (a.priority !== b.priority) return a.priority - b.priority;
+        return a.createdAt.getTime() - b.createdAt.getTime();
+    });
+    return list;
+}
+
+export async function createTheme(data: {
+    theme: string;
+    kind: LetterKind;
+    priority?: number;
+    note?: string | null;
+}): Promise<ThemePoolEntry> {
+    const db = getDb();
+    const id = randomUUID();
+    const payload = {
+        theme: data.theme,
+        kind: data.kind,
+        used: false,
+        usedAt: null,
+        usedLetterSlug: null,
+        priority: data.priority ?? 100,
+        note: data.note ?? null,
+        createdAt: new Date(),
+    };
+    await db.collection(COLLECTIONS.themePool).doc(id).set(payload);
+    return { id, ...payload };
+}
+
+export async function updateTheme(
+    id: string,
+    data: Partial<Pick<ThemePoolEntry, 'theme' | 'kind' | 'priority' | 'note' | 'used' | 'usedLetterSlug'>>,
+): Promise<void> {
+    const db = getDb();
+    await db.collection(COLLECTIONS.themePool).doc(id).update(data);
+}
+
+export async function deleteTheme(id: string): Promise<void> {
+    const db = getDb();
+    await db.collection(COLLECTIONS.themePool).doc(id).delete();
+}
+
+export async function pickNextTheme(kind?: LetterKind): Promise<ThemePoolEntry | null> {
+    const list = await listThemes({ used: false, kind });
+    return list[0] ?? null;
+}
+
+export async function markThemeUsed(
+    id: string,
+    letterSlug: string,
+): Promise<void> {
+    const db = getDb();
+    await db.collection(COLLECTIONS.themePool).doc(id).update({
+        used: true,
+        usedAt: new Date(),
+        usedLetterSlug: letterSlug,
+    });
 }
 
 // Re-export FieldValue for downstream increments etc.
