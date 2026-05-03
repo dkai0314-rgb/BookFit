@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import TestEmailButton from './TestEmailButton';
 import {
     countLetters,
     listLetters,
@@ -86,9 +87,10 @@ export default async function AdminDashboardPage() {
                     </h1>
                     <p className="text-sm text-gray-600 mt-1">콘텐츠 발행 / 발송 / 사용자 활동 한 눈에 보기</p>
                 </div>
-                <nav className="flex gap-2 flex-wrap">
+                <nav className="flex gap-2 flex-wrap items-start">
                     <AdminLink href="/admin/letters" label="북핏레터" />
                     <AdminLink href="/admin/themes" label="테마 풀" />
+                    <TestEmailButton />
                 </nav>
             </header>
 

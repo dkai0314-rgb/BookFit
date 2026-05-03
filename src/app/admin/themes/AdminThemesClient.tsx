@@ -54,9 +54,12 @@ export default function AdminThemesClient({
                 });
                 return;
             }
+            const emailStatus = json.notifyOk
+                ? '✅ 운영자 이메일 발송 완료'
+                : `⚠️ 이메일 발송 실패: ${json.notifyError || '알 수 없는 오류'}`;
             setTriggerMessage({
-                kind: 'success',
-                text: `생성 완료! 테마: "${json.theme}"`,
+                kind: json.notifyOk ? 'success' : 'error',
+                text: `Draft 생성 완료! 테마: "${json.theme}"\n${emailStatus}`,
                 link: `/admin/letters/${encodeURIComponent(json.letterSlug)}`,
             });
             // 테마 목록 새로고침 (used 상태 반영)
@@ -229,7 +232,7 @@ export default function AdminThemesClient({
                                         : 'bg-blue-50 border border-blue-200 text-blue-900'
                             }`}
                         >
-                            <div>{triggerMessage.text}</div>
+                            <div style={{ whiteSpace: 'pre-line' }}>{triggerMessage.text}</div>
                             {triggerMessage.link && (
                                 <Link
                                     href={triggerMessage.link}
