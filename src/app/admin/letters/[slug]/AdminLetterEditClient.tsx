@@ -4,24 +4,30 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+type LetterKind = 'weekly' | 'monthly_pick' | 'special';
+
 type Initial = {
-    id: string;
-    title: string;
-    theme: string;
-    description: string;
-    instaCaption: string;
     slug: string;
+    title: string;
+    headlineTitle: string;
+    metaTitle: string;
+    metaDescription: string;
+    ogImageUrl: string;
+    coverImageUrl: string;
+    kind: LetterKind;
     category: string;
     curatorNote: string;
-    seoTitle: string;
-    seoDesc: string;
-    ogImage: string;
-    cardImageUrl: string;
-    readingTime: number | null;
+    contentMarkdown: string;
     isFeatured: boolean;
     status: string;
+    readingTime: number | null;
     publishedAt: string | null;
     createdAt: string;
+    authors: string;
+    publisher: string;
+    publishedDate: string;
+    isbn13: string;
+    bookIds: string[];
     books: {
         id: string;
         title: string;
@@ -31,23 +37,29 @@ type Initial = {
     }[];
 };
 
-export default function AdminCurationEditClient({ initial }: { initial: Initial }) {
+const KIND_LABELS: Record<LetterKind, string> = {
+    weekly: '이주의 한 권 (단권)',
+    monthly_pick: '이달의 픽 (3권)',
+    special: '스페셜',
+};
+
+export default function AdminLetterEditClient({ initial }: { initial: Initial }) {
     const router = useRouter();
     const [form, setForm] = useState({
-        title: initial.title,
-        theme: initial.theme,
-        description: initial.description,
-        instaCaption: initial.instaCaption,
         slug: initial.slug,
+        title: initial.title,
+        headlineTitle: initial.headlineTitle,
+        metaTitle: initial.metaTitle,
+        metaDescription: initial.metaDescription,
+        ogImageUrl: initial.ogImageUrl,
+        coverImageUrl: initial.coverImageUrl,
+        kind: initial.kind,
         category: initial.category,
         curatorNote: initial.curatorNote,
-        seoTitle: initial.seoTitle,
-        seoDesc: initial.seoDesc,
-        ogImage: initial.ogImage,
-        cardImageUrl: initial.cardImageUrl,
-        readingTime: initial.readingTime ?? 0,
+        contentMarkdown: initial.contentMarkdown,
         isFeatured: initial.isFeatured,
         status: initial.status,
+        readingTime: initial.readingTime ?? 0,
     });
     const [message, setMessage] = useState('');
     const [saving, setSaving] = useState(false);
@@ -63,25 +75,37 @@ export default function AdminCurationEditClient({ initial }: { initial: Initial 
             ...form,
             ...overrides,
             readingTime: form.readingTime || null,
+            newSlug: form.slug !== initial.slug ? form.slug : undefined,
         };
         try {
-            const res = await fetch(`/api/curation/${initial.id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
+            const res = await fetch(
+                `/api/letter/${encodeURIComponent(initial.slug)}`,
+                {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                },
+            );
             const json = await res.json();
             if (!res.ok || !json?.success) {
                 setMessage(json?.error || '저장 실패');
                 return false;
             }
-            const c = json.curation as Partial<typeof form> & { status: string; slug: string | null };
-            setForm((prev) => ({
-                ...prev,
-                slug: c.slug ?? prev.slug,
-                status: c.status,
-            }));
-            setMessage(`저장 완료 — 상태: ${c.status}`);
+            const dispatch = json.dispatch as
+                | { sentCount?: number; skipped?: boolean; error?: string }
+                | null;
+            const dispatchMsg = dispatch
+                ? dispatch.error
+                    ? ` · 발송 오류: ${dispatch.error}`
+                    : dispatch.skipped
+                        ? ' · 발송 skip (기존 발송 로그 있음)'
+                        : ` · ${dispatch.sentCount}명에게 발송됨`
+                : '';
+            setMessage(`저장 완료 — 상태: ${json.letter.status}${dispatchMsg}`);
+            const newSlug = json.letter.slug as string;
+            if (newSlug !== initial.slug) {
+                router.replace(`/admin/letters/${encodeURIComponent(newSlug)}`);
+            }
             return true;
         } catch (e) {
             console.error(e);
@@ -95,52 +119,57 @@ export default function AdminCurationEditClient({ initial }: { initial: Initial 
     const handleSaveDraft = () => save({ status: 'draft' });
     const handlePublish = async () => {
         if (!form.slug) {
-            setMessage('published 전환 전에 slug를 먼저 지정하세요.');
+            setMessage('publish 전에 slug를 먼저 지정하세요.');
             return;
         }
-        const ok = await save({ status: 'published' });
+        const ok = await save({ status: 'PUBLISHED' });
         if (ok) router.refresh();
     };
 
     const handleDelete = async () => {
         if (!confirm('정말 삭제하시겠어요? 되돌릴 수 없습니다.')) return;
         try {
-            const res = await fetch(`/api/curation/${initial.id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/letter/${encodeURIComponent(initial.slug)}`, {
+                method: 'DELETE',
+            });
             const json = await res.json();
             if (!res.ok || !json?.success) {
                 alert(json?.error || '삭제 실패');
                 return;
             }
-            router.push('/admin/curations');
+            router.push('/admin/letters');
         } catch (e) {
             console.error(e);
             alert('네트워크 오류');
         }
     };
 
+    const isPublished = form.status === 'PUBLISHED' || form.status === 'published';
+
     return (
         <div className="p-8 max-w-4xl mx-auto space-y-8 font-sans text-gray-900">
-            <header className="flex items-center justify-between">
+            <header className="flex items-center justify-between flex-wrap gap-2">
                 <div className="space-y-1">
-                    <Link href="/admin/curations" className="text-sm text-gray-500 hover:underline">
-                        ← 큐레이션 목록
+                    <Link href="/admin/letters" className="text-sm text-gray-500 hover:underline">
+                        ← 레터 목록
                     </Link>
-                    <h1 className="text-3xl font-bold">큐레이션 편집</h1>
-                    <p className="text-xs text-gray-500 font-mono">id: {initial.id}</p>
+                    <h1 className="text-3xl font-bold">레터 편집</h1>
+                    <p className="text-xs text-gray-500 font-mono">slug: {initial.slug}</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <span
                         className={`inline-block px-3 py-1 rounded text-xs font-bold ${
-                            form.status === 'published'
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-gray-200 text-gray-700'
+                            isPublished ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-700'
                         }`}
                     >
                         {form.status}
                     </span>
-                    {form.status === 'published' && form.slug && (
+                    <span className="inline-block px-3 py-1 rounded text-xs font-bold bg-accent/10 text-accent border border-accent/20">
+                        {KIND_LABELS[form.kind]}
+                    </span>
+                    {isPublished && (
                         <Link
-                            href={`/curation/${form.slug}`}
+                            href={`/bookfit-letter/${encodeURIComponent(form.slug)}`}
                             target="_blank"
                             className="px-3 py-1 text-sm border rounded text-blue-600 hover:bg-blue-50"
                         >
@@ -154,7 +183,7 @@ export default function AdminCurationEditClient({ initial }: { initial: Initial 
 
             <section className="space-y-4 border p-6 rounded-xl bg-white shadow-sm">
                 <h2 className="text-xl font-semibold">기본 정보</h2>
-                <Field label="제목 (title)">
+                <Field label="회차 제목 (title)">
                     <input
                         type="text"
                         value={form.title}
@@ -162,36 +191,74 @@ export default function AdminCurationEditClient({ initial }: { initial: Initial 
                         className="border p-2 w-full rounded"
                     />
                 </Field>
-                <Field label="테마 (theme)">
+                <Field label="본문 헤드라인 (headlineTitle, H1로 표시)">
                     <input
                         type="text"
-                        value={form.theme}
-                        onChange={(e) => update('theme', e.target.value)}
+                        value={form.headlineTitle}
+                        onChange={(e) => update('headlineTitle', e.target.value)}
                         className="border p-2 w-full rounded"
                     />
                 </Field>
-                <Field label="설명 (description, 2-3 문장)">
+                <Field label="큐레이터 노트 (curatorNote, 도입 단락)">
                     <textarea
-                        rows={3}
-                        value={form.description}
-                        onChange={(e) => update('description', e.target.value)}
-                        className="border p-2 w-full rounded"
-                    />
-                </Field>
-                <Field label="큐레이터 노트 (curatorNote, 4-6 문장)">
-                    <textarea
-                        rows={6}
+                        rows={5}
                         value={form.curatorNote}
                         onChange={(e) => update('curatorNote', e.target.value)}
                         className="border p-2 w-full rounded"
                     />
                 </Field>
                 <div className="grid grid-cols-2 gap-4">
+                    <Field label="형식 (kind)">
+                        <select
+                            value={form.kind}
+                            onChange={(e) => update('kind', e.target.value as LetterKind)}
+                            className="border p-2 w-full rounded"
+                        >
+                            <option value="weekly">{KIND_LABELS.weekly}</option>
+                            <option value="monthly_pick">{KIND_LABELS.monthly_pick}</option>
+                            <option value="special">{KIND_LABELS.special}</option>
+                        </select>
+                    </Field>
                     <Field label="카테고리 (감정/계절/직군/트렌드 등)">
                         <input
                             type="text"
                             value={form.category}
                             onChange={(e) => update('category', e.target.value)}
+                            className="border p-2 w-full rounded"
+                        />
+                    </Field>
+                </div>
+            </section>
+
+            <section className="space-y-4 border p-6 rounded-xl bg-white shadow-sm">
+                <h2 className="text-xl font-semibold">본문 마크다운</h2>
+                <p className="text-xs text-gray-500">
+                    프론트매터(--- 영역)는 자동 파싱되어 메타로 분리됩니다. 책 카드는 본문 아래 자동 렌더되니 본문 안에 cover 이미지/구매 링크는 넣지 마세요.
+                </p>
+                <textarea
+                    rows={20}
+                    value={form.contentMarkdown}
+                    onChange={(e) => update('contentMarkdown', e.target.value)}
+                    className="border p-3 w-full rounded font-mono text-sm leading-relaxed"
+                />
+            </section>
+
+            <section className="space-y-4 border p-6 rounded-xl bg-white shadow-sm">
+                <h2 className="text-xl font-semibold">SEO &amp; URL</h2>
+                <Field label="URL slug (영문/한글 + 대시)">
+                    <input
+                        type="text"
+                        value={form.slug}
+                        onChange={(e) => update('slug', e.target.value)}
+                        className="border p-2 w-full rounded font-mono"
+                    />
+                </Field>
+                <div className="grid grid-cols-2 gap-4">
+                    <Field label="SEO/Meta Title (40~60자)">
+                        <input
+                            type="text"
+                            value={form.metaTitle}
+                            onChange={(e) => update('metaTitle', e.target.value)}
                             className="border p-2 w-full rounded"
                         />
                     </Field>
@@ -204,32 +271,11 @@ export default function AdminCurationEditClient({ initial }: { initial: Initial 
                         />
                     </Field>
                 </div>
-            </section>
-
-            <section className="space-y-4 border p-6 rounded-xl bg-white shadow-sm">
-                <h2 className="text-xl font-semibold">SEO &amp; URL</h2>
-                <Field label="URL slug (영문/한글, 대시 가능)">
-                    <input
-                        type="text"
-                        value={form.slug}
-                        onChange={(e) => update('slug', e.target.value)}
-                        className="border p-2 w-full rounded font-mono"
-                        placeholder="ex: 위로받고-싶은-밤-x9k2"
-                    />
-                </Field>
-                <Field label="SEO Title (40~60자)">
-                    <input
-                        type="text"
-                        value={form.seoTitle}
-                        onChange={(e) => update('seoTitle', e.target.value)}
-                        className="border p-2 w-full rounded"
-                    />
-                </Field>
-                <Field label="SEO Description (110~140자)">
+                <Field label="SEO/Meta Description (110~140자)">
                     <textarea
                         rows={2}
-                        value={form.seoDesc}
-                        onChange={(e) => update('seoDesc', e.target.value)}
+                        value={form.metaDescription}
+                        onChange={(e) => update('metaDescription', e.target.value)}
                         className="border p-2 w-full rounded"
                     />
                 </Field>
@@ -237,28 +283,20 @@ export default function AdminCurationEditClient({ initial }: { initial: Initial 
                     <Field label="OG Image URL">
                         <input
                             type="text"
-                            value={form.ogImage}
-                            onChange={(e) => update('ogImage', e.target.value)}
+                            value={form.ogImageUrl}
+                            onChange={(e) => update('ogImageUrl', e.target.value)}
                             className="border p-2 w-full rounded font-mono text-xs"
                         />
                     </Field>
-                    <Field label="Card Image URL">
+                    <Field label="Cover Image URL (단권 표지)">
                         <input
                             type="text"
-                            value={form.cardImageUrl}
-                            onChange={(e) => update('cardImageUrl', e.target.value)}
+                            value={form.coverImageUrl}
+                            onChange={(e) => update('coverImageUrl', e.target.value)}
                             className="border p-2 w-full rounded font-mono text-xs"
                         />
                     </Field>
                 </div>
-                <Field label="Instagram 캡션">
-                    <textarea
-                        rows={4}
-                        value={form.instaCaption}
-                        onChange={(e) => update('instaCaption', e.target.value)}
-                        className="border p-2 w-full rounded text-sm"
-                    />
-                </Field>
                 <label className="flex items-center gap-2 text-sm">
                     <input
                         type="checkbox"
@@ -273,10 +311,14 @@ export default function AdminCurationEditClient({ initial }: { initial: Initial 
             <section className="space-y-4 border p-6 rounded-xl bg-white shadow-sm">
                 <h2 className="text-xl font-semibold">묶인 책 ({initial.books.length}권)</h2>
                 <p className="text-xs text-gray-500">
-                    책 목록은 큐레이션 생성 시 결정되며 이 화면에선 변경할 수 없습니다.
-                    각 책의 추천사(recommendation)는 책 모델을 직접 편집해야 변경됩니다.
+                    책 목록은 회차 생성 시 결정됩니다. 책별 추천사(recommendation)는 책 마스터를 직접 편집해야 변경됩니다.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {initial.books.length === 0 && (
+                        <div className="col-span-3 text-sm text-gray-500 text-center py-4">
+                            묶인 책이 없습니다.
+                        </div>
+                    )}
                     {initial.books.map((b) => (
                         <div key={b.id} className="border rounded p-3 space-y-2 bg-gray-50">
                             {b.imageUrl && (
@@ -319,7 +361,7 @@ export default function AdminCurationEditClient({ initial }: { initial: Initial 
                         disabled={saving}
                         className="px-6 py-2 bg-primary text-primary-foreground rounded font-bold hover:bg-primary/90 disabled:opacity-50"
                     >
-                        {saving ? '저장 중...' : 'Publish (저장 + 발행)'}
+                        {saving ? '저장 중...' : 'Publish (저장 + 발행 + 메일 발송)'}
                     </button>
                 </div>
             </footer>

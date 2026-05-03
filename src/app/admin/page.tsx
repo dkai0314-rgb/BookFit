@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import {
     countLetters,
-    countCurations,
-    listCurations,
+    listLetters,
     countShelfTotal,
     countShelfSince,
     listRecentDispatchLogs,
@@ -41,10 +40,9 @@ export default async function AdminDashboardPage() {
         totalLetters,
         publishedLetters,
         weekLetters,
-        totalCurations,
-        publishedCurations,
-        monthCurations,
-        topCurations,
+        monthLetters,
+        monthlyPickCount,
+        topLetters,
         totalShelf,
         weekShelf,
         recentDispatch,
@@ -53,20 +51,22 @@ export default async function AdminDashboardPage() {
         safeQuery(() => countLetters(), 0),
         safeQuery(() => countLetters({ status: 'PUBLISHED' }), 0),
         safeQuery(() => countLetters({ status: 'PUBLISHED', sinceDate: since7d }), 0),
-        safeQuery(() => countCurations(), 0),
-        safeQuery(() => countCurations({ status: 'published' }), 0),
-        safeQuery(() => countCurations({ status: 'published', sinceDate: sinceMonth }), 0),
+        safeQuery(() => countLetters({ status: 'PUBLISHED', sinceDate: sinceMonth }), 0),
+        safeQuery(
+            () => listLetters({ status: 'PUBLISHED', kind: 'monthly_pick' }).then((l) => l.length),
+            0,
+        ),
         safeQuery(
             () =>
-                listCurations({
-                    status: 'published',
+                listLetters({
+                    status: 'PUBLISHED',
                     limit: 5,
                     orderBy: [
                         { field: 'viewCount', dir: 'desc' },
                         { field: 'publishedAt', dir: 'desc' },
                     ],
                 }),
-            [] as Awaited<ReturnType<typeof listCurations>>,
+            [] as Awaited<ReturnType<typeof listLetters>>,
         ),
         safeQuery(() => countShelfTotal(), 0),
         safeQuery(() => countShelfSince(since7d), 0),
@@ -84,8 +84,7 @@ export default async function AdminDashboardPage() {
                     <p className="text-sm text-gray-600 mt-1">콘텐츠 발행 / 발송 / 사용자 활동 한 눈에 보기</p>
                 </div>
                 <nav className="flex gap-2 flex-wrap">
-                    <AdminLink href="/admin/curations" label="큐레이션" />
-                    <AdminLink href="/admin/bookfit-letter" label="북핏레터" />
+                    <AdminLink href="/admin/letters" label="북핏레터" />
                 </nav>
             </header>
 
@@ -98,9 +97,9 @@ export default async function AdminDashboardPage() {
                 />
                 <KpiCard
                     icon={<Sparkles className="w-5 h-5" />}
-                    label="이번달 발행 큐레이션"
-                    value={`${monthCurations}건`}
-                    sub={`전체 published ${publishedCurations} / 총 ${totalCurations}`}
+                    label="이번달 발행 회차"
+                    value={`${monthLetters}건`}
+                    sub={`이달의 픽 ${monthlyPickCount}건 포함`}
                 />
                 <KpiCard
                     icon={<Bookmark className="w-5 h-5" />}
@@ -117,14 +116,14 @@ export default async function AdminDashboardPage() {
             </section>
 
             <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Panel title="인기 큐레이션 Top 5" icon={<BarChart3 className="w-5 h-5" />}>
-                    {topCurations.length === 0 ? (
-                        <EmptyHint>아직 published 큐레이션이 없습니다.</EmptyHint>
+                <Panel title="인기 레터 Top 5" icon={<BarChart3 className="w-5 h-5" />}>
+                    {topLetters.length === 0 ? (
+                        <EmptyHint>아직 published 레터가 없습니다.</EmptyHint>
                     ) : (
                         <ol className="space-y-2">
-                            {topCurations.map((c, i) => (
+                            {topLetters.map((l, i) => (
                                 <li
-                                    key={c.id}
+                                    key={l.id}
                                     className="flex items-center justify-between gap-3 p-3 rounded-lg border bg-white"
                                 >
                                     <div className="flex items-center gap-3 min-w-0">
@@ -132,17 +131,18 @@ export default async function AdminDashboardPage() {
                                             {i + 1}
                                         </span>
                                         <div className="min-w-0">
-                                            <div className="font-semibold truncate">{c.title}</div>
+                                            <div className="font-semibold truncate">{l.headlineTitle || l.title}</div>
                                             <div className="text-xs text-gray-500 truncate">
-                                                {c.category ? `${c.category} · ` : ''}
-                                                {c.publishedAt
-                                                    ? new Date(c.publishedAt).toLocaleDateString('ko-KR')
-                                                    : '미발행'}
+                                                {l.kind === 'monthly_pick' ? '이달의 픽' : l.kind === 'weekly' ? '이주의 한 권' : '스페셜'}
+                                                {l.category ? ` · ${l.category}` : ''}
+                                                {l.publishedAt
+                                                    ? ` · ${new Date(l.publishedAt).toLocaleDateString('ko-KR')}`
+                                                    : ''}
                                             </div>
                                         </div>
                                     </div>
                                     <div className="text-right shrink-0">
-                                        <div className="text-sm font-bold">{c.viewCount.toLocaleString()}</div>
+                                        <div className="text-sm font-bold">{l.viewCount.toLocaleString()}</div>
                                         <div className="text-xs text-gray-500">view</div>
                                     </div>
                                 </li>

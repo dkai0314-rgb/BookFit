@@ -10,7 +10,6 @@ const FieldValue = (() => {
 
 const COLLECTIONS = {
     books: 'books',
-    curations: 'curations',
     letters: 'letters',
     monthlyBestsellers: 'monthlyBestsellers',
     templateRequests: 'templateRequests',
@@ -35,28 +34,11 @@ export type Book = {
     updatedAt: Date;
 };
 
-export type Curation = {
-    id: string;
-    theme: string;
-    title: string;
-    description: string;
-    instaCaption: string | null;
-    cardImageUrl: string | null;
-    slug: string | null;
-    category: string | null;
-    curatorNote: string | null;
-    seoTitle: string | null;
-    seoDesc: string | null;
-    ogImage: string | null;
-    readingTime: number | null;
-    publishedAt: Date | null;
-    status: string; // draft | published
-    viewCount: number;
-    isFeatured: boolean;
-    isPublished: boolean;
-    bookIds: string[]; // book ids (denormalized join)
-    createdAt: Date;
-};
+// Curation type/helpers는 W6에서 Letter로 흡수됨 — kind: 'monthly_pick' 으로 사용.
+
+export type LetterKind = 'weekly' | 'monthly_pick' | 'special';
+
+export const LETTER_KINDS: LetterKind[] = ['weekly', 'monthly_pick', 'special'];
 
 export type Letter = {
     id: string; // = slug (we use slug as doc id)
@@ -82,6 +64,14 @@ export type Letter = {
     seoKeywords: string | null;
     createdAt: Date;
     updatedAt: Date;
+
+    // W6 — 큐레이션 흡수 (이달의북핏 ↔ 북핏레터 통합)
+    kind: LetterKind;          // 'weekly'(단권 1) | 'monthly_pick'(3권 묶음) | 'special'(자유)
+    bookIds: string[];         // 회차에 묶인 책. weekly=1, monthly_pick=3+, special=0~N
+    curatorNote: string | null; // 도입 단락 (큐레이터 시각)
+    category: string | null;   // 분류 ("감정","계절","직군","트렌드" 등)
+    isFeatured: boolean;       // 홈/목록 우선 노출
+    viewCount: number;
 };
 
 export type MonthlyBestseller = {
@@ -152,34 +142,11 @@ function bookFromDoc(doc: admin.firestore.DocumentSnapshot): Book {
     };
 }
 
-function curationFromDoc(doc: admin.firestore.DocumentSnapshot): Curation {
-    const d = doc.data() ?? {};
-    return {
-        id: doc.id,
-        theme: d.theme ?? '',
-        title: d.title ?? '',
-        description: d.description ?? '',
-        instaCaption: d.instaCaption ?? null,
-        cardImageUrl: d.cardImageUrl ?? null,
-        slug: d.slug ?? null,
-        category: d.category ?? null,
-        curatorNote: d.curatorNote ?? null,
-        seoTitle: d.seoTitle ?? null,
-        seoDesc: d.seoDesc ?? null,
-        ogImage: d.ogImage ?? null,
-        readingTime: typeof d.readingTime === 'number' ? d.readingTime : null,
-        publishedAt: tsToDate(d.publishedAt),
-        status: d.status ?? 'draft',
-        viewCount: typeof d.viewCount === 'number' ? d.viewCount : 0,
-        isFeatured: !!d.isFeatured,
-        isPublished: !!d.isPublished,
-        bookIds: Array.isArray(d.bookIds) ? d.bookIds : [],
-        createdAt: tsToDate(d.createdAt) ?? new Date(),
-    };
-}
-
 function letterFromDoc(doc: admin.firestore.DocumentSnapshot): Letter {
     const d = doc.data() ?? {};
+    const rawKind = d.kind;
+    const kind: LetterKind =
+        rawKind === 'monthly_pick' || rawKind === 'special' ? rawKind : 'weekly';
     return {
         id: doc.id,
         slug: d.slug ?? doc.id,
@@ -204,6 +171,12 @@ function letterFromDoc(doc: admin.firestore.DocumentSnapshot): Letter {
         seoKeywords: d.seoKeywords ?? null,
         createdAt: tsToDate(d.createdAt) ?? new Date(),
         updatedAt: tsToDate(d.updatedAt) ?? new Date(),
+        kind,
+        bookIds: Array.isArray(d.bookIds) ? d.bookIds : [],
+        curatorNote: d.curatorNote ?? null,
+        category: d.category ?? null,
+        isFeatured: !!d.isFeatured,
+        viewCount: typeof d.viewCount === 'number' ? d.viewCount : 0,
     };
 }
 
@@ -343,149 +316,6 @@ export async function createBook(data: {
     return { id, ...payload };
 }
 
-// ===== Curations =====
-
-export async function getCuration(id: string): Promise<Curation | null> {
-    const db = tryDb();
-    if (!db) return null;
-    const snap = await db.collection(COLLECTIONS.curations).doc(id).get();
-    if (!snap.exists) return null;
-    return curationFromDoc(snap);
-}
-
-export async function getCurationBySlug(slug: string): Promise<Curation | null> {
-    const db = tryDb();
-    if (!db) return null;
-    const snap = await db
-        .collection(COLLECTIONS.curations)
-        .where('slug', '==', slug)
-        .limit(1)
-        .get();
-    if (snap.empty) return null;
-    return curationFromDoc(snap.docs[0]);
-}
-
-export async function findCurationBySlug(
-    slug: string,
-    excludeId?: string,
-): Promise<Curation | null> {
-    const c = await getCurationBySlug(slug);
-    if (c && excludeId && c.id === excludeId) return null;
-    return c;
-}
-
-export type CurationListOpts = {
-    status?: 'draft' | 'published';
-    category?: string;
-    requireSlug?: boolean;
-    limit?: number;
-    orderBy?: Array<{ field: string; dir: 'asc' | 'desc' }>;
-};
-
-export async function listCurations(opts: CurationListOpts = {}): Promise<Curation[]> {
-    const db = tryDb();
-    if (!db) return [];
-    let q: admin.firestore.Query = db.collection(COLLECTIONS.curations);
-    if (opts.status) q = q.where('status', '==', opts.status);
-    if (opts.category) q = q.where('category', '==', opts.category);
-    const orderBy = opts.orderBy ?? [{ field: 'createdAt', dir: 'desc' as const }];
-    for (const o of orderBy) q = q.orderBy(o.field, o.dir);
-    if (opts.limit) q = q.limit(opts.limit);
-    const snap = await q.get();
-    let list = snap.docs.map(curationFromDoc);
-    if (opts.requireSlug) list = list.filter((c) => !!c.slug);
-    return list;
-}
-
-export async function listCurationCategories(): Promise<string[]> {
-    const list = await listCurations({ status: 'published' });
-    const set = new Set<string>();
-    for (const c of list) if (c.category) set.add(c.category);
-    return Array.from(set);
-}
-
-export async function createCuration(data: {
-    theme: string;
-    title: string;
-    description: string;
-    instaCaption: string | null;
-    slug: string;
-    curatorNote: string | null;
-    seoTitle: string | null;
-    seoDesc: string | null;
-    readingTime: number | null;
-    bookIds: string[];
-}): Promise<Curation> {
-    const db = getDb();
-    const id = randomUUID();
-    const payload = {
-        ...data,
-        cardImageUrl: null,
-        category: null,
-        ogImage: null,
-        publishedAt: null,
-        status: 'draft',
-        viewCount: 0,
-        isFeatured: false,
-        isPublished: false,
-        createdAt: new Date(),
-    };
-    await db.collection(COLLECTIONS.curations).doc(id).set(payload);
-    return { id, ...payload };
-}
-
-const CURATION_ALLOWED_FIELDS = new Set([
-    'title',
-    'description',
-    'curatorNote',
-    'seoTitle',
-    'seoDesc',
-    'ogImage',
-    'cardImageUrl',
-    'category',
-    'slug',
-    'isFeatured',
-    'status',
-    'isPublished',
-    'readingTime',
-    'instaCaption',
-    'theme',
-    'publishedAt',
-    'viewCount',
-]);
-
-export async function updateCuration(
-    id: string,
-    data: Record<string, unknown>,
-): Promise<Curation | null> {
-    const db = getDb();
-    const filtered: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(data)) {
-        if (CURATION_ALLOWED_FIELDS.has(k)) filtered[k] = v;
-    }
-    if (Object.keys(filtered).length === 0) return getCuration(id);
-    await db.collection(COLLECTIONS.curations).doc(id).update(filtered);
-    return getCuration(id);
-}
-
-export async function deleteCuration(id: string): Promise<void> {
-    const db = getDb();
-    await db.collection(COLLECTIONS.curations).doc(id).delete();
-}
-
-export async function curationLatestForChoice(): Promise<Curation | null> {
-    const list = await listCurations({
-        status: 'published',
-        limit: 1,
-        orderBy: [
-            { field: 'isFeatured', dir: 'desc' },
-            { field: 'publishedAt', dir: 'desc' },
-            { field: 'createdAt', dir: 'desc' },
-        ],
-    });
-    return list[0] ?? null;
-}
-
 // ===== Letters =====
 
 export async function getLetterBySlug(slug: string): Promise<Letter | null> {
@@ -498,7 +328,10 @@ export async function getLetterBySlug(slug: string): Promise<Letter | null> {
 
 export type LetterListOpts = {
     status?: string; // 'PUBLISHED' or 'published'
+    kind?: LetterKind;
+    category?: string;
     limit?: number;
+    orderBy?: Array<{ field: string; dir: 'asc' | 'desc' }>;
 };
 
 export async function listLetters(opts: LetterListOpts = {}): Promise<Letter[]> {
@@ -510,10 +343,56 @@ export async function listLetters(opts: LetterListOpts = {}): Promise<Letter[]> 
         const statuses = [opts.status, opts.status.toLowerCase(), opts.status.toUpperCase()];
         q = q.where('status', 'in', Array.from(new Set(statuses)));
     }
-    q = q.orderBy('publishedAt', 'desc');
+    if (opts.kind) q = q.where('kind', '==', opts.kind);
+    if (opts.category) q = q.where('category', '==', opts.category);
+    const orderBy = opts.orderBy ?? [{ field: 'publishedAt', dir: 'desc' as const }];
+    for (const o of orderBy) q = q.orderBy(o.field, o.dir);
     if (opts.limit) q = q.limit(opts.limit);
     const snap = await q.get();
     return snap.docs.map(letterFromDoc);
+}
+
+export type LetterWithBooks = Letter & { books: Book[] };
+
+export async function listLettersWithBooks(
+    opts: LetterListOpts = {},
+): Promise<LetterWithBooks[]> {
+    const letters = await listLetters(opts);
+    const allBookIds = Array.from(new Set(letters.flatMap((l) => l.bookIds)));
+    const books = await getBooksByIds(allBookIds);
+    const bookMap = new Map(books.map((b) => [b.id, b]));
+    return letters.map((l) => ({
+        ...l,
+        books: l.bookIds.map((id) => bookMap.get(id)).filter((b): b is Book => !!b),
+    }));
+}
+
+export async function getLetterWithBooks(slug: string): Promise<LetterWithBooks | null> {
+    const letter = await getLetterBySlug(slug);
+    if (!letter) return null;
+    const books = await getBooksByIds(letter.bookIds);
+    return { ...letter, books };
+}
+
+export async function listLetterCategories(): Promise<string[]> {
+    const list = await listLetters({ status: 'PUBLISHED' });
+    const set = new Set<string>();
+    for (const l of list) if (l.category) set.add(l.category);
+    return Array.from(set);
+}
+
+export async function findLetterBySlug(
+    slug: string,
+    excludeId?: string,
+): Promise<Letter | null> {
+    const l = await getLetterBySlug(slug);
+    if (l && excludeId && l.id === excludeId) return null;
+    return l;
+}
+
+export async function deleteLetter(slug: string): Promise<void> {
+    const db = getDb();
+    await db.collection(COLLECTIONS.letters).doc(slug).delete();
 }
 
 export async function upsertLetter(
@@ -763,18 +642,6 @@ export async function upsertPersonalRecommendCache(
             expiresAt,
             createdAt: new Date(),
         });
-}
-
-// ===== Curation count helpers (admin) =====
-
-export async function countCurations(opts: { status?: string; sinceDate?: Date } = {}): Promise<number> {
-    const db = tryDb();
-    if (!db) return 0;
-    let q: admin.firestore.Query = db.collection(COLLECTIONS.curations);
-    if (opts.status) q = q.where('status', '==', opts.status);
-    if (opts.sinceDate) q = q.where('publishedAt', '>=', opts.sinceDate);
-    const snap = await q.count().get();
-    return snap.data().count;
 }
 
 // Re-export FieldValue for downstream increments etc.

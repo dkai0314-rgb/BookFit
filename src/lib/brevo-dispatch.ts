@@ -154,6 +154,14 @@ export async function dispatchEmail(input: DispatchInput): Promise<DispatchResul
     return { sentCount, skipped: false, error: lastError };
 }
 
+export type LetterEmailKind = 'weekly' | 'monthly_pick' | 'special';
+
+const KIND_BADGE: Record<LetterEmailKind, string> = {
+    weekly: '이주의 한 권',
+    monthly_pick: '이달의 픽 (3권)',
+    special: '스페셜',
+};
+
 export function buildLetterEmailHtml(letter: {
     slug: string;
     headlineTitle: string | null;
@@ -161,11 +169,54 @@ export function buildLetterEmailHtml(letter: {
     metaDescription: string | null;
     contentMarkdown: string;
     coverImageUrl: string | null;
+    kind?: LetterEmailKind;
+    books?: { title: string; author: string; imageUrl: string | null }[];
+    curatorNote?: string | null;
 }): { subject: string; htmlBody: string } {
     const subject = `[북핏레터] ${letter.headlineTitle || letter.title}`;
     const url = `${SITE_ORIGIN}/bookfit-letter/${letter.slug}`;
     const desc = letter.metaDescription || '';
-    const cover = letter.coverImageUrl || '';
+    const kind = letter.kind ?? 'weekly';
+    const badge = KIND_BADGE[kind];
+
+    const cover =
+        letter.coverImageUrl ||
+        letter.books?.find((b) => !!b.imageUrl)?.imageUrl ||
+        '';
+    const normalize = (u: string) =>
+        u.replace('coversum', 'cover500').replace(/^http:/i, 'https:');
+
+    let coverBlock = '';
+    if (kind === 'monthly_pick' && letter.books && letter.books.length >= 2) {
+        const cells = letter.books
+            .slice(0, 3)
+            .map((b) =>
+                b.imageUrl
+                    ? `<td align="center" style="padding:0 6px;"><img src="${escapeAttr(normalize(b.imageUrl))}" alt="${escapeAttr(b.title)}" width="160" style="display:block;width:100%;max-width:160px;height:auto;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.12);" /></td>`
+                    : '<td></td>',
+            )
+            .join('');
+        coverBlock = `<tr><td style="padding:32px 32px 0 32px;background:#faf8f5;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr>${cells}</tr></table></td></tr>`;
+    } else if (cover) {
+        coverBlock = `<tr><td><img src="${escapeAttr(normalize(cover))}" alt="" style="display:block;width:100%;height:auto;" /></td></tr>`;
+    }
+
+    const curatorNoteBlock = letter.curatorNote
+        ? `<tr><td style="padding:0 32px 24px 32px;"><div style="background:#faf6ee;border-left:3px solid #a87f5b;padding:16px 20px;border-radius:6px;font-size:14px;line-height:1.7;color:#5a4a35;white-space:pre-line;">${escapeHtml(letter.curatorNote)}</div></td></tr>`
+        : '';
+
+    const bookListBlock =
+        letter.books && letter.books.length > 0
+            ? `<tr><td style="padding:0 32px 24px 32px;font-size:13px;color:#666;">
+                <div style="font-weight:bold;color:#333;margin-bottom:8px;">이번 회차의 책</div>
+                ${letter.books
+                    .map(
+                        (b) =>
+                            `<div style="margin:4px 0;">· <strong>${escapeHtml(b.title)}</strong> — ${escapeHtml(b.author)}</div>`,
+                    )
+                    .join('')}
+              </td></tr>`
+            : '';
 
     const htmlBody = `<!DOCTYPE html>
 <html lang="ko">
@@ -175,17 +226,19 @@ export function buildLetterEmailHtml(letter: {
     <tr>
       <td align="center">
         <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-          ${cover ? `<tr><td><img src="${escapeAttr(cover)}" alt="" style="display:block;width:100%;height:auto;" /></td></tr>` : ''}
+          ${coverBlock}
           <tr><td style="padding:32px 32px 16px 32px;">
-            <div style="font-size:11px;font-weight:bold;letter-spacing:0.1em;text-transform:uppercase;color:#a87f5b;">Weekly Letter</div>
+            <div style="font-size:11px;font-weight:bold;letter-spacing:0.1em;text-transform:uppercase;color:#a87f5b;">${escapeHtml(badge)}</div>
             <h1 style="margin:8px 0 16px 0;font-size:24px;line-height:1.4;color:#222;">${escapeHtml(letter.headlineTitle || letter.title)}</h1>
             <p style="margin:0;font-size:15px;line-height:1.7;color:#555;">${escapeHtml(desc)}</p>
           </td></tr>
+          ${curatorNoteBlock}
+          ${bookListBlock}
           <tr><td style="padding:0 32px 32px 32px;">
             <a href="${escapeAttr(url)}" style="display:inline-block;background:#a87f5b;color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px;">전체 글 읽기 →</a>
           </td></tr>
           <tr><td style="padding:24px 32px;border-top:1px solid #efebe5;font-size:12px;color:#888;">
-            BookFit · 매주 한 권의 책에서 인사이트를 정리해 보내드려요.<br/>
+            BookFit · 책으로 만나는 매주의 회차.<br/>
             <a href="${SITE_ORIGIN}" style="color:#a87f5b;text-decoration:none;">bookfit.kr</a>
           </td></tr>
         </table>

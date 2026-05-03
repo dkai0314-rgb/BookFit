@@ -1,55 +1,114 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, BookOpen, MessageSquare, BookCheck, Lightbulb, Sparkles, Mail, ListChecks } from 'lucide-react';
-import CurationSection from '@/components/CurationSection';
+import { ArrowRight, BookOpen, MessageSquare, BookCheck, Lightbulb, Mail, ListChecks } from 'lucide-react';
 import JsonLd from '@/components/JsonLd';
 import Header from '@/components/Header';
 import {
-    listLetters,
-    listCurations,
-    getBooksByIds,
+    listLettersWithBooks,
     getLatestBestsellerMonth,
     listBestsellersForMonth,
-    type Curation,
-    type Book,
+    type LetterWithBooks,
+    type LetterKind,
 } from '@/lib/firestore-models';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-async function getLatestLetters() {
+async function getRecentLetters(): Promise<LetterWithBooks[]> {
     try {
-        return await listLetters({ status: 'PUBLISHED', limit: 3 });
+        return await listLettersWithBooks({
+            status: 'PUBLISHED',
+            limit: 6,
+            orderBy: [
+                { field: 'isFeatured', dir: 'desc' },
+                { field: 'publishedAt', dir: 'desc' },
+            ],
+        });
     } catch (error) {
-        console.error('home/getLatestLetters', error);
+        console.error('home/getRecentLetters', error);
         return [];
     }
 }
 
-async function getRecentCurations(): Promise<{ curation: Curation; firstBook: Book | null }[]> {
-    try {
-        const list = await listCurations({
-            status: 'published',
-            limit: 6,
-            requireSlug: true,
-            orderBy: [
-                { field: 'isFeatured', dir: 'desc' },
-                { field: 'publishedAt', dir: 'desc' },
-                { field: 'createdAt', dir: 'desc' },
-            ],
-        });
-        const firstBookIds = list.map((c) => c.bookIds[0]).filter((id): id is string => !!id);
-        const books = await getBooksByIds(Array.from(new Set(firstBookIds)));
-        const bookMap = new Map(books.map((b) => [b.id, b]));
-        return list.map((c) => ({
-            curation: c,
-            firstBook: c.bookIds[0] ? bookMap.get(c.bookIds[0]) ?? null : null,
-        }));
-    } catch (error) {
-        console.error('home/getRecentCurations', error);
-        return [];
-    }
+const KIND_LABELS: Record<LetterKind, string> = {
+    weekly: '이주의 한 권',
+    monthly_pick: '이달의 픽',
+    special: '스페셜',
+};
+
+function HomeLetterCard({ letter }: { letter: LetterWithBooks }) {
+    const headline = letter.headlineTitle || letter.metaTitle || letter.title;
+    const cover = letter.ogImageUrl || letter.coverImageUrl || letter.books[0]?.imageUrl || null;
+    return (
+        <Link
+            href={`/bookfit-letter/${letter.slug}`}
+            className="group block bg-background border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:border-accent transition-all"
+        >
+            <div className="relative aspect-[16/10] w-full bg-muted overflow-hidden">
+                {cover ? (
+                    letter.kind === 'monthly_pick' && letter.books.length >= 3 ? (
+                        <div className="absolute inset-0 flex items-center justify-center gap-2 px-4 bg-secondary/40">
+                            {letter.books.slice(0, 3).map((b) => (
+                                <Image
+                                    key={b.id}
+                                    src={(b.imageUrl ?? '').replace('coversum', 'cover500').replace(/^http:/i, 'https:')}
+                                    alt={b.title}
+                                    width={120}
+                                    height={180}
+                                    className="aspect-[2/3] object-cover rounded shadow-lg group-hover:-translate-y-1 transition-transform w-1/3 h-auto"
+                                    unoptimized
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <Image
+                            src={cover.replace('coversum', 'cover500').replace(/^http:/i, 'https:')}
+                            alt={letter.title}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            unoptimized
+                        />
+                    )
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                        <BookOpen className="w-8 h-8 opacity-30" />
+                    </div>
+                )}
+                <div className="absolute top-3 right-3 z-10 bg-white/90 backdrop-blur-sm border border-border text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded text-accent">
+                    {KIND_LABELS[letter.kind]}
+                </div>
+                {letter.isFeatured && (
+                    <div className="absolute top-3 left-3 z-10 bg-accent text-primary-foreground text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">
+                        Featured
+                    </div>
+                )}
+            </div>
+            <div className="p-5 space-y-2">
+                {letter.category && (
+                    <div className="text-[10px] text-accent font-bold uppercase tracking-widest">
+                        {letter.category}
+                    </div>
+                )}
+                <h3 className="text-lg font-bold font-serif text-primary leading-tight group-hover:text-accent transition-colors break-keep line-clamp-2">
+                    {headline}
+                </h3>
+                {letter.metaDescription && (
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 break-keep">
+                        {letter.metaDescription}
+                    </p>
+                )}
+                <div className="pt-2 text-xs text-muted-foreground flex items-center justify-between">
+                    <span>
+                        {letter.publishedAt
+                            ? new Date(letter.publishedAt).toLocaleDateString('ko-KR')
+                            : ''}
+                    </span>
+                    {letter.readingTime ? <span>약 {letter.readingTime}분</span> : null}
+                </div>
+            </div>
+        </Link>
+    );
 }
 
 async function getMonthlyBestsellers() {
@@ -96,9 +155,8 @@ const FAQ_DATA = {
 };
 
 export default async function Home() {
-    const [letters, curations, bestsellers] = await Promise.all([
-        getLatestLetters(),
-        getRecentCurations(),
+    const [letters, bestsellers] = await Promise.all([
+        getRecentLetters(),
         getMonthlyBestsellers(),
     ]);
 
@@ -147,75 +205,39 @@ export default async function Home() {
                                     지금 내 책 찾기 🔍
                                 </Button>
                             </Link>
-                            <Link href="/curation" className="w-full">
+                            <Link href="/bookfit-letter" className="w-full">
                                 <Button
                                     variant="outline"
                                     size="lg"
                                     className="w-full rounded-md border-primary/20 bg-white/50 text-primary hover:bg-primary/5 px-8 py-6 text-lg backdrop-blur-sm transition-all hover:border-primary/40 shadow-sm"
-                                    aria-label="큐레이션 매거진 보기"
+                                    aria-label="북핏레터 보기"
                                 >
-                                    <BookCheck className="mr-2 h-5 w-5" />
-                                    큐레이션 매거진 보기
+                                    <Mail className="mr-2 h-5 w-5" />
+                                    북핏레터 읽으러 가기
                                 </Button>
                             </Link>
                         </div>
                     </div>
                 </section>
 
-                {/* Section 1: 이번 주 북핏레터 */}
+                {/* W6: 최근 북핏레터 — 이주의 한 권 + 이달의 픽 통합 */}
                 {letters.length > 0 && (
                     <section className="w-full py-24 px-6 bg-secondary/30 border-y border-border" aria-labelledby="letter-title">
                         <div className="max-w-6xl mx-auto space-y-10">
                             <div className="text-center space-y-3">
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
-                                    <Mail className="w-3 h-3" /> Weekly Letter
+                                    <Mail className="w-3 h-3" /> BookFit Letter
                                 </div>
                                 <h2 id="letter-title" className="text-3xl md:text-4xl font-bold font-serif text-primary">
-                                    이번 주 북핏레터
+                                    최근 북핏레터
                                 </h2>
-                                <p className="text-base text-muted-foreground">한 권의 책에 담긴 인사이트를 매주 정리해 보내드려요.</p>
+                                <p className="text-base text-muted-foreground">
+                                    매주 한 회차 — 어떤 주는 책 한 권 깊이, 어떤 주는 테마로 묶은 세 권.
+                                </p>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {letters.map((l) => (
-                                    <Link
-                                        key={l.id}
-                                        href={`/bookfit-letter/${l.slug}`}
-                                        className="group block bg-background border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:border-accent transition-all"
-                                    >
-                                        <div className="relative aspect-[16/10] w-full bg-muted">
-                                            {l.coverImageUrl ? (
-                                                <Image
-                                                    src={l.coverImageUrl}
-                                                    alt={l.title}
-                                                    fill
-                                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                                    unoptimized
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                                                    <BookOpen className="w-8 h-8 opacity-30" />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="p-5 space-y-2">
-                                            <h3 className="text-lg font-bold font-serif text-primary leading-tight group-hover:text-accent transition-colors break-keep line-clamp-2">
-                                                {l.headlineTitle || l.title}
-                                            </h3>
-                                            {l.metaDescription && (
-                                                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 break-keep">
-                                                    {l.metaDescription}
-                                                </p>
-                                            )}
-                                            <div className="pt-2 text-xs text-muted-foreground flex items-center justify-between">
-                                                <span>
-                                                    {l.publishedAt
-                                                        ? new Date(l.publishedAt).toLocaleDateString('ko-KR')
-                                                        : ''}
-                                                </span>
-                                                {l.readingTime ? <span>약 {l.readingTime}분</span> : null}
-                                            </div>
-                                        </div>
-                                    </Link>
+                                    <HomeLetterCard key={l.id} letter={l} />
                                 ))}
                             </div>
                             <div className="text-center">
@@ -226,78 +248,6 @@ export default async function Home() {
                         </div>
                     </section>
                 )}
-
-                {/* Section 2: 최근 큐레이션 */}
-                {curations.length > 0 && (
-                    <section className="w-full py-24 px-6" aria-labelledby="curation-section-title">
-                        <div className="max-w-6xl mx-auto space-y-10">
-                            <div className="text-center space-y-3">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
-                                    <Sparkles className="w-3 h-3" /> Curation Magazine
-                                </div>
-                                <h2 id="curation-section-title" className="text-3xl md:text-4xl font-bold font-serif text-primary">
-                                    최근 큐레이션
-                                </h2>
-                                <p className="text-base text-muted-foreground">테마별로 묶인 책 3권으로 이번 주의 독서 흐름을 잡아보세요.</p>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {curations.map(({ curation: c, firstBook }) => {
-                                    const cover = c.ogImage || c.cardImageUrl || firstBook?.imageUrl;
-                                    const href = c.slug ? `/curation/${c.slug}` : '#';
-                                    return (
-                                        <Link
-                                            key={c.id}
-                                            href={href}
-                                            className="group block bg-background border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:border-accent transition-all"
-                                        >
-                                            <div className="relative aspect-[16/9] w-full bg-muted">
-                                                {cover ? (
-                                                    <Image
-                                                        src={cover.replace('coversum', 'cover500').replace(/^http:/i, 'https:')}
-                                                        alt={c.title}
-                                                        fill
-                                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                                        unoptimized
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
-                                                        No Image
-                                                    </div>
-                                                )}
-                                                {c.isFeatured && (
-                                                    <div className="absolute top-3 left-3 bg-accent text-primary-foreground text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md">
-                                                        Featured
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="p-5 space-y-2">
-                                                {c.category && (
-                                                    <div className="text-[10px] text-accent font-bold uppercase tracking-widest">
-                                                        {c.category}
-                                                    </div>
-                                                )}
-                                                <h3 className="text-lg font-bold font-serif text-primary leading-tight group-hover:text-accent transition-colors break-keep line-clamp-2">
-                                                    {c.title}
-                                                </h3>
-                                                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 break-keep">
-                                                    {c.description}
-                                                </p>
-                                            </div>
-                                        </Link>
-                                    );
-                                })}
-                            </div>
-                            <div className="text-center">
-                                <Link href="/curation" className="inline-flex items-center gap-1 text-accent hover:underline font-semibold">
-                                    큐레이션 전체 보기 <ArrowRight className="w-4 h-4" />
-                                </Link>
-                            </div>
-                        </div>
-                    </section>
-                )}
-
-                {/* Legacy: BookFit Choice (Google Sheets / JSON) */}
-                <CurationSection id="curation" />
 
                 {/* Section 3: 베스트셀러 */}
                 {bestsellers.books.length > 0 && (

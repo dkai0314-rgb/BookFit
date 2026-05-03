@@ -51,10 +51,9 @@ export default function Header() {
 
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center gap-8 text-base font-medium text-muted-foreground" aria-label="메인 네비게이션">
-                    <Link href="/curation" className="hover:text-accent transition-colors">이달의북핏</Link>
+                    <Link href="/bookfit-letter" className="hover:text-accent transition-colors">북핏레터</Link>
                     <Link href="/bestsellers" className="hover:text-accent transition-colors">베스트셀러</Link>
                     <Link href="/template" className="hover:text-accent transition-colors">독서관 템플릿</Link>
-                    <Link href="/bookfit-letter" className="hover:text-accent transition-colors">북핏레터</Link>
 
                     {/* Auth Nav */}
                     <div className="flex items-center gap-4 ml-4 border-l border-border pl-4">
@@ -94,10 +93,9 @@ export default function Header() {
                 {/* Mobile Navigation Dropdown */}
                 {isMenuOpen && (
                     <div className="absolute top-full left-0 right-0 mt-4 p-4 bg-background/95 backdrop-blur-xl border border-border rounded-2xl shadow-2xl flex flex-col gap-4 text-center md:hidden animate-in slide-in-from-top-4 fade-in">
-                        <Link href="/curation" onClick={toggleMenu} className="block w-full py-3 text-foreground hover:text-accent hover:bg-secondary rounded-xl transition-all font-medium">이달의북핏</Link>
+                        <Link href="/bookfit-letter" onClick={toggleMenu} className="block w-full py-3 text-foreground hover:text-accent hover:bg-secondary rounded-xl transition-all font-medium">북핏레터</Link>
                         <Link href="/bestsellers" onClick={toggleMenu} className="block w-full py-3 text-foreground hover:text-accent hover:bg-secondary rounded-xl transition-all font-medium">베스트셀러</Link>
                         <Link href="/template" onClick={toggleMenu} className="block w-full py-3 text-foreground hover:text-accent hover:bg-secondary rounded-xl transition-all font-medium">독서관 템플릿</Link>
-                        <Link href="/bookfit-letter" onClick={toggleMenu} className="block w-full py-3 text-foreground hover:text-accent hover:bg-secondary rounded-xl transition-all font-medium">북핏레터</Link>
 
                         <div className="h-px bg-border w-full my-1"></div>
 
