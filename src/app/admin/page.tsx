@@ -57,15 +57,15 @@ export default async function AdminDashboardPage() {
             0,
         ),
         safeQuery(
-            () =>
-                listLetters({
+            async () => {
+                // composite index 의존 제거 — 단일 orderBy + in-memory 정렬
+                const all = await listLetters({
                     status: 'PUBLISHED',
-                    limit: 5,
-                    orderBy: [
-                        { field: 'viewCount', dir: 'desc' },
-                        { field: 'publishedAt', dir: 'desc' },
-                    ],
-                }),
+                    limit: 50,
+                    orderBy: [{ field: 'viewCount', dir: 'desc' }],
+                });
+                return all.slice(0, 5);
+            },
             [] as Awaited<ReturnType<typeof listLetters>>,
         ),
         safeQuery(() => countShelfTotal(), 0),

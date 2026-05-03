@@ -1,4 +1,5 @@
-import { getLetterWithBooks } from '@/lib/firestore-models';
+import Link from 'next/link';
+import { getLetterWithBooks, type LetterWithBooks } from '@/lib/firestore-models';
 import { notFound } from 'next/navigation';
 import AdminLetterEditClient from './AdminLetterEditClient';
 
@@ -9,7 +10,27 @@ type Props = { params: Promise<{ slug: string }> };
 
 export default async function AdminLetterEditPage({ params }: Props) {
     const { slug } = await params;
-    const letter = await getLetterWithBooks(decodeURIComponent(slug));
+    let letter: LetterWithBooks | null = null;
+    try {
+        letter = await getLetterWithBooks(decodeURIComponent(slug));
+    } catch (error) {
+        const err = error as Error;
+        console.error('admin/letters/[slug] query failed', err);
+        return (
+            <div className="p-8 max-w-2xl mx-auto space-y-4 font-sans text-gray-900">
+                <Link href="/admin/letters" className="text-sm text-gray-500 hover:underline">
+                    ← 레터 목록
+                </Link>
+                <h1 className="text-2xl font-bold text-red-600">Firestore 연결 실패</h1>
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm font-mono text-red-900 break-all">
+                    {err.message || 'unknown error'}
+                </div>
+                <p className="text-sm text-gray-600">
+                    /admin/letters 메인 화면에서 점검 단계를 확인해주세요.
+                </p>
+            </div>
+        );
+    }
     if (!letter) notFound();
 
     return (

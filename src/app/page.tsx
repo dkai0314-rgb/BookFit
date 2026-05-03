@@ -17,14 +17,19 @@ export const runtime = 'nodejs';
 
 async function getRecentLetters(): Promise<LetterWithBooks[]> {
     try {
-        return await listLettersWithBooks({
+        // Firestore composite index 의존 제거 — 단일 orderBy + in-memory 정렬
+        const list = await listLettersWithBooks({
             status: 'PUBLISHED',
-            limit: 6,
-            orderBy: [
-                { field: 'isFeatured', dir: 'desc' },
-                { field: 'publishedAt', dir: 'desc' },
-            ],
+            limit: 24,
+            orderBy: [{ field: 'publishedAt', dir: 'desc' }],
         });
+        list.sort((a, b) => {
+            if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
+            const ad = a.publishedAt?.getTime() ?? 0;
+            const bd = b.publishedAt?.getTime() ?? 0;
+            return bd - ad;
+        });
+        return list.slice(0, 6);
     } catch (error) {
         console.error('home/getRecentLetters', error);
         return [];

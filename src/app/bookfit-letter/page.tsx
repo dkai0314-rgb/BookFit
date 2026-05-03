@@ -25,6 +25,7 @@ export default async function BookFitLetterListPage({ searchParams }: Props) {
 
     let letters: LetterWithBooks[] = [];
     try {
+        // Firestore composite index 의존 제거 — 단일 orderBy + in-memory 정렬
         letters = await listLettersWithBooks({
             status: 'PUBLISHED',
             kind:
@@ -33,10 +34,13 @@ export default async function BookFitLetterListPage({ searchParams }: Props) {
                 filterKind === 'special'
                     ? filterKind
                     : undefined,
-            orderBy: [
-                { field: 'isFeatured', dir: 'desc' },
-                { field: 'publishedAt', dir: 'desc' },
-            ],
+            orderBy: [{ field: 'publishedAt', dir: 'desc' }],
+        });
+        letters.sort((a, b) => {
+            if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
+            const ad = a.publishedAt?.getTime() ?? 0;
+            const bd = b.publishedAt?.getTime() ?? 0;
+            return bd - ad;
         });
     } catch (error) {
         console.error('letter list query failed', error);
