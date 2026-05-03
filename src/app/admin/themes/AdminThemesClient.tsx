@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { SerializedTheme } from './page';
 
 type LetterKind = 'weekly' | 'monthly_pick' | 'special';
@@ -19,6 +20,7 @@ export default function AdminThemesClient({
     initial: SerializedTheme[];
     dbError: string | null;
 }) {
+    const router = useRouter();
     const [list, setList] = useState<SerializedTheme[]>(initial);
     const [theme, setTheme] = useState('');
     const [kind, setKind] = useState<LetterKind>('monthly_pick');
@@ -26,6 +28,46 @@ export default function AdminThemesClient({
     const [note, setNote] = useState('');
     const [busy, setBusy] = useState(false);
     const [message, setMessage] = useState('');
+    const [triggerBusy, setTriggerBusy] = useState(false);
+    const [triggerMessage, setTriggerMessage] = useState<{
+        kind: 'success' | 'error' | 'info';
+        text: string;
+        link?: string;
+    } | null>(null);
+
+    const triggerNow = async () => {
+        if (
+            !confirm(
+                '지금 즉시 cron을 수동 실행합니다.\n\n다음 미사용 테마 1개로 Claude가 회차 draft를 만들고, 운영자 메일이 발송됩니다.\n진행할까요?',
+            )
+        )
+            return;
+        setTriggerBusy(true);
+        setTriggerMessage({ kind: 'info', text: 'Claude가 회차를 작성하는 중... (15~30초)' });
+        try {
+            const res = await fetch('/api/admin/trigger-weekly-draft', { method: 'POST' });
+            const json = await res.json();
+            if (!res.ok || !json.success) {
+                setTriggerMessage({
+                    kind: 'error',
+                    text: json.reason || json.error || '실행 실패',
+                });
+                return;
+            }
+            setTriggerMessage({
+                kind: 'success',
+                text: `생성 완료! 테마: "${json.theme}"`,
+                link: `/admin/letters/${encodeURIComponent(json.letterSlug)}`,
+            });
+            // 테마 목록 새로고침 (used 상태 반영)
+            router.refresh();
+        } catch (e) {
+            console.error(e);
+            setTriggerMessage({ kind: 'error', text: '네트워크 오류' });
+        } finally {
+            setTriggerBusy(false);
+        }
+    };
 
     const refresh = async () => {
         try {
@@ -151,15 +193,53 @@ export default function AdminThemesClient({
             </header>
 
             {nextTheme && (
-                <section className="border border-accent/30 bg-accent/5 rounded-xl p-5 space-y-2">
-                    <div className="text-xs font-bold uppercase tracking-widest text-accent">
-                        다음 cron이 가져갈 테마
+                <section className="border border-accent/30 bg-accent/5 rounded-xl p-5 space-y-3">
+                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                        <div className="space-y-1">
+                            <div className="text-xs font-bold uppercase tracking-widest text-accent">
+                                다음 cron이 가져갈 테마
+                            </div>
+                            <div className="text-lg font-bold">{nextTheme.theme}</div>
+                            <div className="text-xs text-gray-600">
+                                형식: {KIND_LABEL[nextTheme.kind]} · 우선순위: {nextTheme.priority}
+                                {nextTheme.note ? ` · ${nextTheme.note}` : ''}
+                            </div>
+                        </div>
+                        <button
+                            onClick={triggerNow}
+                            disabled={triggerBusy || nextTheme.kind === 'weekly'}
+                            className="shrink-0 px-5 py-2.5 rounded-md bg-accent text-primary-foreground font-bold hover:bg-accent/90 disabled:opacity-50 text-sm"
+                            title={
+                                nextTheme.kind === 'weekly'
+                                    ? 'weekly kind는 자동 트리거 미지원'
+                                    : '지금 즉시 cron을 수동 실행'
+                            }
+                        >
+                            {triggerBusy ? '⏳ 실행 중...' : '⚡ 지금 실행 (수동 트리거)'}
+                        </button>
                     </div>
-                    <div className="text-lg font-bold">{nextTheme.theme}</div>
-                    <div className="text-xs text-gray-600">
-                        형식: {KIND_LABEL[nextTheme.kind]} · 우선순위: {nextTheme.priority}
-                        {nextTheme.note ? ` · ${nextTheme.note}` : ''}
-                    </div>
+
+                    {triggerMessage && (
+                        <div
+                            className={`p-3 rounded-md text-sm ${
+                                triggerMessage.kind === 'success'
+                                    ? 'bg-green-50 border border-green-200 text-green-900'
+                                    : triggerMessage.kind === 'error'
+                                        ? 'bg-red-50 border border-red-200 text-red-900'
+                                        : 'bg-blue-50 border border-blue-200 text-blue-900'
+                            }`}
+                        >
+                            <div>{triggerMessage.text}</div>
+                            {triggerMessage.link && (
+                                <Link
+                                    href={triggerMessage.link}
+                                    className="inline-block mt-2 font-bold underline"
+                                >
+                                    검토하러 가기 →
+                                </Link>
+                            )}
+                        </div>
+                    )}
                 </section>
             )}
 

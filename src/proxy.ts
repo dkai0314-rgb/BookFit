@@ -4,8 +4,11 @@ import type { NextRequest } from 'next/server';
 export default function proxy(req: NextRequest) {
     const url = req.nextUrl;
 
-    // Protect all /admin routes
-    if (url.pathname.startsWith('/admin')) {
+    // Protect /admin pages and admin-only API endpoints
+    if (
+        url.pathname.startsWith('/admin') ||
+        url.pathname.startsWith('/api/admin')
+    ) {
         const basicAuth = req.headers.get('authorization');
 
         if (basicAuth) {
@@ -34,5 +37,5 @@ export default function proxy(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/admin/:path*'],
+    matcher: ['/admin/:path*', '/api/admin/:path*'],
 };
