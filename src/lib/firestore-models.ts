@@ -558,16 +558,18 @@ export async function findRecentSuccessfulDispatch(
 ): Promise<EmailDispatchLog | null> {
     const db = tryDb();
     if (!db) return null;
+    // targetId 단일 필드만 쿼리 → 복합 인덱스 불필요.
+    // type · errorMessage 필터와 sentAt 정렬은 인메모리 처리.
     const snap = await db
         .collection(COLLECTIONS.emailDispatchLogs)
-        .where('type', '==', type)
         .where('targetId', '==', targetId)
-        .where('errorMessage', '==', null)
-        .orderBy('sentAt', 'desc')
-        .limit(1)
         .get();
     if (snap.empty) return null;
-    return dispatchLogFromDoc(snap.docs[0]);
+    const logs = snap.docs
+        .map(dispatchLogFromDoc)
+        .filter((l) => l.type === type && !l.errorMessage)
+        .sort((a, b) => b.sentAt.getTime() - a.sentAt.getTime());
+    return logs[0] ?? null;
 }
 
 export async function createDispatchLog(data: {
