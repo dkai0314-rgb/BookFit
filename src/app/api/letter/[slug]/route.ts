@@ -35,7 +35,7 @@ const ALLOWED_FIELDS = [
     'source',
 ] as const;
 
-const ALLOWED_KIND = new Set<LetterKind>(['weekly', 'monthly_pick', 'special']);
+const ALLOWED_KIND = new Set<LetterKind>(['letter', 'weekly', 'monthly_pick', 'special']);
 
 export async function GET(_request: Request, { params }: Params) {
     try {

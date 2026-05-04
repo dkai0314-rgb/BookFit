@@ -35,11 +35,11 @@ export type Book = {
     updatedAt: Date;
 };
 
-// Curation type/helpers는 W6에서 Letter로 흡수됨 — kind: 'monthly_pick' 으로 사용.
+// kind 필드: 신규 생성은 'letter' 고정. 기존 DB 값('weekly'/'monthly_pick'/'special')은 하위호환 유지.
 
-export type LetterKind = 'weekly' | 'monthly_pick' | 'special';
+export type LetterKind = 'letter' | 'weekly' | 'monthly_pick' | 'special';
 
-export const LETTER_KINDS: LetterKind[] = ['weekly', 'monthly_pick', 'special'];
+export const LETTER_KINDS: LetterKind[] = ['letter', 'weekly', 'monthly_pick', 'special'];
 
 export type Letter = {
     id: string; // = slug (we use slug as doc id)
@@ -66,9 +66,9 @@ export type Letter = {
     createdAt: Date;
     updatedAt: Date;
 
-    // W6 — 큐레이션 흡수 (이달의북핏 ↔ 북핏레터 통합)
-    kind: LetterKind;          // 'weekly'(단권 1) | 'monthly_pick'(3권 묶음) | 'special'(자유)
-    bookIds: string[];         // 회차에 묶인 책. weekly=1, monthly_pick=3+, special=0~N
+    // W6 — 큐레이션 흡수. 신규 생성은 kind: 'letter' 고정. 기존 DB 값은 하위호환 유지.
+    kind: LetterKind;          // 'letter'(기본) | 'weekly' | 'monthly_pick' | 'special' (기존 호환)
+    bookIds: string[];         // 회차에 묶인 책
     curatorNote: string | null; // 도입 단락 (큐레이터 시각)
     category: string | null;   // 분류 ("감정","계절","직군","트렌드" 등)
     isFeatured: boolean;       // 홈/목록 우선 노출
@@ -147,7 +147,9 @@ function letterFromDoc(doc: admin.firestore.DocumentSnapshot): Letter {
     const d = doc.data() ?? {};
     const rawKind = d.kind;
     const kind: LetterKind =
-        rawKind === 'monthly_pick' || rawKind === 'special' ? rawKind : 'weekly';
+        rawKind === 'weekly' || rawKind === 'monthly_pick' || rawKind === 'special'
+            ? rawKind
+            : 'letter';
     return {
         id: doc.id,
         slug: d.slug ?? doc.id,
@@ -652,7 +654,7 @@ export async function upsertPersonalRecommendCache(
 export type ThemePoolEntry = {
     id: string;
     theme: string;
-    kind: LetterKind; // 'monthly_pick' (default) | 'weekly' | 'special'
+    kind: LetterKind; // 'letter' (default) | 'weekly' | 'monthly_pick' | 'special' (기존 호환)
     used: boolean;
     usedAt: Date | null;
     usedLetterSlug: string | null;
@@ -665,7 +667,9 @@ function themeFromDoc(doc: admin.firestore.DocumentSnapshot): ThemePoolEntry {
     const d = doc.data() ?? {};
     const rawKind = d.kind;
     const kind: LetterKind =
-        rawKind === 'weekly' || rawKind === 'special' ? rawKind : 'monthly_pick';
+        rawKind === 'weekly' || rawKind === 'monthly_pick' || rawKind === 'special'
+            ? rawKind
+            : 'letter';
     return {
         id: doc.id,
         theme: d.theme ?? '',

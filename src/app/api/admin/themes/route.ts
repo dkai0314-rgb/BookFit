@@ -5,7 +5,7 @@ import {
     type LetterKind,
 } from '@/lib/firestore-models';
 
-const ALLOWED_KIND = new Set<LetterKind>(['weekly', 'monthly_pick', 'special']);
+const ALLOWED_KIND = new Set<LetterKind>(['letter', 'weekly', 'monthly_pick', 'special']);
 
 export async function GET() {
     try {
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
         if (!body.theme || !body.theme.trim()) {
             return NextResponse.json({ error: '테마 텍스트가 필요합니다.' }, { status: 400 });
         }
-        const kind = (body.kind ?? 'monthly_pick') as LetterKind;
+        const kind = (body.kind ?? 'letter') as LetterKind;
         if (!ALLOWED_KIND.has(kind)) {
             return NextResponse.json({ error: 'invalid kind' }, { status: 400 });
         }

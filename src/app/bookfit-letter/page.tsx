@@ -1,6 +1,5 @@
 import {
     listLettersWithBooks,
-    type LetterKind,
     type LetterWithBooks,
 } from '@/lib/firestore-models';
 import Link from 'next/link';
@@ -9,31 +8,16 @@ import Header from '@/components/Header';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-const KIND_LABELS: Record<LetterKind, string> = {
-    weekly: '이주의 한 권',
-    monthly_pick: '이달의 픽 (3권)',
-    special: '스페셜',
-};
-
 type Props = {
-    searchParams: Promise<{ kind?: string }>;
+    searchParams?: Promise<Record<string, string>>;
 };
 
-export default async function BookFitLetterListPage({ searchParams }: Props) {
-    const sp = await searchParams;
-    const filterKind = (sp.kind && (sp.kind as LetterKind)) || undefined;
-
+export default async function BookFitLetterListPage(_props: Props) {
     let letters: LetterWithBooks[] = [];
     try {
         // Firestore composite index 의존 제거 — 단일 orderBy + in-memory 정렬
         letters = await listLettersWithBooks({
             status: 'PUBLISHED',
-            kind:
-                filterKind === 'weekly' ||
-                filterKind === 'monthly_pick' ||
-                filterKind === 'special'
-                    ? filterKind
-                    : undefined,
             orderBy: [{ field: 'publishedAt', dir: 'desc' }],
         });
         letters.sort((a, b) => {
@@ -62,13 +46,9 @@ export default async function BookFitLetterListPage({ searchParams }: Props) {
                     </p>
                 </div>
 
-                <FilterChips active={filterKind} />
-
                 {letters.length === 0 ? (
                     <div className="text-center py-20 text-gray-500 bg-secondary/30 border border-border rounded-xl">
-                        {filterKind
-                            ? '이 형식의 발행된 레터가 아직 없어요.'
-                            : '발행된 레터가 아직 없어요. 첫 번째 레터를 기대해 주세요!'}
+                        발행된 레터가 아직 없어요. 첫 번째 레터를 기대해 주세요!
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
@@ -82,35 +62,6 @@ export default async function BookFitLetterListPage({ searchParams }: Props) {
     );
 }
 
-function FilterChips({ active }: { active: LetterKind | undefined }) {
-    const items: { value: LetterKind | 'all'; label: string }[] = [
-        { value: 'all', label: '전체' },
-        { value: 'weekly', label: KIND_LABELS.weekly },
-        { value: 'monthly_pick', label: KIND_LABELS.monthly_pick },
-        { value: 'special', label: KIND_LABELS.special },
-    ];
-    return (
-        <div className="flex flex-wrap gap-2">
-            {items.map((it) => {
-                const isActive = it.value === 'all' ? !active : active === it.value;
-                const href = it.value === 'all' ? '/bookfit-letter' : `/bookfit-letter?kind=${it.value}`;
-                return (
-                    <Link
-                        key={it.value}
-                        href={href}
-                        className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
-                            isActive
-                                ? 'bg-accent text-primary-foreground border-accent shadow-sm'
-                                : 'bg-background border-border text-muted-foreground hover:border-accent hover:text-accent'
-                        }`}
-                    >
-                        {it.label}
-                    </Link>
-                );
-            })}
-        </div>
-    );
-}
 
 function LetterCard({ letter }: { letter: LetterWithBooks }) {
     const cover =
@@ -139,7 +90,7 @@ function LetterCard({ letter }: { letter: LetterWithBooks }) {
                             aria-hidden="true"
                             className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-125 z-0"
                         />
-                        {letter.kind === 'monthly_pick' && letter.books.length >= 3 ? (
+                        {letter.books.length >= 2 ? (
                             <div className="relative z-10 flex gap-2 px-4">
                                 {letter.books.slice(0, 3).map((b) => (
                                     /* eslint-disable-next-line @next/next/no-img-element */
@@ -171,7 +122,7 @@ function LetterCard({ letter }: { letter: LetterWithBooks }) {
                     </div>
                 )}
                 <div className="absolute top-3 right-3 z-20 bg-white/90 backdrop-blur-sm border border-border text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded text-accent">
-                    {KIND_LABELS[letter.kind]}
+                    북핏레터
                 </div>
             </div>
             <div className="p-6 space-y-2">

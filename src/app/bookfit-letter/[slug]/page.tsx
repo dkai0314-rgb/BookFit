@@ -19,11 +19,12 @@ interface Props {
     params: Promise<{ slug: string }>;
 }
 
-const KIND_LABELS = {
-    weekly: '이주의 한 권',
-    monthly_pick: '이달의 픽',
-    special: '스페셜',
-} as const;
+const KIND_LABELS: Record<string, string> = {
+    letter: '북핏레터',
+    weekly: '북핏레터',
+    monthly_pick: '북핏레터',
+    special: '북핏레터',
+};
 
 function isPublished(status: string): boolean {
     return status === 'PUBLISHED' || status === 'published';
@@ -172,7 +173,7 @@ export default async function LetterDetailPage({ params }: Props) {
                 {letter.books.length > 0 && (
                     <section className="mt-16 space-y-8 not-prose border-t border-border pt-12">
                         <h2 className="text-2xl font-bold font-serif text-primary text-center">
-                            {letter.kind === 'weekly' ? '이번 회차의 책' : `이번 회차의 책 ${letter.books.length}권`}
+                            {letter.books.length === 1 ? '이번 회차의 책' : `이번 회차의 책 ${letter.books.length}권`}
                         </h2>
                         <div className="space-y-8">
                             {letter.books.map((book, idx) => (
@@ -218,7 +219,7 @@ function LetterHeader({ letter }: { letter: LetterWithBooks }) {
         <header className="mb-10 text-center border-b pb-8 space-y-4">
             <div className="flex items-center justify-center gap-2 flex-wrap">
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
-                    {KIND_LABELS[letter.kind]}
+                    {KIND_LABELS[letter.kind] ?? '북핏레터'}
                 </span>
                 {letter.category && (
                     <span className="inline-flex items-center px-3 py-1 rounded-full bg-secondary border border-border text-xs font-medium text-muted-foreground">
@@ -227,20 +228,7 @@ function LetterHeader({ letter }: { letter: LetterWithBooks }) {
                 )}
             </div>
 
-            {letter.kind === 'weekly' && letter.coverImageUrl && (
-                <div className="w-32 h-44 mx-auto shadow-md rounded-md overflow-hidden relative">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                        src={letter.coverImageUrl
-                            .replace('coversum', 'cover500')
-                            .replace(/^http:/i, 'https:')}
-                        alt={letter.title}
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-            )}
-
-            {letter.kind === 'monthly_pick' && letter.books.length > 0 && (
+            {letter.books.length >= 2 ? (
                 <div className="flex justify-center gap-3 px-4">
                     {letter.books.slice(0, 3).map((b) => (
                         /* eslint-disable-next-line @next/next/no-img-element */
@@ -254,7 +242,18 @@ function LetterHeader({ letter }: { letter: LetterWithBooks }) {
                         />
                     ))}
                 </div>
-            )}
+            ) : letter.coverImageUrl ? (
+                <div className="w-32 h-44 mx-auto shadow-md rounded-md overflow-hidden relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={letter.coverImageUrl
+                            .replace('coversum', 'cover500')
+                            .replace(/^http:/i, 'https:')}
+                        alt={letter.title}
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+            ) : null}
 
             <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight break-keep">
                 {letter.headlineTitle || letter.title}

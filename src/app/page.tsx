@@ -37,9 +37,10 @@ async function getRecentLetters(): Promise<LetterWithBooks[]> {
 }
 
 const KIND_LABELS: Record<LetterKind, string> = {
-    weekly: '이주의 한 권',
-    monthly_pick: '이달의 픽',
-    special: '스페셜',
+    letter: '북핏레터',
+    weekly: '북핏레터',
+    monthly_pick: '북핏레터',
+    special: '북핏레터',
 };
 
 function HomeLetterCard({ letter }: { letter: LetterWithBooks }) {
@@ -52,7 +53,7 @@ function HomeLetterCard({ letter }: { letter: LetterWithBooks }) {
         >
             <div className="relative aspect-[16/10] w-full bg-muted overflow-hidden">
                 {cover ? (
-                    letter.kind === 'monthly_pick' && letter.books.length >= 3 ? (
+                    letter.books.length >= 2 ? (
                         <div className="absolute inset-0 flex items-center justify-center gap-2 px-4 bg-secondary/40">
                             {letter.books.slice(0, 3).map((b) => (
                                 <Image

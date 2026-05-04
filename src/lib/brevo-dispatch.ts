@@ -154,12 +154,13 @@ export async function dispatchEmail(input: DispatchInput): Promise<DispatchResul
     return { sentCount, skipped: false, error: lastError };
 }
 
-export type LetterEmailKind = 'weekly' | 'monthly_pick' | 'special';
+export type LetterEmailKind = 'letter' | 'weekly' | 'monthly_pick' | 'special';
 
 const KIND_BADGE: Record<LetterEmailKind, string> = {
-    weekly: '이주의 한 권',
-    monthly_pick: '이달의 픽 (3권)',
-    special: '스페셜',
+    letter: '북핏레터',
+    weekly: '북핏레터',
+    monthly_pick: '북핏레터',
+    special: '북핏레터',
 };
 
 export function buildLetterEmailHtml(letter: {
@@ -176,8 +177,8 @@ export function buildLetterEmailHtml(letter: {
     const subject = `[북핏레터] ${letter.headlineTitle || letter.title}`;
     const url = `${SITE_ORIGIN}/bookfit-letter/${letter.slug}`;
     const desc = letter.metaDescription || '';
-    const kind = letter.kind ?? 'weekly';
-    const badge = KIND_BADGE[kind];
+    const kind = letter.kind ?? 'letter';
+    const badge = KIND_BADGE[kind] ?? '북핏레터';
 
     const cover =
         letter.coverImageUrl ||
@@ -187,7 +188,7 @@ export function buildLetterEmailHtml(letter: {
         u.replace('coversum', 'cover500').replace(/^http:/i, 'https:');
 
     let coverBlock = '';
-    if (kind === 'monthly_pick' && letter.books && letter.books.length >= 2) {
+    if (letter.books && letter.books.length >= 2) {
         const cells = letter.books
             .slice(0, 3)
             .map((b) =>

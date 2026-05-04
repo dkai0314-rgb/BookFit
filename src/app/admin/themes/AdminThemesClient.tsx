@@ -5,12 +5,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { SerializedTheme } from './page';
 
-type LetterKind = 'weekly' | 'monthly_pick' | 'special';
+type LetterKind = 'letter' | 'weekly' | 'monthly_pick' | 'special';
 
 const KIND_LABEL: Record<LetterKind, string> = {
-    weekly: '이주의 한 권',
-    monthly_pick: '이달의 픽 (3권)',
-    special: '스페셜',
+    letter: '북핏레터',
+    weekly: '북핏레터',
+    monthly_pick: '북핏레터',
+    special: '북핏레터',
 };
 
 export default function AdminThemesClient({
@@ -23,7 +24,7 @@ export default function AdminThemesClient({
     const router = useRouter();
     const [list, setList] = useState<SerializedTheme[]>(initial);
     const [theme, setTheme] = useState('');
-    const [kind, setKind] = useState<LetterKind>('monthly_pick');
+    const [kind, setKind] = useState<LetterKind>('letter');
     const [priority, setPriority] = useState<number>(100);
     const [note, setNote] = useState('');
     const [busy, setBusy] = useState(false);
@@ -204,19 +205,15 @@ export default function AdminThemesClient({
                             </div>
                             <div className="text-lg font-bold">{nextTheme.theme}</div>
                             <div className="text-xs text-gray-600">
-                                형식: {KIND_LABEL[nextTheme.kind]} · 우선순위: {nextTheme.priority}
+                                우선순위: {nextTheme.priority}
                                 {nextTheme.note ? ` · ${nextTheme.note}` : ''}
                             </div>
                         </div>
                         <button
                             onClick={triggerNow}
-                            disabled={triggerBusy || nextTheme.kind === 'weekly'}
+                            disabled={triggerBusy}
                             className="shrink-0 px-5 py-2.5 rounded-md bg-accent text-primary-foreground font-bold hover:bg-accent/90 disabled:opacity-50 text-sm"
-                            title={
-                                nextTheme.kind === 'weekly'
-                                    ? 'weekly kind는 자동 트리거 미지원'
-                                    : '지금 즉시 cron을 수동 실행'
-                            }
+                            title="지금 즉시 cron을 수동 실행"
                         >
                             {triggerBusy ? '⏳ 실행 중...' : '⚡ 지금 실행 (수동 트리거)'}
                         </button>
@@ -260,22 +257,6 @@ export default function AdminThemesClient({
                             className="border p-2 w-full rounded focus:ring-2 focus:ring-primary focus:outline-none"
                             onKeyDown={(e) => e.key === 'Enter' && !busy && create()}
                         />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">형식</label>
-                        <select
-                            value={kind}
-                            onChange={(e) => setKind(e.target.value as LetterKind)}
-                            className="border p-2 w-full rounded"
-                        >
-                            <option value="monthly_pick">{KIND_LABEL.monthly_pick}</option>
-                            <option value="weekly" disabled>
-                                {KIND_LABEL.weekly} (자동화 미지원)
-                            </option>
-                            <option value="special" disabled>
-                                {KIND_LABEL.special} (자동화 미지원)
-                            </option>
-                        </select>
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -366,7 +347,6 @@ function ThemeTable({
                     <tr>
                         <th className="px-4 py-3 text-left">우선순위</th>
                         <th className="px-4 py-3 text-left">테마</th>
-                        <th className="px-4 py-3 text-left">형식</th>
                         <th className="px-4 py-3 text-left">메모</th>
                         <th className="px-4 py-3 text-left">상태</th>
                         <th className="px-4 py-3 text-left">생성일</th>
@@ -388,9 +368,6 @@ function ThemeTable({
                                 />
                             </td>
                             <td className="px-4 py-3 font-medium max-w-md truncate">{t.theme}</td>
-                            <td className="px-4 py-3 text-xs text-gray-600">
-                                {t.kind === 'monthly_pick' ? '이달의 픽' : t.kind === 'weekly' ? '이주의 한 권' : '스페셜'}
-                            </td>
                             <td className="px-4 py-3 text-gray-600 text-xs max-w-xs truncate">
                                 {t.note || '-'}
                             </td>

@@ -43,7 +43,6 @@ export default async function AdminDashboardPage() {
         publishedLetters,
         weekLetters,
         monthLetters,
-        monthlyPickCount,
         topLetters,
         totalShelf,
         weekShelf,
@@ -55,10 +54,6 @@ export default async function AdminDashboardPage() {
         safeQuery(() => countLetters({ status: 'PUBLISHED' }), 0),
         safeQuery(() => countLetters({ status: 'PUBLISHED', sinceDate: since7d }), 0),
         safeQuery(() => countLetters({ status: 'PUBLISHED', sinceDate: sinceMonth }), 0),
-        safeQuery(
-            () => listLetters({ status: 'PUBLISHED', kind: 'monthly_pick' }).then((l) => l.length),
-            0,
-        ),
         safeQuery(
             async () => {
                 // composite index 의존 제거 — 단일 orderBy + in-memory 정렬
@@ -119,13 +114,13 @@ export default async function AdminDashboardPage() {
                     icon={<Mail className="w-5 h-5" />}
                     label="이번주 발행 레터"
                     value={`${weekLetters}건`}
-                    sub={`전체 published ${publishedLetters} / 총 ${totalLetters}`}
+                    sub={`이번달 ${monthLetters}건`}
                 />
                 <KpiCard
                     icon={<Sparkles className="w-5 h-5" />}
-                    label="이번달 발행 회차"
+                    label="이번달 발행 레터"
                     value={`${monthLetters}건`}
-                    sub={`이달의 픽 ${monthlyPickCount}건 포함`}
+                    sub={`전체 published ${publishedLetters} / 총 ${totalLetters}`}
                 />
                 <KpiCard
                     icon={<Bookmark className="w-5 h-5" />}
@@ -159,7 +154,7 @@ export default async function AdminDashboardPage() {
                                         <div className="min-w-0">
                                             <div className="font-semibold truncate">{l.headlineTitle || l.title}</div>
                                             <div className="text-xs text-gray-500 truncate">
-                                                {l.kind === 'monthly_pick' ? '이달의 픽' : l.kind === 'weekly' ? '이주의 한 권' : '스페셜'}
+                                                북핏레터
                                                 {l.category ? ` · ${l.category}` : ''}
                                                 {l.publishedAt
                                                     ? ` · ${new Date(l.publishedAt).toLocaleDateString('ko-KR')}`

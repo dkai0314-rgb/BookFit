@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-type LetterKind = 'weekly' | 'monthly_pick' | 'special';
+type LetterKind = 'letter' | 'weekly' | 'monthly_pick' | 'special';
 
 type Initial = {
     slug: string;
@@ -38,9 +38,10 @@ type Initial = {
 };
 
 const KIND_LABELS: Record<LetterKind, string> = {
-    weekly: '이주의 한 권 (단권)',
-    monthly_pick: '이달의 픽 (3권)',
-    special: '스페셜',
+    letter: '북핏레터',
+    weekly: '북핏레터',
+    monthly_pick: '북핏레터',
+    special: '북핏레터',
 };
 
 export default function AdminLetterEditClient({ initial }: { initial: Initial }) {
@@ -209,15 +210,9 @@ export default function AdminLetterEditClient({ initial }: { initial: Initial })
                 </Field>
                 <div className="grid grid-cols-2 gap-4">
                     <Field label="형식 (kind)">
-                        <select
-                            value={form.kind}
-                            onChange={(e) => update('kind', e.target.value as LetterKind)}
-                            className="border p-2 w-full rounded"
-                        >
-                            <option value="weekly">{KIND_LABELS.weekly}</option>
-                            <option value="monthly_pick">{KIND_LABELS.monthly_pick}</option>
-                            <option value="special">{KIND_LABELS.special}</option>
-                        </select>
+                        <div className="border p-2 w-full rounded bg-gray-50 text-sm text-gray-700">
+                            북핏레터
+                        </div>
                     </Field>
                     <Field label="카테고리 (감정/계절/직군/트렌드 등)">
                         <input

@@ -5,13 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { SerializedLetterRow } from './page';
 
-type Mode = 'idle' | 'weekly' | 'monthly_pick';
-
-const KIND_LABEL = {
-    weekly: '이주의 한 권',
-    monthly_pick: '이달의 픽 (3권)',
-    special: '스페셜',
-} as const;
+type Mode = 'idle' | 'theme' | 'weekly';
 
 interface BookMeta {
     title: string;
@@ -50,7 +44,7 @@ export default function AdminLettersClient({
             const res = await fetch('/api/letter/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ kind: 'monthly_pick', theme }),
+                body: JSON.stringify({ kind: 'letter', theme }),
             });
             const json = await res.json();
             if (!res.ok || !json?.letter?.slug) {
@@ -141,13 +135,26 @@ export default function AdminLettersClient({
                     북핏레터 Admin
                 </h1>
                 <p className="text-sm text-gray-600">
-                    이달의 픽 (큐레이션 3권) ↔ 이주의 한 권 (단권) ↔ 스페셜 — 한 곳에서 발행.
+                    북핏레터 — 테마 기반 3권 큐레이션 또는 단권 레터를 한 곳에서 발행.
                 </p>
             </header>
 
             <section className="space-y-4 border p-6 rounded-xl shadow-sm bg-white">
                 <h2 className="text-xl font-semibold">새 회차 생성</h2>
                 <div className="flex gap-2 flex-wrap">
+                    <button
+                        onClick={() => {
+                            setMode('theme');
+                            setMessage('');
+                        }}
+                        className={`px-4 py-2 rounded-md font-medium border ${
+                            mode === 'theme'
+                                ? 'bg-primary text-primary-foreground border-primary'
+                                : 'bg-background border-border text-foreground hover:border-primary'
+                        }`}
+                    >
+                        ✨ 테마로 레터 생성 (3권 큐레이션)
+                    </button>
                     <button
                         onClick={() => {
                             setMode('weekly');
@@ -159,24 +166,11 @@ export default function AdminLettersClient({
                                 : 'bg-background border-border text-foreground hover:border-primary'
                         }`}
                     >
-                        📖 이주의 한 권 (단권)
-                    </button>
-                    <button
-                        onClick={() => {
-                            setMode('monthly_pick');
-                            setMessage('');
-                        }}
-                        className={`px-4 py-2 rounded-md font-medium border ${
-                            mode === 'monthly_pick'
-                                ? 'bg-primary text-primary-foreground border-primary'
-                                : 'bg-background border-border text-foreground hover:border-primary'
-                        }`}
-                    >
-                        ✨ 이달의 픽 (3권 큐레이션)
+                        📖 단권 레터 생성
                     </button>
                 </div>
 
-                {mode === 'monthly_pick' && (
+                {mode === 'theme' && (
                     <div className="space-y-3 pt-2">
                         <input
                             type="text"
@@ -268,7 +262,6 @@ export default function AdminLettersClient({
                         <thead className="bg-gray-50 text-xs uppercase tracking-wider text-gray-600">
                             <tr>
                                 <th className="px-4 py-3 text-left">상태</th>
-                                <th className="px-4 py-3 text-left">형식</th>
                                 <th className="px-4 py-3 text-left">제목</th>
                                 <th className="px-4 py-3 text-left">카테고리</th>
                                 <th className="px-4 py-3 text-left">slug</th>
@@ -281,7 +274,7 @@ export default function AdminLettersClient({
                         <tbody className="divide-y">
                             {list.length === 0 && (
                                 <tr>
-                                    <td colSpan={9} className="px-4 py-12 text-center text-gray-500">
+                                    <td colSpan={8} className="px-4 py-12 text-center text-gray-500">
                                         아직 레터가 없습니다. 위에서 첫 회차를 만들어보세요.
                                     </td>
                                 </tr>
@@ -291,7 +284,6 @@ export default function AdminLettersClient({
                                     <td className="px-4 py-3">
                                         <StatusBadge status={l.status} />
                                     </td>
-                                    <td className="px-4 py-3 text-xs">{KIND_LABEL[l.kind]}</td>
                                     <td className="px-4 py-3 font-medium max-w-xs truncate">
                                         {l.headlineTitle || l.title}
                                     </td>

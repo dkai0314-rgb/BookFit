@@ -35,18 +35,6 @@ export async function POST() {
             });
         }
 
-        if (theme.kind === 'weekly') {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error:
-                        'weekly kind는 자동 트리거 미지원. 테마의 kind를 monthly_pick으로 변경하거나, /admin/letters 에서 직접 책 검색으로 weekly 회차를 만들어주세요.',
-                    themeId: theme.id,
-                },
-                { status: 400 },
-            );
-        }
-
         const letter = await generateMonthlyPickDraft(theme.theme);
         await markThemeUsed(theme.id, letter.slug);
 

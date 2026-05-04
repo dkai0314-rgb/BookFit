@@ -5,7 +5,7 @@ import {
     type LetterKind,
 } from '@/lib/firestore-models';
 
-const ALLOWED_KIND = new Set<LetterKind>(['weekly', 'monthly_pick', 'special']);
+const ALLOWED_KIND = new Set<LetterKind>(['letter', 'weekly', 'monthly_pick', 'special']);
 
 type Params = { params: Promise<{ id: string }> };
 

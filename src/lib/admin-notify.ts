@@ -55,7 +55,7 @@ export function buildDraftReadyEmail(letter: {
     theme?: string;
 }): { subject: string; htmlBody: string } {
     const editUrl = `${SITE_ORIGIN}/admin/letters/${encodeURIComponent(letter.slug)}`;
-    const subject = `[북핏 자동화] 새 ${letter.kind === 'monthly_pick' ? '이달의 픽' : '회차'} draft 생성됨`;
+    const subject = `[북핏 자동화] 새 레터 draft 생성됨`;
     const headline = letter.headlineTitle || letter.title;
 
     const htmlBody = `<!DOCTYPE html>
