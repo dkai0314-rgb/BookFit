@@ -1,6 +1,7 @@
 import {
     findRecentSuccessfulDispatch,
     createDispatchLog,
+    type StructuredContent,
 } from './firestore-models';
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
@@ -173,10 +174,11 @@ export function buildLetterEmailHtml(letter: {
     kind?: LetterEmailKind;
     books?: { title: string; author: string; imageUrl: string | null }[];
     curatorNote?: string | null;
+    structuredContent?: StructuredContent | null;
 }): { subject: string; htmlBody: string } {
-    const subject = `[북핏레터] ${letter.headlineTitle || letter.title}`;
+    const sc = letter.structuredContent;
+    const subject = `[북핏레터] ${sc?.headline || letter.headlineTitle || letter.title}`;
     const url = `${SITE_ORIGIN}/bookfit-letter/${letter.slug}`;
-    const desc = letter.metaDescription || '';
     const kind = letter.kind ?? 'letter';
     const badge = KIND_BADGE[kind] ?? '북핏레터';
 
@@ -202,22 +204,83 @@ export function buildLetterEmailHtml(letter: {
         coverBlock = `<tr><td><img src="${escapeAttr(normalize(cover))}" alt="" style="display:block;width:100%;height:auto;" /></td></tr>`;
     }
 
-    const curatorNoteBlock = letter.curatorNote
-        ? `<tr><td style="padding:0 32px 24px 32px;"><div style="background:#faf6ee;border-left:3px solid #a87f5b;padding:16px 20px;border-radius:6px;font-size:14px;line-height:1.7;color:#5a4a35;white-space:pre-line;">${escapeHtml(letter.curatorNote)}</div></td></tr>`
-        : '';
+    let bodyRows = '';
 
-    const bookListBlock =
-        letter.books && letter.books.length > 0
-            ? `<tr><td style="padding:0 32px 24px 32px;font-size:13px;color:#666;">
-                <div style="font-weight:bold;color:#333;margin-bottom:8px;">이번 회차의 책</div>
-                ${letter.books
-                    .map(
-                        (b) =>
-                            `<div style="margin:4px 0;">· <strong>${escapeHtml(b.title)}</strong> — ${escapeHtml(b.author)}</div>`,
-                    )
-                    .join('')}
-              </td></tr>`
-            : '';
+    if (sc) {
+        // 구조화 콘텐츠 기반 이메일 렌더
+        const headlineHtml = escapeHtml(sc.headline || letter.headlineTitle || letter.title);
+        const subheadlineHtml = escapeHtml(sc.subheadline || letter.metaDescription || '');
+        const curatorNoteHtml = escapeHtml(sc.curatorNote || '');
+
+        bodyRows += `<tr><td style="padding:32px 32px 16px 32px;">
+            <div style="font-size:11px;font-weight:bold;letter-spacing:0.1em;text-transform:uppercase;color:#a87f5b;">${escapeHtml(badge)}</div>
+            <h1 style="margin:8px 0 16px 0;font-size:24px;line-height:1.4;color:#222;">${headlineHtml}</h1>
+            <p style="margin:0;font-size:15px;line-height:1.7;color:#555;">${subheadlineHtml}</p>
+          </td></tr>`;
+
+        if (curatorNoteHtml) {
+            bodyRows += `<tr><td style="padding:0 32px 24px 32px;"><div style="background:#fdf8f0;border-left:3px solid #a87f5b;padding:16px 20px;border-radius:0 6px 6px 0;font-size:14px;line-height:1.7;color:#5a4a35;white-space:pre-line;">${curatorNoteHtml}</div></td></tr>`;
+        }
+
+        // 단권: keyQuote + insights 3개 요약
+        if (sc.type === 'single') {
+            if (sc.keyQuote) {
+                bodyRows += `<tr><td style="padding:0 32px 24px 32px;"><blockquote style="margin:0;padding:16px 20px;background:#f8f8f8;border-left:4px solid #a87f5b;border-radius:0 8px 8px 0;font-size:16px;line-height:1.6;color:#333;font-style:italic;">"${escapeHtml(sc.keyQuote)}"</blockquote></td></tr>`;
+            }
+            if (sc.insights && sc.insights.length > 0) {
+                const insightsHtml = sc.insights.map((ins) =>
+                    `<div style="margin-bottom:16px;padding:16px;background:#f9f9f9;border-radius:8px;">
+                        <div style="font-weight:bold;font-size:14px;color:#222;margin-bottom:6px;">${escapeHtml(ins.title)}</div>
+                        <div style="font-size:13px;line-height:1.6;color:#555;">${escapeHtml(ins.body.split(/[.。]/)[0] + '.')}</div>
+                    </div>`
+                ).join('');
+                bodyRows += `<tr><td style="padding:0 32px 16px 32px;"><div style="font-weight:bold;font-size:14px;color:#333;margin-bottom:12px;">핵심 인사이트</div>${insightsHtml}</td></tr>`;
+            }
+        }
+
+        // 테마: themeBooks 3권 각각 요약
+        if (sc.type === 'theme' && sc.themeBooks && sc.themeBooks.length > 0) {
+            const booksHtml = sc.themeBooks.map((b, i) =>
+                `<div style="margin-bottom:16px;padding:16px;background:#f9f9f9;border-radius:8px;">
+                    <div style="font-size:11px;font-weight:bold;color:#a87f5b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Book ${i + 1}</div>
+                    <div style="font-weight:bold;font-size:15px;color:#222;">${escapeHtml(b.title)}</div>
+                    <div style="font-size:12px;color:#888;margin-bottom:8px;">— ${escapeHtml(b.author)}</div>
+                    <div style="font-size:12px;color:#666;font-style:italic;margin-bottom:6px;">${escapeHtml(b.forWhom)}</div>
+                    <div style="font-size:13px;color:#555;line-height:1.5;">${escapeHtml(b.afterReading)}</div>
+                </div>`
+            ).join('');
+            bodyRows += `<tr><td style="padding:0 32px 16px 32px;"><div style="font-weight:bold;font-size:14px;color:#333;margin-bottom:12px;">이번 레터의 책 3권</div>${booksHtml}</td></tr>`;
+        }
+
+        // 공통: recommendation + afterReading
+        if (sc.recommendation.length > 0) {
+            const recHtml = sc.recommendation.map((r) => `<div style="margin:4px 0;font-size:13px;color:#555;">✓ ${escapeHtml(r)}</div>`).join('');
+            bodyRows += `<tr><td style="padding:0 32px 16px 32px;"><div style="font-weight:bold;font-size:14px;color:#333;margin-bottom:8px;">이런 분께 특히 추천해요</div>${recHtml}</td></tr>`;
+        }
+        if (sc.afterReading.length > 0) {
+            const arHtml = sc.afterReading.map((a) => `<div style="margin:4px 0;font-size:13px;color:#555;">✅ ${escapeHtml(a)}</div>`).join('');
+            bodyRows += `<tr><td style="padding:0 32px 24px 32px;"><div style="font-weight:bold;font-size:14px;color:#333;margin-bottom:8px;">읽고 나면</div>${arHtml}</td></tr>`;
+        }
+    } else {
+        // Fallback: 기존 로직
+        const desc = letter.metaDescription || '';
+        bodyRows += `<tr><td style="padding:32px 32px 16px 32px;">
+            <div style="font-size:11px;font-weight:bold;letter-spacing:0.1em;text-transform:uppercase;color:#a87f5b;">${escapeHtml(badge)}</div>
+            <h1 style="margin:8px 0 16px 0;font-size:24px;line-height:1.4;color:#222;">${escapeHtml(letter.headlineTitle || letter.title)}</h1>
+            <p style="margin:0;font-size:15px;line-height:1.7;color:#555;">${escapeHtml(desc)}</p>
+          </td></tr>`;
+
+        if (letter.curatorNote) {
+            bodyRows += `<tr><td style="padding:0 32px 24px 32px;"><div style="background:#faf6ee;border-left:3px solid #a87f5b;padding:16px 20px;border-radius:6px;font-size:14px;line-height:1.7;color:#5a4a35;white-space:pre-line;">${escapeHtml(letter.curatorNote)}</div></td></tr>`;
+        }
+
+        if (letter.books && letter.books.length > 0) {
+            const bookListHtml = letter.books
+                .map((b) => `<div style="margin:4px 0;">· <strong>${escapeHtml(b.title)}</strong> — ${escapeHtml(b.author)}</div>`)
+                .join('');
+            bodyRows += `<tr><td style="padding:0 32px 24px 32px;font-size:13px;color:#666;"><div style="font-weight:bold;color:#333;margin-bottom:8px;">이번 회차의 책</div>${bookListHtml}</td></tr>`;
+        }
+    }
 
     const htmlBody = `<!DOCTYPE html>
 <html lang="ko">
@@ -228,13 +291,7 @@ export function buildLetterEmailHtml(letter: {
       <td align="center">
         <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
           ${coverBlock}
-          <tr><td style="padding:32px 32px 16px 32px;">
-            <div style="font-size:11px;font-weight:bold;letter-spacing:0.1em;text-transform:uppercase;color:#a87f5b;">${escapeHtml(badge)}</div>
-            <h1 style="margin:8px 0 16px 0;font-size:24px;line-height:1.4;color:#222;">${escapeHtml(letter.headlineTitle || letter.title)}</h1>
-            <p style="margin:0;font-size:15px;line-height:1.7;color:#555;">${escapeHtml(desc)}</p>
-          </td></tr>
-          ${curatorNoteBlock}
-          ${bookListBlock}
+          ${bodyRows}
           <tr><td style="padding:0 32px 32px 32px;">
             <a href="${escapeAttr(url)}" style="display:inline-block;background:#a87f5b;color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px;">전체 글 읽기 →</a>
           </td></tr>

@@ -4,6 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+type CardNewsSlide = {
+    slide: number;
+    role: string;
+    headline: string;
+    body: string;
+    note: string;
+};
+
 type LetterKind = 'letter' | 'weekly' | 'monthly_pick' | 'special';
 
 type Initial = {
@@ -28,6 +36,7 @@ type Initial = {
     publishedDate: string;
     isbn13: string;
     bookIds: string[];
+    hasStructuredContent: boolean;
     books: {
         id: string;
         title: string;
@@ -64,6 +73,11 @@ export default function AdminLetterEditClient({ initial }: { initial: Initial })
     });
     const [message, setMessage] = useState('');
     const [saving, setSaving] = useState(false);
+    const [cardNewsSlides, setCardNewsSlides] = useState<CardNewsSlide[] | null>(null);
+    const [cardNewsCaption, setCardNewsCaption] = useState<string | null>(null);
+    const [cardNewsLoading, setCardNewsLoading] = useState(false);
+    const [cardNewsOpen, setCardNewsOpen] = useState(false);
+    const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
 
     const update = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
         setForm((prev) => ({ ...prev, [key]: value }));
@@ -127,6 +141,34 @@ export default function AdminLetterEditClient({ initial }: { initial: Initial })
         if (ok) router.refresh();
     };
 
+    const handleLoadCardNews = async () => {
+        setCardNewsLoading(true);
+        setCardNewsOpen(false);
+        try {
+            const res = await fetch(`/api/admin/letters/${encodeURIComponent(initial.slug)}/card-news`);
+            const json = await res.json();
+            if (!res.ok || !json?.success) {
+                setMessage(json?.error || '카드뉴스 데이터 로드 실패');
+                return;
+            }
+            setCardNewsSlides(json.slides as CardNewsSlide[]);
+            setCardNewsCaption(json.instagramCaption as string | null);
+            setCardNewsOpen(true);
+        } catch (e) {
+            console.error(e);
+            setMessage('카드뉴스 데이터 로드 중 오류');
+        } finally {
+            setCardNewsLoading(false);
+        }
+    };
+
+    const handleCopySlide = (idx: number, text: string) => {
+        void navigator.clipboard.writeText(text).then(() => {
+            setCopiedIdx(idx);
+            setTimeout(() => setCopiedIdx(null), 1500);
+        });
+    };
+
     const handleDelete = async () => {
         if (!confirm('정말 삭제하시겠어요? 되돌릴 수 없습니다.')) return;
         try {
@@ -157,7 +199,7 @@ export default function AdminLetterEditClient({ initial }: { initial: Initial })
                     <h1 className="text-3xl font-bold">레터 편집</h1>
                     <p className="text-xs text-gray-500 font-mono">slug: {initial.slug}</p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                     <span
                         className={`inline-block px-3 py-1 rounded text-xs font-bold ${
                             isPublished ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-700'
@@ -168,6 +210,11 @@ export default function AdminLetterEditClient({ initial }: { initial: Initial })
                     <span className="inline-block px-3 py-1 rounded text-xs font-bold bg-accent/10 text-accent border border-accent/20">
                         {KIND_LABELS[form.kind]}
                     </span>
+                    {initial.hasStructuredContent && (
+                        <span className="inline-block px-3 py-1 rounded text-xs font-bold bg-green-100 text-green-800 border border-green-200">
+                            ✅ 구조화 형식
+                        </span>
+                    )}
                     {isPublished && (
                         <Link
                             href={`/bookfit-letter/${encodeURIComponent(form.slug)}`}
@@ -177,10 +224,76 @@ export default function AdminLetterEditClient({ initial }: { initial: Initial })
                             보기
                         </Link>
                     )}
+                    {initial.hasStructuredContent && (
+                        <button
+                            onClick={handleLoadCardNews}
+                            disabled={cardNewsLoading}
+                            className="px-3 py-1 text-sm border rounded text-purple-700 border-purple-300 hover:bg-purple-50 disabled:opacity-50"
+                        >
+                            {cardNewsLoading ? '로딩 중...' : '카드뉴스 데이터'}
+                        </button>
+                    )}
                 </div>
             </header>
 
             {message && <div className="p-3 bg-gray-100 rounded text-sm">{message}</div>}
+
+            {/* 카드뉴스 슬라이드 데이터 패널 */}
+            {cardNewsOpen && cardNewsSlides && (
+                <section className="border border-purple-200 rounded-xl bg-purple-50 p-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-xl font-semibold text-purple-900">카드뉴스 7슬라이드 데이터</h2>
+                        <button
+                            onClick={() => setCardNewsOpen(false)}
+                            className="text-sm text-gray-500 hover:text-gray-800"
+                        >
+                            닫기 ✕
+                        </button>
+                    </div>
+                    {cardNewsCaption && (
+                        <div className="bg-white border border-purple-200 rounded-lg p-4 space-y-2">
+                            <div className="text-xs font-bold text-purple-700 uppercase tracking-wider">인스타 캡션</div>
+                            <p className="text-sm whitespace-pre-line text-gray-700">{cardNewsCaption}</p>
+                            <button
+                                onClick={() => handleCopySlide(-1, cardNewsCaption)}
+                                className="text-xs px-2 py-1 rounded bg-purple-100 text-purple-700 hover:bg-purple-200"
+                            >
+                                {copiedIdx === -1 ? '복사됨!' : '복사'}
+                            </button>
+                        </div>
+                    )}
+                    <div className="space-y-3">
+                        {cardNewsSlides.map((slide) => (
+                            <div key={slide.slide} className="bg-white border border-purple-100 rounded-lg p-4 space-y-2">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <span className="inline-block w-7 h-7 rounded-full bg-purple-600 text-white text-xs font-bold flex items-center justify-center">
+                                            {slide.slide}
+                                        </span>
+                                        <span className="text-xs font-semibold text-purple-700">{slide.role}</span>
+                                    </div>
+                                    <button
+                                        onClick={() =>
+                                            handleCopySlide(
+                                                slide.slide,
+                                                `[Slide ${slide.slide}] ${slide.role}\n${slide.headline}\n\n${slide.body}\n\n${slide.note}`,
+                                            )
+                                        }
+                                        className="text-xs px-2 py-1 rounded bg-purple-100 text-purple-700 hover:bg-purple-200"
+                                    >
+                                        {copiedIdx === slide.slide ? '복사됨!' : '복사'}
+                                    </button>
+                                </div>
+                                <div className="font-bold text-gray-900 text-sm">{slide.headline}</div>
+                                <div className="text-sm text-gray-600 whitespace-pre-line">{slide.body}</div>
+                                {slide.note && (
+                                    <div className="text-xs text-gray-400 italic">{slide.note}</div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             <section className="space-y-4 border p-6 rounded-xl bg-white shadow-sm">
                 <h2 className="text-xl font-semibold">기본 정보</h2>

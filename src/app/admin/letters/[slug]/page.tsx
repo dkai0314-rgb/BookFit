@@ -57,6 +57,7 @@ export default async function AdminLetterEditPage({ params }: Props) {
                 publishedDate: letter.publishedDate ?? '',
                 isbn13: letter.isbn13 ?? '',
                 bookIds: letter.bookIds,
+                hasStructuredContent: !!letter.structuredContent,
                 books: letter.books.map((b) => ({
                     id: b.id,
                     title: b.title,

@@ -20,6 +20,53 @@ const COLLECTIONS = {
 
 // ===== Types =====
 
+// ===== StructuredContent Types =====
+
+export type StructuredInsight = {
+    title: string;
+    body: string;
+    reflection: string;
+};
+
+export type StructuredThemeBook = {
+    title: string;
+    author: string;
+    forWhom: string;
+    curatorPick: string;
+    afterReading: string;
+    reflection: string;
+};
+
+export type StructuredChallenge = {
+    rules: string[];
+    goal: string;
+};
+
+export type StructuredContent = {
+    type: 'single' | 'theme';
+    // SEO
+    metaTitle: string;
+    metaDescription: string;
+    ogTitle: string;
+    ogDescription: string;
+    tags: string[];
+    // Core
+    headline: string;
+    subheadline: string;
+    curatorNote: string;
+    recommendation: string[];
+    afterReading: string[];
+    instagramCaption: string;
+    // Single book
+    keyQuote?: string;
+    insights?: StructuredInsight[];
+    twoWeekChallenge?: StructuredChallenge;
+    // Theme
+    theme?: string;
+    themeBooks?: StructuredThemeBook[];
+    themeConclusion?: string;
+};
+
 export type Book = {
     id: string;
     title: string;
@@ -73,6 +120,7 @@ export type Letter = {
     category: string | null;   // 분류 ("감정","계절","직군","트렌드" 등)
     isFeatured: boolean;       // 홈/목록 우선 노출
     viewCount: number;
+    structuredContent: StructuredContent | null; // 구조화 콘텐츠 (신규 형식). 없으면 contentMarkdown fallback
 };
 
 export type MonthlyBestseller = {
@@ -180,6 +228,7 @@ function letterFromDoc(doc: admin.firestore.DocumentSnapshot): Letter {
         category: d.category ?? null,
         isFeatured: !!d.isFeatured,
         viewCount: typeof d.viewCount === 'number' ? d.viewCount : 0,
+        structuredContent: d.structuredContent ?? null,
     };
 }
 
@@ -403,6 +452,7 @@ export async function upsertLetter(
     data: Omit<Partial<Letter>, 'id' | 'slug' | 'createdAt' | 'updatedAt'> & {
         title: string;
         contentMarkdown: string;
+        structuredContent?: StructuredContent | null;
     },
 ): Promise<Letter> {
     const db = getDb();
