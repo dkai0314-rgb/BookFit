@@ -390,18 +390,44 @@ export async function listLetters(opts: LetterListOpts = {}): Promise<Letter[]> 
     const db = tryDb();
     if (!db) return [];
     let q: admin.firestore.Query = db.collection(COLLECTIONS.letters);
-    if (opts.status) {
-        // Letters use uppercase status historically; accept both.
-        const statuses = [opts.status, opts.status.toLowerCase(), opts.status.toUpperCase()];
-        q = q.where('status', 'in', Array.from(new Set(statuses)));
-    }
+
+    // status는 in 쿼리 + orderBy 조합이 복합 인덱스를 요구하므로 인메모리 필터로 처리.
+    // kind/category는 equality filter이므로 Firestore에서 처리 가능.
     if (opts.kind) q = q.where('kind', '==', opts.kind);
     if (opts.category) q = q.where('category', '==', opts.category);
+
+    // orderBy 단일 필드만 Firestore에서 처리 (복합 인덱스 회피)
     const orderBy = opts.orderBy ?? [{ field: 'publishedAt', dir: 'desc' as const }];
-    for (const o of orderBy) q = q.orderBy(o.field, o.dir);
-    if (opts.limit) q = q.limit(opts.limit);
+    if (orderBy.length === 1) {
+        q = q.orderBy(orderBy[0].field, orderBy[0].dir);
+    }
+
     const snap = await q.get();
-    return snap.docs.map(letterFromDoc);
+    let results = snap.docs.map(letterFromDoc);
+
+    // 인메모리: status 필터 (대소문자 무시)
+    if (opts.status) {
+        const lower = opts.status.toLowerCase();
+        results = results.filter((l) => l.status.toLowerCase() === lower);
+    }
+
+    // 인메모리: 다중 orderBy 또는 limit
+    if (orderBy.length > 1) {
+        results.sort((a, b) => {
+            for (const o of orderBy) {
+                const av = (a as Record<string, unknown>)[o.field];
+                const bv = (b as Record<string, unknown>)[o.field];
+                const cmp = av instanceof Date && bv instanceof Date
+                    ? av.getTime() - bv.getTime()
+                    : String(av ?? '').localeCompare(String(bv ?? ''));
+                if (cmp !== 0) return o.dir === 'asc' ? cmp : -cmp;
+            }
+            return 0;
+        });
+    }
+
+    if (opts.limit) results = results.slice(0, opts.limit);
+    return results;
 }
 
 export type LetterWithBooks = Letter & { books: Book[] };
@@ -473,17 +499,23 @@ export async function upsertLetter(
     return letterFromDoc(after);
 }
 
-export async function countLetters(opts: { status?: string; sinceDate?: Date } = {}): Promise<number> {
+export async function countLetters(opts: { status?: string; sinceDate?: Date; kind?: LetterKind } = {}): Promise<number> {
     const db = tryDb();
     if (!db) return 0;
+    // status + sinceDate 복합 쿼리는 인덱스 필요 → 전체 fetch 후 인메모리 필터
     let q: admin.firestore.Query = db.collection(COLLECTIONS.letters);
-    if (opts.status) {
-        const statuses = [opts.status, opts.status.toLowerCase(), opts.status.toUpperCase()];
-        q = q.where('status', 'in', Array.from(new Set(statuses)));
-    }
+    if (opts.kind) q = q.where('kind', '==', opts.kind);
     if (opts.sinceDate) q = q.where('publishedAt', '>=', opts.sinceDate);
-    const snap = await q.count().get();
-    return snap.data().count;
+    const snap = await q.get();
+    let count = snap.size;
+    if (opts.status) {
+        const lower = opts.status.toLowerCase();
+        count = snap.docs.filter((d) => {
+            const s = (d.data()?.status ?? '') as string;
+            return s.toLowerCase() === lower;
+        }).length;
+    }
+    return count;
 }
 
 // ===== MonthlyBestsellers =====
