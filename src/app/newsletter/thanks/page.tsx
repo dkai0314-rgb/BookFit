@@ -10,7 +10,7 @@ export default function NewsletterThanksPage() {
                     <CheckCircle2 className="w-8 h-8 text-accent" />
                 </div>
 
-                <h1 className="text-3xl md:text-4xl font-black font-serif text-foreground leading-tight">
+                <h1 className="text-3xl md:text-4xl font-black font-sans text-foreground leading-tight">
                     구독해주셔서 감사합니다!
                 </h1>
 

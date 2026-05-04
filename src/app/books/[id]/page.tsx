@@ -49,10 +49,7 @@ type Vendor = { name: string; href: string; primary?: boolean };
 function buildVendorLinks(book: { title: string; author: string; purchaseLink: string | null }): Vendor[] {
     const q = encodeURIComponent(`${book.title} ${book.author}`);
     return [
-        { name: '쿠팡', href: `https://www.coupang.com/np/search?q=${q}`, primary: true },
-        { name: '알라딘', href: book.purchaseLink || `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&KeyWord=${q}` },
-        { name: '예스24', href: `https://www.yes24.com/Product/Search?domain=BOOK&query=${q}` },
-        { name: '교보문고', href: `https://search.kyobobook.co.kr/search?keyword=${q}&gbCode=TOT&target=total` },
+        { name: '쿠팡에서 보기', href: book.purchaseLink || `https://www.coupang.com/np/search?q=${q}`, primary: true },
     ];
 }
 
@@ -84,7 +81,7 @@ export default async function BookDetailPage({ params }: Props) {
             {/* Detailed Page Header */}
             <header className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-primary/90 backdrop-blur-md border-b border-border shadow-sm">
                 <div className="max-w-6xl mx-auto w-full flex justify-between items-center">
-                    <Link href="/" className="text-2xl font-bold font-serif tracking-tight text-foreground hover:text-accent transition-colors">
+                    <Link href="/" className="text-2xl font-bold font-sans tracking-tight text-foreground hover:text-accent transition-colors">
                         BookFit
                     </Link>
                 </div>
@@ -112,7 +109,7 @@ export default async function BookDetailPage({ params }: Props) {
                 <div className="w-full md:w-2/3 space-y-8 text-foreground">
                     <div className="space-y-2 border-b border-border pb-6">
                         <div className="text-accent text-sm font-semibold tracking-wider uppercase mb-1">{book.category}</div>
-                        <h1 className="text-4xl md:text-5xl font-bold font-serif leading-tight text-primary">{book.title}</h1>
+                        <h1 className="text-4xl md:text-5xl font-bold font-sans leading-tight text-primary">{book.title}</h1>
                         <p className="text-xl text-muted-foreground font-medium">{book.author}</p>
                     </div>
 
@@ -151,18 +148,14 @@ export default async function BookDetailPage({ params }: Props) {
                         <h3 className="text-lg font-bold text-primary flex items-center gap-2">
                             <ShoppingBag className="w-5 h-5" /> 이 책을 구할 수 있는 곳
                         </h3>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <div className="flex gap-2">
                             {vendors.map((vendor) => (
                                 <a
                                     key={vendor.name}
                                     href={vendor.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`text-center px-4 py-3 rounded-md border font-semibold text-sm transition-all ${
-                                        vendor.primary
-                                            ? 'bg-accent text-primary-foreground border-accent hover:bg-accent/90'
-                                            : 'bg-background border-border text-foreground hover:bg-secondary'
-                                    }`}
+                                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg border text-sm font-bold transition-all bg-accent text-primary-foreground border-accent hover:bg-accent/90 shadow-sm hover:shadow"
                                 >
                                     {vendor.name}
                                 </a>

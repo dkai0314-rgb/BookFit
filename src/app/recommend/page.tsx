@@ -98,7 +98,7 @@ export default function RecommendPage() {
                 {mode === 'SELECT' && (
                     <div className="space-y-12 animate-fade-in-up">
                         <div className="text-center space-y-4">
-                            <h1 className="text-4xl md:text-5xl font-bold font-serif leading-tight text-primary">
+                            <h1 className="text-4xl md:text-5xl font-bold font-sans leading-tight text-primary">
                                 어떤 책을 찾고 계신가요?
                             </h1>
                             <p className="text-muted-foreground text-xl">
@@ -146,7 +146,7 @@ export default function RecommendPage() {
                 {mode === 'TASTE' && !loading && !hasSearched && (
                     <section className="space-y-8 animate-fade-in">
                         <div className="text-center space-y-2">
-                            <h2 className="text-3xl font-bold font-serif text-accent">취향 추천</h2>
+                            <h2 className="text-3xl font-bold font-sans text-accent">취향 추천</h2>
                             <p className="text-muted-foreground">당신의 독서 취향을 알려주세요.</p>
                         </div>
 
@@ -200,7 +200,7 @@ export default function RecommendPage() {
                 {mode === 'MIND' && !loading && !hasSearched && (
                     <section className="space-y-8 animate-fade-in">
                         <div className="text-center space-y-2">
-                            <h2 className="text-3xl font-bold font-serif text-[#FF5678]">마음 추천</h2>
+                            <h2 className="text-3xl font-bold font-sans text-[#FF5678]">마음 추천</h2>
                             <p className="text-muted-foreground">오늘 당신의 마음은 어떤가요?</p>
                         </div>
 
@@ -255,7 +255,7 @@ export default function RecommendPage() {
                     <div className="flex flex-col items-center justify-center py-20 space-y-6 animate-pulse">
                         <Loader2 size={48} className={`animate-spin ${mode === 'TASTE' ? 'text-accent' : 'text-[#FF5678]'}`} />
                         <div className="text-center">
-                            <h3 className="text-2xl font-bold font-serif mb-2">
+                            <h3 className="text-2xl font-bold font-sans mb-2">
                                 {mode === 'TASTE' ? "최적의 책을 선별하고 있습니다..." : "당신의 마음에 닿을 문장을 찾고 있습니다..."}
                             </h3>
                             <p className="text-gray-400 text-lg">잠시만 기다려주세요</p>
@@ -267,7 +267,7 @@ export default function RecommendPage() {
                 {!loading && hasSearched && (
                     <section className="space-y-12 animate-fade-in w-full">
                         <div className="text-center space-y-2">
-                            <h2 className="text-3xl font-bold font-serif text-foreground">
+                            <h2 className="text-3xl font-bold font-sans text-foreground">
                                 {mode === 'TASTE' ? <span className="text-accent">당신의 취향을 위한 큐레이션</span> : <span className="text-[#FF5678]">당신을 위해 준비했습니다</span>}
                             </h2>
                             <p className="text-muted-foreground text-base">

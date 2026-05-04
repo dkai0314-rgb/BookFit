@@ -83,7 +83,7 @@ export default function RootLayout({
         <JsonLd data={organizationData} />
         <JsonLd data={websiteData} />
       </head>
-      <body className="antialiased flex flex-col min-h-screen">
+      <body className="antialiased flex flex-col min-h-screen font-sans">
         {GA_ID && (
           <>
             <Script

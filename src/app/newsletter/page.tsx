@@ -12,7 +12,7 @@ export default function NewsletterPage() {
                         <ArrowLeft className="w-5 h-5" />
                         <span className="font-medium">Back</span>
                     </Link>
-                    <div className="text-xl font-bold font-serif tracking-tight">
+                    <div className="text-xl font-bold font-sans tracking-tight">
                         <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">BookFit Letter</span>
                     </div>
                     <div className="w-16"></div> {/* Spacer */}
@@ -26,7 +26,7 @@ export default function NewsletterPage() {
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-bold uppercase tracking-widest">
                             <Mail className="w-4 h-4" /> Weekly Newsletter
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-black font-serif leading-tight text-primary">
+                        <h1 className="text-4xl md:text-5xl font-black font-sans leading-tight text-primary">
                             사유의 조각을<br />
                             매주 받아보세요
                         </h1>

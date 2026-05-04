@@ -14,7 +14,7 @@ export default function Footer() {
 
                 <div className="flex flex-col md:flex-row justify-between mb-8">
                     <div className="mb-6 md:mb-0 max-w-md">
-                        <div className="mb-4 text-foreground font-bold text-xl font-serif">
+                        <div className="mb-4 text-foreground font-bold text-xl font-sans">
                             BookFit
                         </div>
                         <div className="space-y-1 text-sm">

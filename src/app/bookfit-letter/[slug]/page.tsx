@@ -74,10 +74,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 function buildVendorLinks(book: { title: string; author: string }) {
     const q = encodeURIComponent(`${book.title} ${book.author}`);
     return [
-        { name: '쿠팡', href: `https://www.coupang.com/np/search?q=${q}`, primary: true },
-        { name: '알라딘', href: `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&KeyWord=${q}` },
-        { name: '예스24', href: `https://www.yes24.com/Product/Search?domain=BOOK&query=${q}` },
-        { name: '교보문고', href: `https://search.kyobobook.co.kr/search?keyword=${q}&gbCode=TOT&target=total` },
+        { name: '쿠팡에서 보기', href: `https://www.coupang.com/np/search?q=${q}`, primary: true },
     ];
 }
 
@@ -181,7 +178,7 @@ export default async function LetterDetailPage({ params }: Props) {
 
                 {letter.books.length > 0 && (
                     <section className="mt-16 space-y-8 not-prose border-t border-border pt-12">
-                        <h2 className="text-2xl font-bold font-serif text-primary text-center">
+                        <h2 className="text-2xl font-bold font-sans text-primary text-center">
                             {letter.books.length === 1 ? '이번 회차의 책' : `이번 회차의 책 ${letter.books.length}권`}
                         </h2>
                         <div className="space-y-8">
@@ -454,7 +451,7 @@ function BookCard({
                         </div>
                     )}
                     <Link href={`/books/${book.id}`} className="block group">
-                        <h3 className="text-xl font-bold font-serif text-primary group-hover:text-accent transition-colors break-keep leading-tight">
+                        <h3 className="text-xl font-bold font-sans text-primary group-hover:text-accent transition-colors break-keep leading-tight">
                             {book.title}
                         </h3>
                         <p className="text-sm text-muted-foreground mt-1">{book.author}</p>
@@ -470,18 +467,14 @@ function BookCard({
                 <h4 className="text-sm font-bold text-primary flex items-center gap-2">
                     <ShoppingBag className="w-4 h-4" /> 이 책을 구할 수 있는 곳
                 </h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <div className="flex gap-2">
                     {buildVendorLinks(book).map((v) => (
                         <a
                             key={v.name}
                             href={v.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`text-center px-3 py-2 rounded-md border text-sm font-semibold transition-all ${
-                                v.primary
-                                    ? 'bg-accent text-primary-foreground border-accent hover:bg-accent/90'
-                                    : 'bg-background border-border text-foreground hover:bg-secondary'
-                            }`}
+                            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg border text-sm font-bold transition-all bg-accent text-primary-foreground border-accent hover:bg-accent/90 shadow-sm hover:shadow"
                         >
                             {v.name}
                         </a>

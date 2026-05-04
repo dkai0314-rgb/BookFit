@@ -96,7 +96,7 @@ function HomeLetterCard({ letter }: { letter: LetterWithBooks }) {
                         {letter.category}
                     </div>
                 )}
-                <h3 className="text-lg font-bold font-serif text-primary leading-tight group-hover:text-accent transition-colors break-keep line-clamp-2">
+                <h3 className="text-lg font-bold font-sans text-primary leading-tight group-hover:text-accent transition-colors break-keep line-clamp-2">
                     {headline}
                 </h3>
                 {letter.metaDescription && (
@@ -234,7 +234,7 @@ export default async function Home() {
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
                                     <Mail className="w-3 h-3" /> BookFit Letter
                                 </div>
-                                <h2 id="letter-title" className="text-3xl md:text-4xl font-bold font-serif text-primary">
+                                <h2 id="letter-title" className="text-3xl md:text-4xl font-bold font-sans text-primary">
                                     최근 북핏레터
                                 </h2>
                                 <p className="text-base text-muted-foreground">
@@ -263,7 +263,7 @@ export default async function Home() {
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
                                     <ListChecks className="w-3 h-3" /> Bestseller
                                 </div>
-                                <h2 id="bestseller-title" className="text-3xl md:text-4xl font-bold font-serif text-primary">
+                                <h2 id="bestseller-title" className="text-3xl md:text-4xl font-bold font-sans text-primary">
                                     {bestsellers.month ? `${bestsellers.month} 베스트셀러` : '베스트셀러'}
                                 </h2>
                                 <p className="text-base text-muted-foreground">알라딘 기준 이번 달 상위 도서</p>
@@ -315,7 +315,7 @@ export default async function Home() {
                 <section className="w-full py-24 px-6 relative bg-white border-t border-border" aria-labelledby="journey-title">
                     <div className="max-w-6xl mx-auto text-center space-y-16">
                         <div className="space-y-4">
-                            <h2 id="journey-title" className="text-3xl md:text-4xl font-bold text-primary font-serif">
+                            <h2 id="journey-title" className="text-3xl md:text-4xl font-bold text-primary font-sans">
                                 Your BookFit Journey
                             </h2>
                             <div className="w-12 h-0.5 bg-accent/50 mx-auto" aria-hidden="true"></div>

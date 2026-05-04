@@ -73,7 +73,7 @@ export default function BestsellersPage() {
                 <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2" aria-label="메인 페이지로 돌아가기">
                     <ArrowLeft size={20} aria-hidden="true" /> 홈으로
                 </Link>
-                <div className="text-xl font-bold font-serif tracking-tight text-foreground hover:text-accent transition-colors">
+                <div className="text-xl font-bold font-sans tracking-tight text-foreground hover:text-accent transition-colors">
                     BookFit Bestsellers
                 </div>
                 <div className="w-20" aria-hidden="true"></div>
@@ -81,7 +81,7 @@ export default function BestsellersPage() {
 
             <main role="main" className="w-full max-w-[1400px] mt-24 pb-20">
                 <div className="text-center mb-12 space-y-3">
-                    <h1 id="bestseller-title" className="text-3xl md:text-5xl font-bold font-serif">
+                    <h1 id="bestseller-title" className="text-3xl md:text-5xl font-bold font-sans">
                         분야별 <span className="text-accent">베스트셀러</span>
                     </h1>
                     <p className="text-muted-foreground text-lg">
