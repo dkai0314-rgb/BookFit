@@ -124,7 +124,7 @@ export default async function LetterDetailPage({ params }: Props) {
                 <LetterHeader letter={letter} />
 
                 {hasStructured && letter.structuredContent ? (
-                    <StructuredLetterBody sc={letter.structuredContent} letterSlug={letter.slug} />
+                    <StructuredLetterBody sc={letter.structuredContent} />
                 ) : (
                     <>
                         {letter.curatorNote && (
@@ -212,7 +212,7 @@ export default async function LetterDetailPage({ params }: Props) {
     );
 }
 
-function StructuredLetterBody({ sc, letterSlug }: { sc: StructuredContent; letterSlug: string }) {
+function StructuredLetterBody({ sc }: { sc: StructuredContent }) {
     return (
         <div className="space-y-10">
             {/* subheadline 리드문 */}
@@ -331,15 +331,6 @@ function StructuredLetterBody({ sc, letterSlug }: { sc: StructuredContent; lette
                 </ul>
             </section>
 
-            {/* CTA */}
-            <div className="text-center">
-                <a
-                    href={`/bookfit-letter/${letterSlug}`}
-                    className="inline-block bg-accent text-primary-foreground font-bold px-8 py-4 rounded-2xl hover:bg-accent/90 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1"
-                >
-                    전체 글 읽기 →
-                </a>
-            </div>
         </div>
     );
 }
