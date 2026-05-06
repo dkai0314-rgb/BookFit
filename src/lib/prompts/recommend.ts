@@ -70,7 +70,7 @@ export const RECOMMEND_TOOL = {
                         },
                         publisher: {
                             type: "string",
-                            description: "한국 정식 출판사 이름. 검색 검증용 필수 필드.",
+                            description: "한국 정식 출판사 이름. 정확히 알 때만 작성. 모르면 빈 문자열.",
                         },
                         reason: {
                             type: "string",
@@ -85,7 +85,7 @@ export const RECOMMEND_TOOL = {
                             description: "이 책이 독자에게 주는 가치/위로 (10자 이내 키워드).",
                         },
                     },
-                    required: ["title", "author", "publisher", "reason", "coreMessage", "userConnectionPoint"],
+                    required: ["title", "author", "reason", "coreMessage", "userConnectionPoint"],
                 },
             },
         },
