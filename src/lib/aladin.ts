@@ -78,26 +78,41 @@ function normalizeTitle(t: string): string {
         .trim();
 }
 
-/** 두 제목이 충분히 비슷한지(부분 매칭 허용). */
+/** 두 제목이 비슷한지 — 관대한 매칭(완전일치/부분포함/단어 절반 이상 공유). */
 function titleMatches(a: string, b: string): boolean {
     const na = normalizeTitle(a).toLowerCase();
     const nb = normalizeTitle(b).toLowerCase();
     if (!na || !nb) return false;
     if (na === nb) return true;
-    // 한쪽이 다른 쪽을 포함하고, 짧은 쪽이 5자 이상일 때만 매칭
-    if (na.length >= 5 && nb.includes(na)) return true;
-    if (nb.length >= 5 && na.includes(nb)) return true;
+
+    // 한쪽이 다른 쪽을 포함 (짧은 쪽이 3자 이상)
+    if (na.length >= 3 && nb.includes(na)) return true;
+    if (nb.length >= 3 && na.includes(nb)) return true;
+
+    // 단어 단위 매칭: 짧은 제목 기준 절반 이상의 단어가 공통이면 OK
+    const wa = na.split(/\s+/).filter((w) => w.length >= 2);
+    const wb = nb.split(/\s+/).filter((w) => w.length >= 2);
+    if (wa.length === 0 || wb.length === 0) return false;
+    const shared = wa.filter((w) => wb.includes(w)).length;
+    const minLen = Math.min(wa.length, wb.length);
+    if (minLen >= 2 && shared / minLen >= 0.5) return true;
+
     return false;
 }
 
 /**
- * 4단계 폴백:
- *  1) 정확한 Title 검색
- *  2) 정규화된 Title 검색 (부제·괄호 제거)
- *  3) 제목 + 저자 Keyword 검색
- *  4) 정규화된 제목 + 저자 Keyword 검색
+ * 알라딘 검색: 폭넓고 관대한 매칭.
  *
- * 각 단계에서 결과가 나오면 반환. AI가 추천한 제목과 검색 결과 제목이 비슷한지(titleMatches) 검증.
+ * 정책: AI가 추천한 제목/저자가 알라딘에서 비슷하기만 하면 검색 결과를 채택.
+ * 사용자에게 책 풀을 풍성하게 보여주는 것이 우선이고, 큐레이터 reason이
+ * 다리 역할을 하므로 매칭은 후하게.
+ *
+ * 단계:
+ *  1) 정확한 Title 검색 — 첫 결과가 비슷하면 채택, 아니면 첫 결과 그대로 채택
+ *  2) 정규화된 Title 검색
+ *  3) 제목 + 저자 Keyword 검색
+ *  4) 정규화 제목 + 저자 Keyword 검색
+ *  5) 제목 단독 Keyword 검색 (마지막 보루, 첫 결과 채택)
  */
 export async function searchBookInAladin(title: string, author?: string): Promise<AladinBook | null> {
     if (!title) return null;
@@ -109,7 +124,6 @@ export async function searchBookInAladin(title: string, author?: string): Promis
         { query: author ? `${normalizeTitle(title)} ${author}` : normalizeTitle(title), type: 'Keyword' },
     ];
 
-    // 중복 쿼리 제거
     const seen = new Set<string>();
     for (const c of candidates) {
         const key = `${c.type}:${c.query}`;
@@ -119,15 +133,15 @@ export async function searchBookInAladin(title: string, author?: string): Promis
         const results = await aladinSearch(c.query, c.type, 5);
         if (results.length === 0) continue;
 
-        // 1순위: AI 제목과 충분히 일치하는 결과
+        // 1순위: 제목이 충분히 비슷한 결과
         const matched = results.find((r) => titleMatches(r.title, title));
         if (matched) return matched;
 
-        // Title 모드는 자체가 정확도 높으므로 최상위 결과 채택 허용
-        if (c.type === 'Title') return results[0];
+        // 모든 모드에서 첫 결과 채택 허용 — 알라딘이 결과를 줬다면 관련 분야 도서로 간주
+        return results[0];
     }
 
-    // 모두 실패 → 마지막 보루: 단순 키워드 검색의 첫 결과(필터링 안 함)
+    // 모두 실패 → 마지막 보루: 제목 단독 키워드 검색 첫 결과
     const last = await aladinSearch(title, 'Keyword', 1);
     return last[0] ?? null;
 }
