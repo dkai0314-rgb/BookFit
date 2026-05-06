@@ -187,9 +187,6 @@ export default async function Home() {
                     </div>
 
                     <div className="relative z-10 flex flex-col items-center space-y-6 px-4 max-w-4xl mx-auto">
-                        <div className="inline-flex items-center rounded-full border border-primary/10 bg-white/80 backdrop-blur-md px-4 py-2 text-base font-semibold text-primary transition-colors shadow-sm">
-                            매주 새로운 큐레이션과 레터, 그리고 나에게 딱 맞는 한 권 📚
-                        </div>
                         <h1
                             id="hero-title"
                             className="text-4xl md:text-7xl font-extrabold tracking-tight text-primary break-keep drop-shadow-sm leading-tight relative"
@@ -209,17 +206,6 @@ export default async function Home() {
                                     aria-label="지금 내 책 찾기"
                                 >
                                     지금 내 책 찾기 🔍
-                                </Button>
-                            </Link>
-                            <Link href="/bookfit-letter" className="w-full">
-                                <Button
-                                    variant="outline"
-                                    size="lg"
-                                    className="w-full rounded-md border-primary/20 bg-white/50 text-primary hover:bg-primary/5 px-8 py-6 text-lg backdrop-blur-sm transition-all hover:border-primary/40 shadow-sm"
-                                    aria-label="북핏레터 보기"
-                                >
-                                    <Mail className="mr-2 h-5 w-5" />
-                                    북핏레터 읽으러 가기
                                 </Button>
                             </Link>
                         </div>

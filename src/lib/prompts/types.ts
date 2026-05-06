@@ -9,6 +9,7 @@ export interface RecommendationRequest {
 export interface RecommendedBookBase {
     title: string;
     author: string;
+    publisher?: string;
     reason: string;
     coreMessage: string;
     userConnectionPoint: string;
