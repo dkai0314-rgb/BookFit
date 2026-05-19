@@ -121,6 +121,7 @@ export type Letter = {
     isFeatured: boolean;       // 홈/목록 우선 노출
     viewCount: number;
     structuredContent: StructuredContent | null; // 구조화 콘텐츠 (신규 형식). 없으면 contentMarkdown fallback
+    featuredBookId: string | null; // 3권 묶음에서 대표책 — 목록/상세 헤더에서 단일 표지로 사용
 };
 
 export type MonthlyBestseller = {
@@ -229,6 +230,7 @@ function letterFromDoc(doc: admin.firestore.DocumentSnapshot): Letter {
         isFeatured: !!d.isFeatured,
         viewCount: typeof d.viewCount === 'number' ? d.viewCount : 0,
         structuredContent: d.structuredContent ?? null,
+        featuredBookId: d.featuredBookId ?? null,
     };
 }
 

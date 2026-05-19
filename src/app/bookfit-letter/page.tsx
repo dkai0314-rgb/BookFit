@@ -64,8 +64,12 @@ export default async function BookFitLetterListPage(_props: Props) {
 
 
 function LetterCard({ letter }: { letter: LetterWithBooks }) {
+    const featuredBook = letter.featuredBookId
+        ? letter.books.find((b) => b.id === letter.featuredBookId)
+        : null;
     const cover =
         letter.ogImageUrl ||
+        featuredBook?.imageUrl ||
         letter.coverImageUrl ||
         letter.books[0]?.imageUrl ||
         null;
@@ -90,7 +94,7 @@ function LetterCard({ letter }: { letter: LetterWithBooks }) {
                             aria-hidden="true"
                             className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-125 z-0"
                         />
-                        {letter.books.length >= 2 ? (
+                        {letter.books.length >= 2 && !featuredBook ? (
                             <div className="relative z-10 flex gap-2 px-4">
                                 {letter.books.slice(0, 3).map((b) => (
                                     /* eslint-disable-next-line @next/next/no-img-element */

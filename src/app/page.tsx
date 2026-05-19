@@ -45,7 +45,15 @@ const KIND_LABELS: Record<LetterKind, string> = {
 
 function HomeLetterCard({ letter }: { letter: LetterWithBooks }) {
     const headline = letter.headlineTitle || letter.metaTitle || letter.title;
-    const cover = letter.ogImageUrl || letter.coverImageUrl || letter.books[0]?.imageUrl || null;
+    const featuredBook = letter.featuredBookId
+        ? letter.books.find((b) => b.id === letter.featuredBookId)
+        : null;
+    const cover =
+        letter.ogImageUrl ||
+        featuredBook?.imageUrl ||
+        letter.coverImageUrl ||
+        letter.books[0]?.imageUrl ||
+        null;
     return (
         <Link
             href={`/bookfit-letter/${letter.slug}`}
@@ -53,7 +61,7 @@ function HomeLetterCard({ letter }: { letter: LetterWithBooks }) {
         >
             <div className="relative aspect-[16/10] w-full bg-muted overflow-hidden">
                 {cover ? (
-                    letter.books.length >= 2 ? (
+                    letter.books.length >= 2 && !featuredBook ? (
                         <div className="absolute inset-0 flex items-center justify-center gap-2 px-4 bg-secondary/40">
                             {letter.books.slice(0, 3).map((b) => (
                                 <Image

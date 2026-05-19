@@ -36,6 +36,7 @@ type Initial = {
     publishedDate: string;
     isbn13: string;
     bookIds: string[];
+    featuredBookId: string | null;
     hasStructuredContent: boolean;
     books: {
         id: string;
@@ -70,6 +71,7 @@ export default function AdminLetterEditClient({ initial }: { initial: Initial })
         isFeatured: initial.isFeatured,
         status: initial.status,
         readingTime: initial.readingTime ?? 0,
+        featuredBookId: initial.featuredBookId,
     });
     const [message, setMessage] = useState('');
     const [saving, setSaving] = useState(false);
@@ -421,31 +423,85 @@ export default function AdminLetterEditClient({ initial }: { initial: Initial })
                 <p className="text-xs text-gray-500">
                     책 목록은 회차 생성 시 결정됩니다. 책별 추천사(recommendation)는 책 마스터를 직접 편집해야 변경됩니다.
                 </p>
+                {initial.books.length >= 2 && (
+                    <div className="space-y-2 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                        <div className="text-sm font-semibold text-amber-900">
+                            대표 책 선택 (목록·OG·헤더에 단일 표지로 표시)
+                        </div>
+                        <p className="text-xs text-amber-800">
+                            선택 안 하면 3권 표지가 함께 표시됩니다.
+                        </p>
+                        <div className="flex flex-wrap gap-2 pt-1">
+                            <button
+                                type="button"
+                                onClick={() => update('featuredBookId', null)}
+                                className={`px-3 py-1.5 rounded text-xs font-bold border ${
+                                    form.featuredBookId === null
+                                        ? 'bg-amber-600 text-white border-amber-600'
+                                        : 'bg-white text-amber-900 border-amber-300 hover:bg-amber-100'
+                                }`}
+                            >
+                                선택 안 함 (3권 모두 표시)
+                            </button>
+                            {initial.books.map((b, i) => (
+                                <button
+                                    key={b.id}
+                                    type="button"
+                                    onClick={() => update('featuredBookId', b.id)}
+                                    className={`px-3 py-1.5 rounded text-xs font-bold border ${
+                                        form.featuredBookId === b.id
+                                            ? 'bg-amber-600 text-white border-amber-600'
+                                            : 'bg-white text-amber-900 border-amber-300 hover:bg-amber-100'
+                                    }`}
+                                    title={b.title}
+                                >
+                                    Book {i + 1}: {b.title.slice(0, 14)}
+                                    {b.title.length > 14 ? '…' : ''}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {initial.books.length === 0 && (
                         <div className="col-span-3 text-sm text-gray-500 text-center py-4">
                             묶인 책이 없습니다.
                         </div>
                     )}
-                    {initial.books.map((b) => (
-                        <div key={b.id} className="border rounded p-3 space-y-2 bg-gray-50">
-                            {b.imageUrl && (
-                                /* eslint-disable-next-line @next/next/no-img-element */
-                                <img
-                                    src={b.imageUrl
-                                        .replace('coversum', 'cover500')
-                                        .replace(/^http:/i, 'https:')}
-                                    alt={b.title}
-                                    className="w-full aspect-[1/1.5] object-cover rounded"
-                                />
-                            )}
-                            <div className="text-sm font-bold leading-tight line-clamp-2">{b.title}</div>
-                            <div className="text-xs text-gray-600">{b.author}</div>
-                            {b.recommendation && (
-                                <div className="text-xs text-gray-500 line-clamp-3">{b.recommendation}</div>
-                            )}
-                        </div>
-                    ))}
+                    {initial.books.map((b) => {
+                        const isFeatured = form.featuredBookId === b.id;
+                        return (
+                            <div
+                                key={b.id}
+                                className={`border rounded p-3 space-y-2 ${
+                                    isFeatured
+                                        ? 'bg-amber-50 border-amber-400 ring-2 ring-amber-300'
+                                        : 'bg-gray-50'
+                                }`}
+                            >
+                                {isFeatured && (
+                                    <div className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-white">
+                                        ★ 대표 책
+                                    </div>
+                                )}
+                                {b.imageUrl && (
+                                    /* eslint-disable-next-line @next/next/no-img-element */
+                                    <img
+                                        src={b.imageUrl
+                                            .replace('coversum', 'cover500')
+                                            .replace(/^http:/i, 'https:')}
+                                        alt={b.title}
+                                        className="w-full aspect-[1/1.5] object-cover rounded"
+                                    />
+                                )}
+                                <div className="text-sm font-bold leading-tight line-clamp-2">{b.title}</div>
+                                <div className="text-xs text-gray-600">{b.author}</div>
+                                {b.recommendation && (
+                                    <div className="text-xs text-gray-500 line-clamp-3">{b.recommendation}</div>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
             </section>
 

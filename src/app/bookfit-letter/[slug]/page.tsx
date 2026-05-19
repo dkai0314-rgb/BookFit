@@ -31,8 +31,17 @@ function isPublished(status: string): boolean {
     return status === 'PUBLISHED' || status === 'published';
 }
 
+function decodeSlug(slug: string): string {
+    try {
+        return decodeURIComponent(slug);
+    } catch {
+        return slug;
+    }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { slug } = await params;
+    const { slug: rawSlug } = await params;
+    const slug = decodeSlug(rawSlug);
     const letter = await getLetterWithBooks(slug);
 
     if (!letter || !isPublished(letter.status)) {
@@ -42,8 +51,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const title = letter.metaTitle || letter.title;
     const description =
         letter.metaDescription || letter.headlineTitle || letter.title;
+    const featuredBook = letter.featuredBookId
+        ? letter.books.find((b) => b.id === letter.featuredBookId)
+        : null;
     const ogImage =
         letter.ogImageUrl ||
+        featuredBook?.imageUrl ||
         letter.coverImageUrl ||
         letter.books[0]?.imageUrl ||
         undefined;
@@ -79,7 +92,8 @@ function buildVendorLinks(book: { title: string; author: string }) {
 }
 
 export default async function LetterDetailPage({ params }: Props) {
-    const { slug } = await params;
+    const { slug: rawSlug } = await params;
+    const slug = decodeSlug(rawSlug);
     const letter = await getLetterWithBooks(slug);
 
     if (!letter || !isPublished(letter.status)) notFound();
@@ -89,6 +103,9 @@ export default async function LetterDetailPage({ params }: Props) {
 
     const hasStructured = !!letter.structuredContent;
 
+    const featuredBookForLd = letter.featuredBookId
+        ? letter.books.find((b) => b.id === letter.featuredBookId)
+        : null;
     const articleJsonLd = {
         '@context': 'https://schema.org',
         '@type': 'Article',
@@ -96,6 +113,7 @@ export default async function LetterDetailPage({ params }: Props) {
         description: letter.metaDescription || undefined,
         image:
             letter.ogImageUrl ||
+            featuredBookForLd?.imageUrl ||
             letter.coverImageUrl ||
             letter.books[0]?.imageUrl ||
             undefined,
@@ -357,32 +375,44 @@ function LetterHeader({ letter }: { letter: LetterWithBooks }) {
                 )}
             </div>
 
-            {letter.books.length >= 2 ? (
-                <div className="flex justify-center gap-3 px-4">
-                    {letter.books.slice(0, 3).map((b) => (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
-                            key={b.id}
-                            src={(b.imageUrl ?? '')
-                                .replace('coversum', 'cover500')
-                                .replace(/^http:/i, 'https:')}
-                            alt={b.title}
-                            className="w-24 md:w-28 aspect-[2/3] object-cover rounded shadow-md"
-                        />
-                    ))}
-                </div>
-            ) : letter.coverImageUrl ? (
-                <div className="w-32 h-44 mx-auto shadow-md rounded-md overflow-hidden relative">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                        src={letter.coverImageUrl
-                            .replace('coversum', 'cover500')
-                            .replace(/^http:/i, 'https:')}
-                        alt={letter.title}
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-            ) : null}
+            {(() => {
+                const featured = letter.featuredBookId
+                    ? letter.books.find((b) => b.id === letter.featuredBookId)
+                    : null;
+                if (letter.books.length >= 2 && !featured) {
+                    return (
+                        <div className="flex justify-center gap-3 px-4">
+                            {letter.books.slice(0, 3).map((b) => (
+                                /* eslint-disable-next-line @next/next/no-img-element */
+                                <img
+                                    key={b.id}
+                                    src={(b.imageUrl ?? '')
+                                        .replace('coversum', 'cover500')
+                                        .replace(/^http:/i, 'https:')}
+                                    alt={b.title}
+                                    className="w-24 md:w-28 aspect-[2/3] object-cover rounded shadow-md"
+                                />
+                            ))}
+                        </div>
+                    );
+                }
+                const featuredCover = featured?.imageUrl ?? letter.coverImageUrl;
+                if (featuredCover) {
+                    return (
+                        <div className="w-32 h-44 mx-auto shadow-md rounded-md overflow-hidden relative">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={featuredCover
+                                    .replace('coversum', 'cover500')
+                                    .replace(/^http:/i, 'https:')}
+                                alt={featured?.title ?? letter.title}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    );
+                }
+                return null;
+            })()}
 
             <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight break-keep">
                 {letter.headlineTitle || letter.title}

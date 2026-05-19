@@ -33,6 +33,7 @@ const ALLOWED_FIELDS = [
     'isbn13',
     'googleVolumeId',
     'source',
+    'featuredBookId',
 ] as const;
 
 const ALLOWED_KIND = new Set<LetterKind>(['letter', 'weekly', 'monthly_pick', 'special']);
@@ -117,6 +118,17 @@ export async function PATCH(request: Request, { params }: Params) {
         if (isPublishing) {
             try {
                 const withBooks = await getLetterWithBooks(updated.slug);
+                const featuredOnly = updated.featuredBookId
+                    ? withBooks?.books.filter((b) => b.id === updated.featuredBookId)
+                    : null;
+                const emailBooks = (featuredOnly && featuredOnly.length > 0
+                    ? featuredOnly
+                    : withBooks?.books
+                )?.map((b) => ({
+                    title: b.title,
+                    author: b.author,
+                    imageUrl: b.imageUrl,
+                }));
                 const { subject, htmlBody } = buildLetterEmailHtml({
                     slug: updated.slug,
                     headlineTitle: updated.headlineTitle,
@@ -126,11 +138,7 @@ export async function PATCH(request: Request, { params }: Params) {
                     coverImageUrl: updated.coverImageUrl,
                     kind: updated.kind,
                     curatorNote: updated.curatorNote,
-                    books: withBooks?.books.map((b) => ({
-                        title: b.title,
-                        author: b.author,
-                        imageUrl: b.imageUrl,
-                    })),
+                    books: emailBooks,
                 });
                 dispatch = await dispatchEmail({
                     type: 'letter',
