@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function NewsletterThanksPage() {
@@ -27,7 +27,7 @@ export default function NewsletterThanksPage() {
                         </Button>
                     </Link>
                     <p className="text-xs text-muted-foreground">
-                        * 구독 해지는 받으시는 메일 하단의 'Unsubscribe' 링크를 통해 언제든 가능합니다.
+                        * 구독 해지는 받으시는 메일 하단의 &apos;Unsubscribe&apos; 링크를 통해 언제든 가능합니다.
                     </p>
                 </div>
             </div>

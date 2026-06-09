@@ -251,9 +251,9 @@ function StructuredLetterBody({ sc }: { sc: StructuredContent }) {
             {/* keyQuote - single only */}
             {sc.type === 'single' && sc.keyQuote && (
                 <blockquote className="border-l-4 border-accent bg-gray-50 py-4 px-6 rounded-r-lg not-italic text-slate-800 text-lg leading-relaxed">
-                    <span className="text-accent font-bold mr-1">"</span>
+                    <span className="text-accent font-bold mr-1">&ldquo;</span>
                     {sc.keyQuote}
-                    <span className="text-accent font-bold ml-1">"</span>
+                    <span className="text-accent font-bold ml-1">&rdquo;</span>
                 </blockquote>
             )}
 

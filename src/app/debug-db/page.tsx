@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 
 export default function DebugPage() {
-    const [data, setData] = useState<any>(null);
-    const [error, setError] = useState<any>(null);
+    const [data, setData] = useState<{ status: number; ok: boolean; body: unknown } | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         fetch('/api/books?choice=true')
