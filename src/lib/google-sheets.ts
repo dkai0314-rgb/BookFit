@@ -135,7 +135,7 @@ export async function fetchCurationFromSheet(): Promise<SheetCuration | null> {
             books
         };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Google Sheets Fetch Error:", error);
         // Throw the error so the API route can see it
         throw error;

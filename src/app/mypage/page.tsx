@@ -10,6 +10,10 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import PersonalRecommendWidget from '@/components/PersonalRecommendWidget';
 
+function hasFirebaseErrorCode(error: unknown): error is { code: string } {
+    return typeof error === 'object' && error !== null && 'code' in error;
+}
+
 export default function MyPage() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
@@ -183,9 +187,9 @@ export default function MyPage() {
                                         await updatePassword(user, newPassword);
                                         setPasswordMessage({ type: "success", text: "비밀번호가 성공적으로 변경되었습니다." });
                                         setNewPassword("");
-                                    } catch (error: any) {
+                                    } catch (error: unknown) {
                                         console.error("Error updating password:", error);
-                                        if (error.code === 'auth/requires-recent-login') {
+                                        if (hasFirebaseErrorCode(error) && error.code === 'auth/requires-recent-login') {
                                             setPasswordMessage({ type: "error", text: "보안을 위해 다시 로그인한 후 변경 가능합니다. 다시 로그인해주세요." });
                                         } else {
                                             setPasswordMessage({ type: "error", text: "비밀번호 변경에 실패했습니다." });
