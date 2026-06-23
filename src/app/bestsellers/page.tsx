@@ -22,6 +22,7 @@ interface CategoryBestseller {
 export default function BestsellersPage() {
     const [categoryBestsellers, setCategoryBestsellers] = useState<CategoryBestseller[]>([]);
     const [loading, setLoading] = useState(true);
+    const [widgetQueries, setWidgetQueries] = useState<Record<number, string>>({});
 
     useEffect(() => {
         const fetchBestsellers = async () => {
@@ -53,7 +54,10 @@ export default function BestsellersPage() {
         }
     };
 
-    const scrollToWidget = (index: number) => {
+    const scrollToWidget = (index: number, query?: string) => {
+        if (query !== undefined) {
+            setWidgetQueries((prev) => ({ ...prev, [index]: query }));
+        }
         const element = document.getElementById(`coupang-widget-${index}`);
         if (element) {
             const headerOffset = 180; // keep header offset
@@ -120,7 +124,7 @@ export default function BestsellersPage() {
 
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-10 mb-12">
                                         {categoryItem.books.map((book, i) => (
-                                            <article key={i} onClick={() => scrollToWidget(sectionIdx)} className="flex flex-col h-full bg-secondary/50 rounded-xl overflow-hidden border border-border hover:border-accent/50 transition-all duration-300 hover:-translate-y-2 shadow-sm group cursor-pointer">
+                                            <article key={i} onClick={() => scrollToWidget(sectionIdx, book.title)} className="flex flex-col h-full bg-secondary/50 rounded-xl overflow-hidden border border-border hover:border-accent/50 transition-all duration-300 hover:-translate-y-2 shadow-sm group cursor-pointer">
                                                 <div className="flex flex-col h-full">
                                                     <div className="aspect-[1/1.5] w-full relative overflow-hidden bg-muted">
                                                         {typeof book.cover === 'string' && book.cover ? (
@@ -175,7 +179,8 @@ export default function BestsellersPage() {
                                             <input
                                                 type="text"
                                                 name="pageKey"
-                                                defaultValue={`${categoryItem.category} 베스트셀러`}
+                                                value={widgetQueries[sectionIdx] ?? `${categoryItem.category} 베스트셀러`}
+                                                onChange={(e) => setWidgetQueries((prev) => ({ ...prev, [sectionIdx]: e.target.value }))}
                                                 placeholder="쿠팡에서 책 검색"
                                                 className="flex-1 px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent"
                                             />
