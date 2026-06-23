@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import ShelfButton from '@/components/ShelfButton';
+import { buildCoupangAffiliateSearch } from '@/lib/coupang-search';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -47,9 +48,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 type Vendor = { name: string; href: string; primary?: boolean };
 
 function buildVendorLinks(book: { title: string; author: string; purchaseLink: string | null }): Vendor[] {
-    const q = encodeURIComponent(`${book.title} ${book.author}`);
     return [
-        { name: '쿠팡에서 보기', href: book.purchaseLink || `https://www.coupang.com/np/search?q=${q}`, primary: true },
+        { name: '쿠팡에서 보기', href: book.purchaseLink || buildCoupangAffiliateSearch(`${book.title} ${book.author}`), primary: true },
     ];
 }
 

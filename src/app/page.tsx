@@ -11,6 +11,7 @@ import {
     type LetterWithBooks,
     type LetterKind,
 } from '@/lib/firestore-models';
+import { buildCoupangAffiliateSearch } from '@/lib/coupang-search';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -266,7 +267,7 @@ export default async function Home() {
                                 {bestsellers.books.map((b) => (
                                     <a
                                         key={b.id}
-                                        href={b.link || `https://www.coupang.com/np/search?q=${encodeURIComponent(`${b.title} ${b.author}`)}`}
+                                        href={b.link || buildCoupangAffiliateSearch(`${b.title} ${b.author}`)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="group block bg-background border border-border rounded-lg overflow-hidden hover:shadow-lg hover:border-accent transition-all"

@@ -10,6 +10,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import { ShoppingBag, Info, BookOpen } from 'lucide-react';
+import { buildCoupangAffiliateSearch } from '@/lib/coupang-search';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -85,9 +86,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 function buildVendorLinks(book: { title: string; author: string }) {
-    const q = encodeURIComponent(`${book.title} ${book.author}`);
     return [
-        { name: '쿠팡에서 보기', href: `https://www.coupang.com/np/search?q=${q}`, primary: true },
+        { name: '쿠팡에서 보기', href: buildCoupangAffiliateSearch(`${book.title} ${book.author}`), primary: true },
     ];
 }
 

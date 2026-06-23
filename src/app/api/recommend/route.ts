@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getRecommendations, RecommendationRequest } from '@/lib/anthropic';
 import { searchBookInAladin } from '@/lib/aladin';
 import { getCoupangLink } from '@/lib/coupang';
+import { buildCoupangAffiliateSearch } from '@/lib/coupang-search';
 
 export async function POST(request: Request) {
     try {
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
             }
 
             const verifiedTitle = aladinData.title || rec.title;
-            const coupangSearchFallback = `https://www.coupang.com/np/search?q=${encodeURIComponent(verifiedTitle)}`;
+            const coupangSearchFallback = buildCoupangAffiliateSearch(verifiedTitle);
             const coupangLink = (await getCoupangLink(verifiedTitle)) || coupangSearchFallback;
 
             return {
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
                 aiRecommendations.slice(0, 5).map(async (rec) => {
                     const coupangLink =
                         (await getCoupangLink(rec.title)) ||
-                        `https://www.coupang.com/np/search?q=${encodeURIComponent(`${rec.title} ${rec.author}`)}`;
+                        buildCoupangAffiliateSearch(`${rec.title} ${rec.author}`);
                     return {
                         ...rec,
                         thumbnail: null,

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { ArrowLeft, ShoppingCart, RefreshCw, BookOpen, Pill, Bot } from "lucide-react";
+import { buildCoupangAffiliateSearch } from "@/lib/coupang-search";
 
 export default function ResultPage() {
     const router = useRouter();
@@ -122,7 +123,7 @@ export default function ResultPage() {
                                             className="w-full bg-accent hover:bg-accent/90 text-white shadow-md font-bold"
                                             onClick={() => {
                                                 const q = book.isbn || `${book.title} ${book.authors?.[0] ?? ""}`;
-                                                window.open(`https://www.coupang.com/np/search?q=${encodeURIComponent(q)}`, '_blank');
+                                                window.open(buildCoupangAffiliateSearch(q), '_blank');
                                             }}
                                         >
                                             <ShoppingCart className="w-4 h-4 mr-2" />

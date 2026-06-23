@@ -6,6 +6,7 @@ import { Heart, Brain, ArrowRight, Loader2, ChevronLeft } from "lucide-react";
 import Image from 'next/image';
 import Link from 'next/link';
 import { trackEvent } from '@/lib/analytics';
+import { buildCoupangAffiliateSearch } from '@/lib/coupang-search';
 
 type Mode = 'SELECT' | 'TASTE' | 'MIND';
 
@@ -318,7 +319,7 @@ export default function RecommendPage() {
 
                                             <div className="flex flex-wrap gap-2">
                                                 <a
-                                                    href={book.coupangLink || `https://www.coupang.com/np/search?q=${encodeURIComponent(book.displayTitle || book.title)}`}
+                                                    href={book.coupangLink || buildCoupangAffiliateSearch(book.displayTitle || book.title)}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className={`inline-flex items-center gap-2 px-4 py-2 rounded-md font-bold text-sm transition-all ${mode === 'TASTE' ? 'bg-accent text-white hover:bg-accent/80' : 'bg-[#FF5678] text-white hover:bg-[#FF5678]/80'}`}
