@@ -164,9 +164,28 @@ export default function BestsellersPage() {
                                         <p className="text-foreground mb-4 font-medium text-center text-lg flex items-center gap-2">
                                             <Lightbulb className="w-5 h-5 text-yellow-500" /> 지금 읽기 딱 좋은 {categoryItem.category} 책, 쿠팡에서 바로 찾아보세요!
                                         </p>
-                                        <div className="w-full overflow-hidden rounded-lg bg-background p-1 border border-border shadow-sm">
-                                            <iframe src="https://coupa.ng/clGXS1" width="100%" height="44" frameBorder="0" scrolling="no" referrerPolicy="unsafe-url"></iframe>
-                                        </div>
+                                        <form
+                                            action="https://link.coupang.com/re/AFFSRP"
+                                            method="GET"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-full flex gap-2"
+                                        >
+                                            <input type="hidden" name="lptag" value="AF7778504" />
+                                            <input
+                                                type="text"
+                                                name="pageKey"
+                                                defaultValue={`${categoryItem.category} 베스트셀러`}
+                                                placeholder="쿠팡에서 책 검색"
+                                                className="flex-1 px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:border-accent"
+                                            />
+                                            <button
+                                                type="submit"
+                                                className="px-5 py-2.5 rounded-lg bg-accent text-primary-foreground font-bold text-sm hover:bg-accent/90 transition-all shadow-sm whitespace-nowrap"
+                                            >
+                                                쿠팡 검색
+                                            </button>
+                                        </form>
                                         <p className="text-sm text-muted-foreground mt-4 text-center">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
                                     </div>
                                 </section>
