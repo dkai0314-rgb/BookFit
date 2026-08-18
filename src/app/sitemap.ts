@@ -12,7 +12,6 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/recommend`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE_URL}/bestsellers`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE_URL}/search`, changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${BASE_URL}/newsletter`, changeFrequency: 'monthly', priority: 0.5 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

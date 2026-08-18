@@ -1,17 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import BookfitLetterForm from '@/components/BookfitLetterForm';
 
 export default function Footer() {
     return (
         <footer className="bg-secondary/30 text-muted-foreground py-10 border-t border-border mt-20">
             <div className="container mx-auto px-4 max-w-6xl">
-                {/* 북핏레터 신청 폼 */}
-                <div className="mb-12 border-b border-border pb-12">
-                    <BookfitLetterForm />
-                </div>
-
                 <div className="flex flex-col md:flex-row justify-between mb-8">
                     <div className="mb-6 md:mb-0 max-w-md">
                         <div className="mb-4 text-foreground font-bold text-xl font-sans">

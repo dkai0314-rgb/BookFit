@@ -65,9 +65,9 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
         {
             slide: 7,
             role: 'CTA',
-            headline: '북핏레터 구독하기',
+            headline: '북핏에서 더 많은 큐레이션 만나기',
             body: '매주 당신에게 꼭 맞는 책 한 권을 큐레이션합니다.',
-            note: '📧 bookfit.kr | @bookfit_letter',
+            note: '🔗 bookfit.kr | @bookfit_letter',
         },
     ];
 
