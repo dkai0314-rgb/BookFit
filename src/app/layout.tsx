@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
 import Footer from "@/components/Footer";
+import { Analytics } from "@vercel/analytics/next";
 
 const SITE_URL = "https://bookfit.kr";
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
@@ -104,6 +105,7 @@ export default function RootLayout({
           {children}
         </div>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );

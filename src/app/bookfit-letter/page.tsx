@@ -2,8 +2,23 @@ import {
     listLettersWithBooks,
     type LetterWithBooks,
 } from '@/lib/firestore-models';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
+
+export const metadata: Metadata = {
+    title: '북핏레터 - 마음을 읽는 책 편지 | 북핏 BookFit',
+    description:
+        '지금의 감정과 상황에 맞는 책을 골라 전하는 북핏의 큐레이션 레터. 서평과 요약, 그리고 당신에게 필요한 한 권을 편지로 만나보세요.',
+    alternates: { canonical: '/bookfit-letter' },
+    openGraph: {
+        title: '북핏레터 - 마음을 읽는 책 편지 | 북핏 BookFit',
+        description:
+            '지금의 감정과 상황에 맞는 책을 골라 전하는 북핏의 큐레이션 레터. 서평과 요약, 그리고 당신에게 필요한 한 권을 편지로 만나보세요.',
+        url: '/bookfit-letter',
+        type: 'website',
+    },
+};
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
