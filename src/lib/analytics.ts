@@ -20,7 +20,9 @@ export type AnalyticsEvent =
     | { name: 'coupang_click'; bookId?: string; bookTitle?: string }
     | { name: 'shelf_add'; bookId: string; status: 'want' | 'reading' | 'done' }
     | { name: 'shelf_remove'; bookId: string }
-    | { name: 'personal_recommend_view'; cached: boolean };
+    | { name: 'personal_recommend_view'; cached: boolean }
+    | { name: 'highlight_add'; bookId: string }
+    | { name: 'challenge_create'; type: 'days' | 'bookCount' };
 
 export function trackEvent(event: AnalyticsEvent): void {
     if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;

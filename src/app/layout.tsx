@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 
 const SITE_URL = "https://bookfit.kr";
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const ADSENSE_CLIENT_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -83,6 +84,13 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
         <JsonLd data={organizationData} />
         <JsonLd data={websiteData} />
+        {ADSENSE_CLIENT_ID && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+            crossOrigin="anonymous"
+          />
+        )}
       </head>
       <body className="antialiased flex flex-col min-h-screen font-sans">
         {GA_ID && (

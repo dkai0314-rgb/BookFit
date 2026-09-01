@@ -636,6 +636,210 @@ export async function countShelfSince(sinceDate: Date): Promise<number> {
     return snap.data().count;
 }
 
+// ===== Highlights =====
+
+export type HighlightPriority = 'P0' | 'P1' | 'P2';
+
+export type Highlight = {
+    id: string;
+    userId: string;
+    bookId: string;
+    quote: string;
+    note: string | null;
+    priority: HighlightPriority | null;
+    isFavorite: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    book?: Book;
+};
+
+function highlightFromDoc(
+    doc: admin.firestore.DocumentSnapshot,
+    userId: string,
+): Highlight {
+    const d = doc.data() ?? {};
+    return {
+        id: doc.id,
+        userId,
+        bookId: d.bookId ?? '',
+        quote: d.quote ?? '',
+        note: d.note ?? null,
+        priority: (d.priority ?? null) as HighlightPriority | null,
+        isFavorite: !!d.isFavorite,
+        createdAt: tsToDate(d.createdAt) ?? new Date(),
+        updatedAt: tsToDate(d.updatedAt) ?? new Date(),
+    };
+}
+
+export async function listHighlights(
+    userId: string,
+    bookId?: string,
+): Promise<Highlight[]> {
+    const db = tryDb();
+    if (!db) return [];
+    let query: admin.firestore.Query = db
+        .collection('users')
+        .doc(userId)
+        .collection('highlights')
+        .orderBy('createdAt', 'desc');
+    if (bookId) {
+        query = query.where('bookId', '==', bookId);
+    }
+    const snap = await query.get();
+    const highlights = snap.docs.map((d) => highlightFromDoc(d, userId));
+    if (highlights.length === 0) return highlights;
+    const books = await getBooksByIds(highlights.map((h) => h.bookId));
+    const bookMap = new Map(books.map((b) => [b.id, b]));
+    for (const h of highlights) {
+        h.book = bookMap.get(h.bookId);
+    }
+    return highlights;
+}
+
+export async function createHighlight(
+    userId: string,
+    data: { bookId: string; quote: string; note?: string | null; priority?: HighlightPriority | null },
+): Promise<Highlight> {
+    const db = getDb();
+    const ref = db.collection('users').doc(userId).collection('highlights').doc();
+    const now = new Date();
+    await ref.set({
+        bookId: data.bookId,
+        quote: data.quote,
+        note: data.note ?? null,
+        priority: data.priority ?? null,
+        isFavorite: false,
+        createdAt: now,
+        updatedAt: now,
+    });
+    const snap = await ref.get();
+    return highlightFromDoc(snap, userId);
+}
+
+export async function updateHighlight(
+    userId: string,
+    id: string,
+    data: { quote?: string; note?: string | null; priority?: HighlightPriority | null; isFavorite?: boolean },
+): Promise<Highlight> {
+    const db = getDb();
+    const ref = db.collection('users').doc(userId).collection('highlights').doc(id);
+    await ref.update({ ...data, updatedAt: new Date() });
+    const snap = await ref.get();
+    return highlightFromDoc(snap, userId);
+}
+
+export async function deleteHighlight(userId: string, id: string): Promise<void> {
+    const db = getDb();
+    await db.collection('users').doc(userId).collection('highlights').doc(id).delete();
+}
+
+export async function countHighlightsTotal(): Promise<number> {
+    const db = tryDb();
+    if (!db) return 0;
+    const snap = await db.collectionGroup('highlights').count().get();
+    return snap.data().count;
+}
+
+// ===== Reading Challenges =====
+
+export type ChallengeType = 'days' | 'bookCount';
+export type ChallengeStatus = 'active' | 'done' | 'expired';
+
+export type ReadingChallengeGoal = {
+    id: string;
+    userId: string;
+    title: string;
+    type: ChallengeType;
+    targetCount: number;
+    progress: number;
+    startDate: Date;
+    deadline: Date | null;
+    status: ChallengeStatus;
+    createdAt: Date;
+    updatedAt: Date;
+};
+
+function challengeFromDoc(
+    doc: admin.firestore.DocumentSnapshot,
+    userId: string,
+): ReadingChallengeGoal {
+    const d = doc.data() ?? {};
+    return {
+        id: doc.id,
+        userId,
+        title: d.title ?? '',
+        type: (d.type === 'bookCount' ? 'bookCount' : 'days') as ChallengeType,
+        targetCount: typeof d.targetCount === 'number' ? d.targetCount : 0,
+        progress: typeof d.progress === 'number' ? d.progress : 0,
+        startDate: tsToDate(d.startDate) ?? new Date(),
+        deadline: tsToDate(d.deadline),
+        status: (d.status ?? 'active') as ChallengeStatus,
+        createdAt: tsToDate(d.createdAt) ?? new Date(),
+        updatedAt: tsToDate(d.updatedAt) ?? new Date(),
+    };
+}
+
+export async function listChallenges(userId: string): Promise<ReadingChallengeGoal[]> {
+    const db = tryDb();
+    if (!db) return [];
+    const snap = await db
+        .collection('users')
+        .doc(userId)
+        .collection('challenges')
+        .orderBy('createdAt', 'desc')
+        .get();
+    return snap.docs.map((d) => challengeFromDoc(d, userId));
+}
+
+export async function createChallenge(
+    userId: string,
+    data: { title: string; type: ChallengeType; targetCount: number; deadline?: Date | null },
+): Promise<ReadingChallengeGoal> {
+    const db = getDb();
+    const ref = db.collection('users').doc(userId).collection('challenges').doc();
+    const now = new Date();
+    await ref.set({
+        title: data.title,
+        type: data.type,
+        targetCount: data.targetCount,
+        progress: 0,
+        startDate: now,
+        deadline: data.deadline ?? null,
+        status: 'active',
+        createdAt: now,
+        updatedAt: now,
+    });
+    const snap = await ref.get();
+    return challengeFromDoc(snap, userId);
+}
+
+export async function updateChallenge(
+    userId: string,
+    id: string,
+    data: { progress?: number; status?: ChallengeStatus },
+): Promise<ReadingChallengeGoal> {
+    const db = getDb();
+    const ref = db.collection('users').doc(userId).collection('challenges').doc(id);
+    const existing = await ref.get();
+    const cur = existing.data() ?? {};
+    const targetCount = typeof cur.targetCount === 'number' ? cur.targetCount : 0;
+    const nextProgress = data.progress ?? (typeof cur.progress === 'number' ? cur.progress : 0);
+    const autoStatus: ChallengeStatus =
+        data.status ?? (targetCount > 0 && nextProgress >= targetCount ? 'done' : (cur.status as ChallengeStatus) ?? 'active');
+    await ref.update({
+        ...(data.progress !== undefined ? { progress: data.progress } : {}),
+        status: autoStatus,
+        updatedAt: new Date(),
+    });
+    const snap = await ref.get();
+    return challengeFromDoc(snap, userId);
+}
+
+export async function deleteChallenge(userId: string, id: string): Promise<void> {
+    const db = getDb();
+    await db.collection('users').doc(userId).collection('challenges').doc(id).delete();
+}
+
 // ===== EmailDispatchLog =====
 
 export async function findRecentSuccessfulDispatch(

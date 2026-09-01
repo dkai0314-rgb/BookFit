@@ -36,6 +36,7 @@
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
     "react-quill-new": "^3.8.3",
+    "recharts": "^3.10.1",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "satori": "^0.19.2",

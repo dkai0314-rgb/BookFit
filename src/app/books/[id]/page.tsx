@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import ShelfButton from '@/components/ShelfButton';
+import HighlightQuickAdd from '@/components/HighlightQuickAdd';
 import { buildCoupangAffiliateSearch } from '@/lib/coupang-search';
 
 export const dynamic = 'force-dynamic';
@@ -142,6 +143,13 @@ export default async function BookDetailPage({ params }: Props) {
                             <BookOpen className="w-5 h-5" /> 내 서재에 담기
                         </h3>
                         <ShelfButton bookId={book.id} />
+                    </div>
+
+                    <div className="pt-6 space-y-3">
+                        <h3 className="text-lg font-bold text-primary flex items-center gap-2">
+                            <BookOpen className="w-5 h-5" /> 하이라이트
+                        </h3>
+                        <HighlightQuickAdd bookId={book.id} />
                     </div>
 
                     <div className="pt-6 space-y-3">

@@ -1,14 +1,13 @@
 "use client";
 
 import { onAuthStateChanged, User, updatePassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db, isFirebaseConfigValid } from "@/lib/firebase";
+import { auth } from "@/lib/firebase";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import PersonalRecommendWidget from '@/components/PersonalRecommendWidget';
+import { PenLine, Trophy, BarChart3 } from 'lucide-react';
 
 function hasFirebaseErrorCode(error: unknown): error is { code: string } {
     return typeof error === 'object' && error !== null && 'code' in error;
@@ -17,7 +16,6 @@ function hasFirebaseErrorCode(error: unknown): error is { code: string } {
 export default function MyPage() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
-    const [hasTemplate, setHasTemplate] = useState(false);
 
     // Password Change State
     const [newPassword, setNewPassword] = useState("");
@@ -32,29 +30,7 @@ export default function MyPage() {
                 return;
             }
             setUser(currentUser);
-
-            // localStorage에서 즉시 확인 → CTA 즉시 표시 (0ms)
-            if (localStorage.getItem(`bookfit_template_${currentUser.uid}`) === "true") {
-                setHasTemplate(true);
-            }
-
             setLoading(false);
-
-            // Firestore 백그라운드 검증 (불일치 시 localStorage 정리)
-            if (isFirebaseConfigValid) {
-                getDoc(doc(db, "users", currentUser.uid, "templates", "bookfit"))
-                    .then((snap) => {
-                        if (snap.exists()) {
-                            setHasTemplate(true);
-                            localStorage.setItem(`bookfit_template_${currentUser.uid}`, "true");
-                        } else {
-                            // Firestore에 없으면 잘못된 캐시 정리
-                            localStorage.removeItem(`bookfit_template_${currentUser.uid}`);
-                            setHasTemplate(false);
-                        }
-                    })
-                    .catch((err) => console.error("Template check error:", err));
-            }
         });
         return () => unsubscribe();
     }, [router]);
@@ -77,24 +53,30 @@ export default function MyPage() {
                 </div>
 
                 <div className="space-y-12">
-                    {/* W4: 내 서재 바로가기 */}
+                    {/* 독서기록장 바로가기 */}
                     <section>
-                        <h2 className="text-2xl font-semibold mb-6">내 서재</h2>
+                        <h2 className="text-2xl font-semibold mb-6">내 독서기록장</h2>
                         <Link
                             href="/mypage/library"
                             className="block bg-secondary/40 border border-border rounded-xl p-6 hover:border-accent transition-colors"
                         >
-                            <div className="flex items-center justify-between">
-                                <div className="space-y-1">
+                            <div className="flex items-center justify-between gap-6">
+                                <div className="space-y-3">
                                     <div className="text-xs font-bold uppercase tracking-widest text-accent">
-                                        Library
+                                        Free
                                     </div>
-                                    <h3 className="text-lg font-bold">읽고 싶은 책 · 읽는 중 · 완독</h3>
+                                    <h3 className="text-lg font-bold">서재 · 하이라이트 · 챌린지 · 통계</h3>
                                     <p className="text-sm text-muted-foreground">
-                                        책 상세 페이지에서 담은 책들을 모아 한줄리뷰와 별점을 남길 수 있어요.
+                                        읽은 책을 정리하고, 인상 깊은 문장을 기록하고, 독서 목표를 세우고 습관을 통계로 확인해보세요.
                                     </p>
+                                    <div className="flex items-center gap-4 pt-1 text-xs text-muted-foreground flex-wrap">
+                                        <span className="inline-flex items-center gap-1">서재</span>
+                                        <span className="inline-flex items-center gap-1"><PenLine className="w-3.5 h-3.5" /> 하이라이트</span>
+                                        <span className="inline-flex items-center gap-1"><Trophy className="w-3.5 h-3.5" /> 챌린지</span>
+                                        <span className="inline-flex items-center gap-1"><BarChart3 className="w-3.5 h-3.5" /> 통계</span>
+                                    </div>
                                 </div>
-                                <span className="text-accent font-bold">→</span>
+                                <span className="text-accent font-bold shrink-0">→</span>
                             </div>
                         </Link>
                     </section>
@@ -102,67 +84,6 @@ export default function MyPage() {
                     {/* W4: 개인화 AI 추천 */}
                     <section>
                         <PersonalRecommendWidget />
-                    </section>
-
-                    {/* 내 템플릿 영역 */}
-                    <section>
-                        <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-                            내 템플릿 보관함
-                            <span className="bg-primary/20 text-primary text-sm px-3 py-1 rounded-full">{hasTemplate ? "1" : "0"}</span>
-                        </h2>
-
-                        {hasTemplate ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {/* Template Card */}
-                                <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5">
-                                    <div className="relative aspect-square w-full">
-                                        <Image
-                                            src="/template-hero.png"
-                                            alt="독서관 노션 템플릿"
-                                            fill
-                                            className="object-contain"
-                                        />
-                                    </div>
-                                    <div className="p-6 flex flex-col flex-grow">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h3 className="text-xl font-bold leading-tight">독서관 노션 템플릿</h3>
-                                        </div>
-                                        <p className="text-muted-foreground text-sm mb-6 flex-grow">
-                                            책 추가, 하이라이트 기록, 챌린지 관리까지 한 곳에서 가능한 노션 독서 템플릿입니다.
-                                        </p>
-
-                                        <div className="mt-auto pt-4 border-t border-border">
-                                            <a
-                                                href="/독서관 가이드.pdf"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex justify-center items-center w-full bg-primary hover:bg-primary-hover text-primary-foreground font-semibold py-3 rounded-lg transition-colors cursor-pointer"
-                                            >
-                                                PDF 가이드 열기
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="bg-secondary border border-border rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[300px]">
-                                <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mb-4">
-                                    <svg className="w-8 h-8 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                    </svg>
-                                </div>
-                                <h3 className="text-xl font-bold text-foreground mb-2">보유 중인 템플릿이 없습니다</h3>
-                                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                                    독서 관리를 위한 완벽한 노션 템플릿을 이제 결제 후 평생 소장하실 수 있습니다. 지금 바로 확인해보세요!
-                                </p>
-                                <a
-                                    href="/template"
-                                    className="inline-flex justify-center items-center bg-accent hover:bg-accent/90 text-primary-foreground font-bold py-3 px-8 rounded-lg transition-colors"
-                                >
-                                    템플릿 상세 보러 가기
-                                </a>
-                            </div>
-                        )}
                     </section>
 
                     {/* 회원 정보 관리 (비밀번호 변경) 영역 */}

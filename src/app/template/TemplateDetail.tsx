@@ -2,22 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 
-const PreviewVideo = ({ src }: { src: string }) => {
-    return (
-        <video
-            src={src}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-            ref={(el) => {
-                if (el) el.playbackRate = 1.5;
-            }}
-        />
-    );
-};
-
 export default function TemplateDetail() {
     const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -27,15 +11,15 @@ export default function TemplateDetail() {
             <section className="flex flex-col gap-8 text-foreground">
                 <div
                     className="w-full bg-transparent aspect-square rounded-xl overflow-hidden relative border border-accent/20"
-                    aria-label="Minimalist desk with books and a laptop showing Notion template"
+                    aria-label="책과 노트북이 놓인 미니멀한 책상, 독서기록장 이미지"
                     style={{ backgroundImage: "url('/template-hero.png')", backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center" }}
                 >
                 </div>
 
                 <div className="flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 text-accent text-xs font-bold w-fit shadow-sm">
-                        <span className="text-base drop-shadow-md">💎</span>
-                        6,900원 평생 소장
+                        <span className="text-base drop-shadow-md">🎁</span>
+                        이제 무료로 이용하세요
                     </div>
                     <h1 className="text-foreground text-4xl font-black leading-[1.15] tracking-tight">
                         독서관
@@ -44,14 +28,14 @@ export default function TemplateDetail() {
                         문장과 생각을 쌓는 독서관
                     </p>
                     <p className="text-muted-foreground text-sm font-normal leading-relaxed">
-                        책 추가, 하이라이트 기록, 챌린지 관리까지 한 곳에서 가능한 노션 독서 템플릿
+                        책 추가, 하이라이트 기록, 챌린지 관리까지 한 곳에서 — 이제 북핏 웹에서 무료로 이용할 수 있어요.
                     </p>
                     <div className="flex flex-col gap-3 mt-4 md:hidden">
                         <Button className="w-full bg-accent text-primary-foreground hover:bg-accent/80 hover:text-primary-foreground font-bold py-6 text-lg transition-all rounded-xl h-14" onClick={() => {
                             const formElement = document.getElementById('template-form-section');
                             if (formElement) formElement.scrollIntoView({ behavior: 'smooth' });
                         }}>
-                            지금 소장하기
+                            무료로 시작하기
                         </Button>
                     </div>
                 </div>
@@ -100,40 +84,6 @@ export default function TemplateDetail() {
                 </div>
             </section>
 
-            {/* Screen Preview */}
-            <section className="flex flex-col gap-8">
-                <h2 className="text-foreground text-2xl font-bold px-2">화면 미리보기</h2>
-                <div className="flex flex-col gap-6">
-                    <div className="rounded-2xl overflow-hidden bg-secondary border border-border">
-                        <div className="aspect-video bg-muted overflow-hidden relative">
-                            <PreviewVideo src="/videos/dashboard.mp4" />
-                        </div>
-                        <div className="p-5">
-                            <h3 className="text-foreground text-lg font-bold mb-2">메인 홈 대시보드</h3>
-                            <p className="text-muted-foreground text-sm">대부분의 작업을 빠르게 처리하고 한눈에 진행 상황을 파악하는 메인 대시보드</p>
-                        </div>
-                    </div>
-                    <div className="rounded-2xl overflow-hidden bg-secondary border border-border">
-                        <div className="aspect-video bg-muted overflow-hidden relative">
-                            <PreviewVideo src="/videos/highlight.mp4" />
-                        </div>
-                        <div className="p-5">
-                            <h3 className="text-foreground text-lg font-bold mb-2">하이라이트 관리 화면</h3>
-                            <p className="text-muted-foreground text-sm">기록한 모든 문장과 생각을 책별, 태그별, 카테고리별로 깔끔하게 자동 분류</p>
-                        </div>
-                    </div>
-                    <div className="rounded-2xl overflow-hidden bg-secondary border border-border">
-                        <div className="aspect-video bg-muted overflow-hidden relative">
-                            <PreviewVideo src="/videos/challenge.mp4" />
-                        </div>
-                        <div className="p-5">
-                            <h3 className="text-foreground text-lg font-bold mb-2">챌린지 관리 화면</h3>
-                            <p className="text-muted-foreground text-sm">책별로 독서 목표를 설정해서 월간/연간 독서 목표까지 상태 확인</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             {/* Trust and Benefits */}
             <section className="bg-secondary/50 rounded-2xl py-12 px-6">
                 <h2 className="text-foreground text-2xl font-bold mb-8 px-2">신뢰와 혜택</h2>
@@ -143,8 +93,8 @@ export default function TemplateDetail() {
                             📘
                         </div>
                         <div>
-                            <p className="text-foreground font-bold">상세 사용 가이드</p>
-                            <p className="text-muted-foreground text-sm">템플릿 내 상세한 가이드 제공</p>
+                            <p className="text-foreground font-bold">쉬운 시작</p>
+                            <p className="text-muted-foreground text-sm">별도 가입 없이, 북핏 로그인만으로 바로 이용</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-4 p-5 bg-secondary rounded-2xl border border-border shadow-sm">
@@ -152,8 +102,8 @@ export default function TemplateDetail() {
                             💬
                         </div>
                         <div>
-                            <p className="text-foreground font-bold">1:1 Q&A 지원</p>
-                            <p className="text-muted-foreground text-sm">궁금한 점은 언제든 판매자에게 직접 문의</p>
+                            <p className="text-foreground font-bold">문의 지원</p>
+                            <p className="text-muted-foreground text-sm">궁금한 점은 카카오톡 채널로 언제든 문의</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-4 p-5 bg-secondary rounded-2xl border border-border shadow-sm">
@@ -161,8 +111,8 @@ export default function TemplateDetail() {
                             🔄
                         </div>
                         <div>
-                            <p className="text-foreground font-bold">평생 업데이트</p>
-                            <p className="text-muted-foreground text-sm">템플릿 개선 시 무상 업데이트 지원</p>
+                            <p className="text-foreground font-bold">지속 업데이트</p>
+                            <p className="text-muted-foreground text-sm">기능이 개선되면 별도 작업 없이 바로 반영</p>
                         </div>
                     </div>
                 </div>
@@ -230,7 +180,7 @@ export default function TemplateDetail() {
                     </div>
                     <div className="flex items-center gap-4 p-5 bg-secondary rounded-2xl border border-border shadow-sm">
                         <span className="text-2xl drop-shadow-md">🎨</span>
-                        <p className="text-foreground font-medium">깔끔한 노션 독서 템플릿을 찾는 사람</p>
+                        <p className="text-foreground font-medium">간편한 독서 기록 도구를 찾는 사람</p>
                     </div>
                 </div>
             </section>
@@ -239,16 +189,16 @@ export default function TemplateDetail() {
                 <h2 className="text-foreground text-2xl font-bold mb-8 text-center font-display">자주 묻는 질문</h2>
                 <div className="space-y-6 max-w-md mx-auto">
                     <div>
-                        <p className="text-foreground font-bold mb-2 flex items-center gap-2"><span className="text-accent font-black text-xl">Q.</span> 노션은 무료인가요?</p>
-                        <p className="text-muted-foreground text-sm pl-7">네, 개인 사용자는 무료로 모든 기기에서 동기화하여 사용할 수 있습니다.</p>
+                        <p className="text-foreground font-bold mb-2 flex items-center gap-2"><span className="text-accent font-black text-xl">Q.</span> 정말 무료인가요?</p>
+                        <p className="text-muted-foreground text-sm pl-7">네, 북핏 회원이면 누구나 별도 결제 없이 무료로 이용할 수 있습니다.</p>
                     </div>
                     <div>
-                        <p className="text-foreground font-bold mb-2 flex items-center gap-2"><span className="text-accent font-black text-xl">Q.</span> 노션이 처음인데 괜찮을까요?</p>
-                        <p className="text-muted-foreground text-sm pl-7">직관적인 인터페이스와 친절한 영상 가이드가 있어 금방 적응하실 수 있습니다.</p>
+                        <p className="text-foreground font-bold mb-2 flex items-center gap-2"><span className="text-accent font-black text-xl">Q.</span> 여러 기기에서 동기화되나요?</p>
+                        <p className="text-muted-foreground text-sm pl-7">네, 로그인만 하면 PC와 모바일 어디서든 같은 기록을 확인할 수 있습니다.</p>
                     </div>
                     <div>
-                        <p className="text-foreground font-bold mb-2 flex items-center gap-2"><span className="text-accent font-black text-xl">Q.</span> 커스터마이징이 가능한가요?</p>
-                        <p className="text-muted-foreground text-sm pl-7">네, 본인의 스타일에 맞게 자유롭게 수정하여 사용할 수 있습니다.</p>
+                        <p className="text-foreground font-bold mb-2 flex items-center gap-2"><span className="text-accent font-black text-xl">Q.</span> 이전에 쓰던 노션 기록도 옮길 수 있나요?</p>
+                        <p className="text-muted-foreground text-sm pl-7">아직 자동 이전은 지원하지 않습니다. 지금부터의 기록을 독서기록장에 새로 쌓아보세요.</p>
                     </div>
                 </div>
             </section>
@@ -265,7 +215,7 @@ export default function TemplateDetail() {
                         const formElement = document.getElementById('template-form-section');
                         if (formElement) formElement.scrollIntoView({ behavior: 'smooth' });
                     }}>
-                        구매하기
+                        무료로 시작하기
                     </Button>
                 </div>
             </section>
