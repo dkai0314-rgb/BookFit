@@ -141,6 +141,7 @@ export type MonthlyBestseller = {
 };
 
 export type ShelfStatus = 'want' | 'reading' | 'done';
+export type ShelfFormat = 'ebook' | 'paper';
 
 export type UserBookShelfEntry = {
     id: string;
@@ -149,6 +150,9 @@ export type UserBookShelfEntry = {
     status: ShelfStatus;
     rating: number | null;
     oneLiner: string | null;
+    format: ShelfFormat | null;
+    startedAt: Date | null;
+    finishedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
     book?: Book;
@@ -265,6 +269,9 @@ function shelfFromDoc(
         status: (d.status ?? 'want') as ShelfStatus,
         rating: typeof d.rating === 'number' ? d.rating : null,
         oneLiner: d.oneLiner ?? null,
+        format: (d.format ?? null) as ShelfFormat | null,
+        startedAt: tsToDate(d.startedAt),
+        finishedAt: tsToDate(d.finishedAt),
         createdAt: tsToDate(d.createdAt) ?? new Date(),
         updatedAt: tsToDate(d.updatedAt) ?? new Date(),
     };
@@ -592,22 +599,47 @@ export async function listShelfEntries(
 export async function upsertShelfEntry(
     userId: string,
     bookId: string,
-    data: { status: ShelfStatus; rating?: number | null; oneLiner?: string | null },
+    data: {
+        status: ShelfStatus;
+        rating?: number | null;
+        oneLiner?: string | null;
+        format?: ShelfFormat | null;
+    },
 ): Promise<UserBookShelfEntry> {
     const db = getDb();
     const ref = db.collection('users').doc(userId).collection('shelf').doc(bookId);
     const existing = await ref.get();
+    const prev = existing.exists ? existing.data() ?? {} : {};
+    const prevStatus = prev.status as ShelfStatus | undefined;
     const now = new Date();
-    const payload = {
+
+    const payload: Record<string, unknown> = {
         status: data.status,
-        rating: data.rating ?? null,
-        oneLiner: data.oneLiner ?? null,
         updatedAt: now,
     };
+    // Partial merge — only overwrite fields the caller actually sent, so a
+    // status-only update (e.g. quick status change) doesn't wipe rating/oneLiner.
+    if (data.rating !== undefined) payload.rating = data.rating;
+    if (data.oneLiner !== undefined) payload.oneLiner = data.oneLiner;
+    if (data.format !== undefined) payload.format = data.format;
+
+    // Auto-track reading timeline on status transitions.
+    if (data.status === 'reading' && prevStatus !== 'reading' && !prev.startedAt) {
+        payload.startedAt = now;
+    }
+    if (data.status === 'done' && !prev.finishedAt) {
+        payload.finishedAt = now;
+        if (!prev.startedAt && payload.startedAt === undefined) {
+            // Jumped straight to "done" without ever passing through "reading" —
+            // backfill startedAt so duration reads as same-day rather than null.
+            payload.startedAt = now;
+        }
+    }
+
     if (existing.exists) {
         await ref.update(payload);
     } else {
-        await ref.set({ ...payload, createdAt: now });
+        await ref.set({ rating: null, oneLiner: null, format: null, ...payload, createdAt: now });
     }
     const after = await ref.get();
     return shelfFromDoc(after, userId);

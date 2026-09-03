@@ -6,10 +6,12 @@ import {
     upsertShelfEntry,
     deleteShelfEntry,
     type ShelfStatus,
+    type ShelfFormat,
 } from '@/lib/firestore-models';
 import { requireAuthUser } from '@/lib/auth';
 
 const ALLOWED_STATUS = new Set<ShelfStatus>(['want', 'reading', 'done']);
+const ALLOWED_FORMAT = new Set<ShelfFormat>(['ebook', 'paper']);
 
 export async function GET(request: Request) {
     const auth = await requireAuthUser(request);
@@ -40,6 +42,7 @@ export async function POST(request: Request) {
         status?: string;
         rating?: number | null;
         oneLiner?: string | null;
+        format?: string | null;
     };
     try {
         body = await request.json();
@@ -53,6 +56,9 @@ export async function POST(request: Request) {
             { status: 400 },
         );
     }
+    if (body.format !== undefined && body.format !== null && !ALLOWED_FORMAT.has(body.format as ShelfFormat)) {
+        return NextResponse.json({ error: 'format은 ebook|paper만 가능합니다.' }, { status: 400 });
+    }
 
     const book = await getBook(body.bookId);
     if (!book) {
@@ -61,8 +67,11 @@ export async function POST(request: Request) {
 
     const updated = await upsertShelfEntry(user.uid, body.bookId, {
         status: body.status as ShelfStatus,
-        rating: body.rating ?? null,
-        oneLiner: body.oneLiner ?? null,
+        // Only forward fields the client actually sent — omitting a field
+        // (undefined) preserves the existing value instead of clearing it.
+        ...(body.rating !== undefined ? { rating: body.rating } : {}),
+        ...(body.oneLiner !== undefined ? { oneLiner: body.oneLiner } : {}),
+        ...(body.format !== undefined ? { format: body.format as ShelfFormat | null } : {}),
     });
 
     return NextResponse.json({ entry: { ...updated, book } });
