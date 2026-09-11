@@ -5,7 +5,7 @@
  */
 
 import { anthropic } from '@ai-sdk/anthropic';
-import { generateObject } from 'ai';
+import { generateObject, NoObjectGeneratedError } from 'ai';
 import { searchBookInAladin } from './aladin';
 import {
     findBookByTitle,
@@ -19,6 +19,22 @@ import { singleLetterSchema, buildSingleLetterPrompt } from './prompts/letter-si
 import { monthlyPickSchema, buildMonthlyPickPrompt } from './prompts/letter-monthly-pick';
 import { slugifyKo, shortHash, estimateReadingTime } from './prompts/curation';
 import type { BookMeta } from './book-apis';
+
+// Claude가 스키마의 고정 길이 배열(예: insights 3개)을 가끔 놓쳐 생성이 통째로 실패하는 경우가 있다.
+// 실제 생성 오류가 아니라 카운트 미스일 뿐이므로, 스키마 불일치에 한해 짧게 재시도한다.
+async function withSchemaRetry<T>(fn: () => Promise<T>, maxAttempts = 3): Promise<T> {
+    let lastError: unknown;
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+        try {
+            return await fn();
+        } catch (error) {
+            lastError = error;
+            if (!NoObjectGeneratedError.isInstance(error)) throw error;
+            console.warn(`generateObject schema mismatch, retry ${attempt}/${maxAttempts}`);
+        }
+    }
+    throw lastError;
+}
 
 export async function uniqueLetterSlug(base: string): Promise<string> {
     const cleanBase = slugifyKo(base) || 'letter';
@@ -113,11 +129,13 @@ export async function generateSingleLetterDraft(book: BookMeta): Promise<Letter>
         });
     }
 
-    const { object: pick } = await generateObject({
-        model: anthropic('claude-sonnet-4-5'),
-        schema: singleLetterSchema,
-        prompt: buildSingleLetterPrompt(book),
-    });
+    const { object: pick } = await withSchemaRetry(() =>
+        generateObject({
+            model: anthropic('claude-sonnet-4-5'),
+            schema: singleLetterSchema,
+            prompt: buildSingleLetterPrompt(book),
+        }),
+    );
 
     const structuredContent: StructuredContent = {
         type: 'single',
@@ -171,11 +189,13 @@ export async function generateSingleLetterDraft(book: BookMeta): Promise<Letter>
 export async function generateThemeLetterDraft(theme: string): Promise<Letter> {
     if (!theme.trim()) throw new Error('테마(theme)가 필요합니다.');
 
-    const { object: pick } = await generateObject({
-        model: anthropic('claude-haiku-4-5'),
-        schema: monthlyPickSchema,
-        prompt: buildMonthlyPickPrompt(theme),
-    });
+    const { object: pick } = await withSchemaRetry(() =>
+        generateObject({
+            model: anthropic('claude-haiku-4-5'),
+            schema: monthlyPickSchema,
+            prompt: buildMonthlyPickPrompt(theme),
+        }),
+    );
 
     // 책 3권 알라딘 검증 + Firestore upsert
     const bookIds: string[] = [];
