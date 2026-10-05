@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { type User } from 'firebase/auth';
-import { Bookmark, BookOpen, CheckCircle, X, Edit2, Save, Plus, Loader2 } from 'lucide-react';
+import { Bookmark, BookOpen, CheckCircle, X, Edit2, Save, Plus, Loader2, PenLine } from 'lucide-react';
+import HighlightQuickAdd from '@/components/HighlightQuickAdd';
 
 type Status = 'want' | 'reading' | 'done';
 type Format = 'ebook' | 'paper';
@@ -24,8 +25,27 @@ type Entry = {
         title: string;
         author: string;
         imageUrl: string | null;
+        isCustom?: boolean;
     };
 };
+
+// 직접 추가한 책은 공개 상세 페이지가 없으므로 링크 없이 렌더한다.
+function BookLink({
+    entry,
+    className,
+    children,
+}: {
+    entry: Entry;
+    className: string;
+    children: React.ReactNode;
+}) {
+    if (entry.book.isCustom) return <div className={className}>{children}</div>;
+    return (
+        <Link href={`/books/${entry.bookId}`} className={className}>
+            {children}
+        </Link>
+    );
+}
 
 const TABS: { value: Status; label: string; icon: typeof Bookmark }[] = [
     { value: 'want', label: '읽고 싶음', icon: Bookmark },
@@ -50,6 +70,7 @@ export default function ShelfTab({ user }: { user: User }) {
     const [entries, setEntries] = useState<Entry[] | null>(null);
     const [activeTab, setActiveTab] = useState<Status>('want');
     const [editingId, setEditingId] = useState<string | null>(null);
+    const [highlightingId, setHighlightingId] = useState<string | null>(null);
     const [draftLine, setDraftLine] = useState('');
     const [draftRating, setDraftRating] = useState<number>(0);
 
@@ -313,7 +334,7 @@ export default function ShelfTab({ user }: { user: User }) {
                             key={entry.id}
                             className="bg-background border border-border rounded-xl p-5 flex flex-col md:flex-row gap-5 shadow-sm"
                         >
-                            <Link href={`/books/${entry.bookId}`} className="md:w-28 shrink-0">
+                            <BookLink entry={entry} className="md:w-28 shrink-0">
                                 <div className="aspect-[1/1.5] relative rounded-md overflow-hidden bg-muted shadow-sm border border-border">
                                     {entry.book.imageUrl ? (
                                         <Image
@@ -331,15 +352,15 @@ export default function ShelfTab({ user }: { user: User }) {
                                         </div>
                                     )}
                                 </div>
-                            </Link>
+                            </BookLink>
                             <div className="flex-1 space-y-3 min-w-0">
                                 <div>
-                                    <Link href={`/books/${entry.bookId}`} className="block group">
+                                    <BookLink entry={entry} className="block group">
                                         <h3 className="text-lg font-bold leading-tight group-hover:text-accent transition-colors break-keep line-clamp-2">
                                             {entry.book.title}
                                         </h3>
                                         <p className="text-sm text-muted-foreground">{entry.book.author}</p>
-                                    </Link>
+                                    </BookLink>
                                 </div>
 
                                 {/* 상태 변경 */}
@@ -447,6 +468,14 @@ export default function ShelfTab({ user }: { user: User }) {
                                         )}
                                     </div>
                                 )}
+
+                                {highlightingId === entry.id && (
+                                    <HighlightQuickAdd
+                                        bookId={entry.bookId}
+                                        defaultOpen
+                                        onCancel={() => setHighlightingId(null)}
+                                    />
+                                )}
                             </div>
                             <div className="md:w-24 shrink-0 flex md:flex-col gap-2 items-end justify-start">
                                 {editingId !== entry.id && (
@@ -455,6 +484,14 @@ export default function ShelfTab({ user }: { user: User }) {
                                         className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
                                     >
                                         <Edit2 className="w-3 h-3" /> 편집
+                                    </button>
+                                )}
+                                {highlightingId !== entry.id && (
+                                    <button
+                                        onClick={() => setHighlightingId(entry.id)}
+                                        className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                                    >
+                                        <PenLine className="w-3 h-3" /> 하이라이트
                                     </button>
                                 )}
                                 <button

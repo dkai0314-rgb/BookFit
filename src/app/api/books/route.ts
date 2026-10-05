@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { listIsChoiceBooks, createBook } from '@/lib/firestore-models';
+import { listIsChoiceBooks } from '@/lib/firestore-models';
 import { tryDb } from '@/lib/db';
 
 // GET /api/books?choice=true
@@ -24,25 +24,5 @@ export async function GET(request: Request) {
             { error: 'Failed to fetch books', details: err.message },
             { status: 500 },
         );
-    }
-}
-
-// POST /api/books (Admin)
-export async function POST(request: Request) {
-    try {
-        const body = await request.json();
-        const book = await createBook({
-            title: body.title,
-            author: body.author,
-            category: body.category,
-            description: body.description,
-            imageUrl: body.imageUrl ?? null,
-            purchaseLink: body.purchaseLink ?? null,
-            recommendation: body.recommendation ?? null,
-        });
-        return NextResponse.json(book);
-    } catch (error) {
-        console.error('book create error', error);
-        return NextResponse.json({ error: 'Failed to create book' }, { status: 500 });
     }
 }

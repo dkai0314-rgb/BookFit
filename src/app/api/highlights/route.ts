@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import {
-    getBook,
+    getBookForUser,
     listHighlights,
     createHighlight,
     updateHighlight,
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
         );
     }
 
-    const book = await getBook(body.bookId);
+    const book = await getBookForUser(user.uid, body.bookId);
     if (!book) {
         return NextResponse.json({ error: 'book not found' }, { status: 404 });
     }

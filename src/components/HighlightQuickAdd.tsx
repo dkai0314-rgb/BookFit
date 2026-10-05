@@ -7,10 +7,18 @@ import { auth } from '@/lib/firebase';
 import { PenLine, Loader2, Check } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 
-export default function HighlightQuickAdd({ bookId }: { bookId: string }) {
+export default function HighlightQuickAdd({
+    bookId,
+    defaultOpen = false,
+    onCancel,
+}: {
+    bookId: string;
+    defaultOpen?: boolean;
+    onCancel?: () => void;
+}) {
     const [user, setUser] = useState<User | null>(null);
     const [authLoading, setAuthLoading] = useState(true);
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(defaultOpen);
     const [quote, setQuote] = useState('');
     const [note, setNote] = useState('');
     const [busy, setBusy] = useState(false);
@@ -75,13 +83,16 @@ export default function HighlightQuickAdd({ bookId }: { bookId: string }) {
 
     if (!open) {
         return (
-            <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-md font-semibold text-sm border border-border bg-background text-foreground hover:bg-secondary hover:border-accent/40 transition-all"
-            >
-                <PenLine className="w-4 h-4" /> 인상 깊은 문장 남기기
-            </button>
+            <div className="space-y-1">
+                <button
+                    type="button"
+                    onClick={() => setOpen(true)}
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-md font-semibold text-sm border border-border bg-background text-foreground hover:bg-secondary hover:border-accent/40 transition-all"
+                >
+                    <PenLine className="w-4 h-4" /> 인상 깊은 문장 남기기
+                </button>
+                {saved && <p className="text-xs text-accent text-center">하이라이트가 저장되었습니다.</p>}
+            </div>
         );
     }
 
@@ -114,13 +125,15 @@ export default function HighlightQuickAdd({ bookId }: { bookId: string }) {
                 </button>
                 <button
                     type="button"
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                        setOpen(false);
+                        onCancel?.();
+                    }}
                     className="px-4 py-2 rounded border border-border text-sm text-muted-foreground hover:bg-secondary"
                 >
                     취소
                 </button>
             </div>
-            {saved && <p className="text-xs text-accent">하이라이트가 저장되었습니다.</p>}
         </div>
     );
 }

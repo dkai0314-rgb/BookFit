@@ -80,6 +80,8 @@ export type Book = {
     isChoice: boolean;
     createdAt: Date;
     updatedAt: Date;
+    // 사용자가 직접 추가한 개인 책 (users/{uid}/customBooks). 공개 카탈로그·상세 페이지에 없다.
+    isCustom?: boolean;
 };
 
 // kind 필드: 신규 생성은 'letter' 고정. 기존 DB 값('weekly'/'monthly_pick'/'special')은 하위호환 유지.
@@ -377,6 +379,62 @@ export async function createBook(data: {
     return { id, ...payload };
 }
 
+// ===== Custom (user-added) books =====
+// 직접 추가한 책은 개인 데이터라 공용 books 컬렉션에 두지 않는다 — 공용 목록 API·상세 페이지·
+// 레터 생성의 제목 매칭(findBookByTitle)에 다른 사람이 입력한 책이 섞이지 않게 한다.
+
+export async function createCustomBook(
+    userId: string,
+    data: { title: string; author: string },
+): Promise<Book> {
+    const db = getDb();
+    const id = randomUUID();
+    const now = new Date();
+    const payload = {
+        title: data.title,
+        author: data.author,
+        category: '직접 추가',
+        description: '',
+        summary: null,
+        recommendation: null,
+        imageUrl: null,
+        purchaseLink: null,
+        isChoice: false,
+        createdAt: now,
+        updatedAt: now,
+    };
+    await db.collection('users').doc(userId).collection('customBooks').doc(id).set(payload);
+    return { id, ...payload, isCustom: true };
+}
+
+// 공용 카탈로그 → 해당 사용자의 개인 책 순으로 찾는다.
+export async function getBookForUser(userId: string, id: string): Promise<Book | null> {
+    const shared = await getBook(id);
+    if (shared) return shared;
+    const db = tryDb();
+    if (!db) return null;
+    const snap = await db.collection('users').doc(userId).collection('customBooks').doc(id).get();
+    if (!snap.exists) return null;
+    return { ...bookFromDoc(snap), isCustom: true };
+}
+
+export async function getBooksForUser(userId: string, ids: string[]): Promise<Book[]> {
+    const unique = Array.from(new Set(ids));
+    const shared = await getBooksByIds(unique);
+    const found = new Set(shared.map((b) => b.id));
+    const missing = unique.filter((id) => !found.has(id));
+    const db = tryDb();
+    if (!db || missing.length === 0) return shared;
+    const refs = missing.map((id) =>
+        db.collection('users').doc(userId).collection('customBooks').doc(id),
+    );
+    const snaps = await db.getAll(...refs);
+    const custom = snaps
+        .filter((s) => s.exists)
+        .map((s) => ({ ...bookFromDoc(s), isCustom: true }));
+    return shared.concat(custom);
+}
+
 // ===== Letters =====
 
 export async function getLetterBySlug(slug: string): Promise<Letter | null> {
@@ -588,7 +646,7 @@ export async function listShelfEntries(
         .get();
     const entries = snap.docs.map((d) => shelfFromDoc(d, userId));
     if (entries.length === 0) return entries;
-    const books = await getBooksByIds(entries.map((e) => e.bookId));
+    const books = await getBooksForUser(userId, entries.map((e) => e.bookId));
     const bookMap = new Map(books.map((b) => [b.id, b]));
     for (const e of entries) {
         e.book = bookMap.get(e.bookId);
@@ -720,7 +778,7 @@ export async function listHighlights(
     const snap = await query.get();
     const highlights = snap.docs.map((d) => highlightFromDoc(d, userId));
     if (highlights.length === 0) return highlights;
-    const books = await getBooksByIds(highlights.map((h) => h.bookId));
+    const books = await getBooksForUser(userId, highlights.map((h) => h.bookId));
     const bookMap = new Map(books.map((b) => [b.id, b]));
     for (const h of highlights) {
         h.book = bookMap.get(h.bookId);

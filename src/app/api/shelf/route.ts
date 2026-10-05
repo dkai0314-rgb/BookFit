@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import {
-    getBook,
+    getBookForUser,
     getShelfEntry,
     listShelfEntries,
     upsertShelfEntry,
@@ -24,7 +24,7 @@ export async function GET(request: Request) {
     if (bookId) {
         const entry = await getShelfEntry(user.uid, bookId);
         if (!entry) return NextResponse.json({ entry: null });
-        const book = await getBook(bookId);
+        const book = await getBookForUser(user.uid, bookId);
         return NextResponse.json({ entry: { ...entry, book } });
     }
 
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'format은 ebook|paper만 가능합니다.' }, { status: 400 });
     }
 
-    const book = await getBook(body.bookId);
+    const book = await getBookForUser(user.uid, body.bookId);
     if (!book) {
         return NextResponse.json({ error: 'book not found' }, { status: 404 });
     }

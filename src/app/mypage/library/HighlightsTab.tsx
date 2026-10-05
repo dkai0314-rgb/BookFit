@@ -15,7 +15,7 @@ type HighlightEntry = {
     priority: Priority;
     isFavorite: boolean;
     createdAt: string;
-    book?: { id: string; title: string; author: string } | null;
+    book?: { id: string; title: string; author: string; isCustom?: boolean } | null;
 };
 
 const PRIORITY_LABEL: Record<'P0' | 'P1' | 'P2', string> = {
@@ -105,7 +105,9 @@ export default function HighlightsTab({ user }: { user: User }) {
                         >
                             <div className="flex items-start justify-between gap-3">
                                 <div className="min-w-0">
-                                    {h.book ? (
+                                    {h.book?.isCustom ? (
+                                        <span className="text-sm font-semibold text-accent">{h.book.title}</span>
+                                    ) : h.book ? (
                                         <Link
                                             href={`/books/${h.book.id}`}
                                             className="text-sm font-semibold text-accent hover:underline"
