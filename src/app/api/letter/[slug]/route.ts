@@ -8,6 +8,7 @@ import {
     type LetterKind,
 } from '@/lib/firestore-models';
 import { dispatchEmail, buildLetterEmailHtml } from '@/lib/brevo-dispatch';
+import { revalidateLetterPaths } from '@/lib/revalidate-letters';
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -113,6 +114,9 @@ export async function PATCH(request: Request, { params }: Params) {
             return NextResponse.json({ error: 'Failed to read after update' }, { status: 500 });
         }
 
+        // ISR 캐시 즉시 무효화 — slug 변경 시 옛 경로도 함께 (YOLD-0441)
+        revalidateLetterPaths([slug, resultSlug]);
+
         // published 전환 → Brevo 자동 발송 (idempotent in helper)
         let dispatch: { sentCount: number; skipped: boolean; error?: string } | null = null;
         if (isPublishing) {
@@ -168,6 +172,7 @@ export async function DELETE(_request: Request, { params }: Params) {
     try {
         const { slug } = await params;
         await deleteLetter(slug);
+        revalidateLetterPaths([slug]);
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error('DELETE /api/letter/[slug] failed', error);

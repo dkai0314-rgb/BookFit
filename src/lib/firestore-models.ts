@@ -318,13 +318,15 @@ export async function getBook(id: string): Promise<Book | null> {
 export async function listIsChoiceBooks(limit = 200): Promise<Book[]> {
     const db = tryDb();
     if (!db) return [];
+    // where + orderBy(updatedAt) 는 복합 인덱스를 요구해 sitemap 이 매 호출 실패했다 (YOLD-0315).
+    // 단일 equality where 만 Firestore 에서 처리하고 정렬·limit 은 메모리에서 한다.
     const snap = await db
         .collection(COLLECTIONS.books)
         .where('isChoice', '==', true)
-        .orderBy('updatedAt', 'desc')
-        .limit(limit)
         .get();
-    return snap.docs.map(bookFromDoc);
+    const books = snap.docs.map(bookFromDoc);
+    books.sort((a, b) => (b.updatedAt?.getTime() ?? 0) - (a.updatedAt?.getTime() ?? 0));
+    return books.slice(0, limit);
 }
 
 export async function findBookByTitle(title: string): Promise<Book | null> {

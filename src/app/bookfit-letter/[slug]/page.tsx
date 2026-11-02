@@ -5,17 +5,23 @@ import {
 } from '@/lib/firestore-models';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import { ShoppingBag, Info, BookOpen } from 'lucide-react';
 import { buildCoupangAffiliateSearch } from '@/lib/coupang-search';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR 1h — 발행/수정 시 revalidatePath 로 즉시 갱신 (YOLD-0441)
 export const runtime = 'nodejs';
 
 const SITE_ORIGIN = 'https://bookfit.kr';
+
+// 빌드 시 미리 만들지 않고 첫 요청에 생성해 revalidate 동안 캐시한다 (on-demand ISR, YOLD-0441)
+export async function generateStaticParams() {
+    return [];
+}
+
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -40,9 +46,22 @@ function decodeSlug(slug: string): string {
     }
 }
 
+/**
+ * 크롤러 로그에 `%5C`(역슬래시)가 붙은 레터 URL 변종이 반복된다 (YOLD-0441).
+ * 역슬래시·앞뒤 공백을 걷어낸 정규 slug 를 돌려준다. 바뀐 게 없으면 null.
+ */
+function canonicalSlugOrNull(slug: string): string | null {
+    const cleaned = slug.replace(/\\+/g, '').trim();
+    return cleaned && cleaned !== slug ? cleaned : null;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug: rawSlug } = await params;
     const slug = decodeSlug(rawSlug);
+    if (canonicalSlugOrNull(slug)) {
+        // 페이지 본문에서 308(permanentRedirect) — 여기서는 Firestore 를 읽지 않는다
+        return { title: '북핏레터 | 북핏', robots: { index: false } };
+    }
     const letter = await getLetterWithBooks(slug);
 
     if (!letter || !isPublished(letter.status)) {
@@ -94,6 +113,10 @@ function buildVendorLinks(book: { title: string; author: string }) {
 export default async function LetterDetailPage({ params }: Props) {
     const { slug: rawSlug } = await params;
     const slug = decodeSlug(rawSlug);
+    const canonical = canonicalSlugOrNull(slug);
+    if (canonical) {
+        permanentRedirect(`/bookfit-letter/${encodeURIComponent(canonical)}`);
+    }
     const letter = await getLetterWithBooks(slug);
 
     if (!letter || !isPublished(letter.status)) notFound();

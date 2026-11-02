@@ -13,7 +13,7 @@ import {
 } from '@/lib/firestore-models';
 import { buildCoupangAffiliateSearch } from '@/lib/coupang-search';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR 1h — 발행/수정 시 revalidatePath 로 즉시 갱신 (YOLD-0441)
 export const runtime = 'nodejs';
 
 async function getRecentLetters(): Promise<LetterWithBooks[]> {

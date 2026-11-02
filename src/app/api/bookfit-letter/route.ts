@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { upsertLetter } from '@/lib/firestore-models';
 import { dispatchEmail, buildLetterEmailHtml } from '@/lib/brevo-dispatch';
+import { revalidateLetterPaths } from '@/lib/revalidate-letters';
 
 export async function POST(request: Request) {
     try {
@@ -103,6 +104,7 @@ export async function POST(request: Request) {
             }
         }
 
+        revalidateLetterPaths([newLetter.slug]);
         return NextResponse.json({ success: true, newLetter, dispatch });
     } catch (error: unknown) {
         const err = error as Error;

@@ -20,14 +20,10 @@ export const metadata: Metadata = {
     },
 };
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR 1h — 발행/수정 시 revalidatePath 로 즉시 갱신 (YOLD-0441)
 export const runtime = 'nodejs';
 
-type Props = {
-    searchParams?: Promise<Record<string, string>>;
-};
-
-export default async function BookFitLetterListPage(_props: Props) {
+export default async function BookFitLetterListPage() {
     let letters: LetterWithBooks[] = [];
     try {
         // Firestore composite index 의존 제거 — 단일 orderBy + in-memory 정렬

@@ -9,10 +9,16 @@ import ShelfButton from '@/components/ShelfButton';
 import HighlightQuickAdd from '@/components/HighlightQuickAdd';
 import { buildCoupangAffiliateSearch } from '@/lib/coupang-search';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR 1h — 발행/수정 시 revalidatePath 로 즉시 갱신 (YOLD-0441)
 export const runtime = 'nodejs';
 
 const SITE_ORIGIN = 'https://bookfit.kr';
+
+// 빌드 시 미리 만들지 않고 첫 요청에 생성해 revalidate 동안 캐시한다 (on-demand ISR, YOLD-0441)
+export async function generateStaticParams() {
+    return [];
+}
+
 
 type Props = { params: Promise<{ id: string }> };
 

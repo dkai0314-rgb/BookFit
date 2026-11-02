@@ -4,6 +4,7 @@ import {
     upsertLetter,
     type LetterKind,
 } from '@/lib/firestore-models';
+import { revalidateLetterPaths } from '@/lib/revalidate-letters';
 
 const ALLOWED_KIND = new Set<LetterKind>(['letter', 'weekly', 'monthly_pick', 'special']);
 
@@ -66,6 +67,7 @@ export async function POST(request: Request) {
             tags: body.tags ?? null,
         });
 
+        revalidateLetterPaths([letter.slug]);
         return NextResponse.json({ success: true, letter });
     } catch (error) {
         console.error('POST /api/letter failed', error);

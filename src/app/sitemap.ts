@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { listLetters, listIsChoiceBooks } from '@/lib/firestore-models';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400; // 하루 1회 재생성 (YOLD-0441)
 export const runtime = 'nodejs';
 
 const BASE_URL = 'https://bookfit.kr';
